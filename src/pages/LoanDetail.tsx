@@ -10,7 +10,7 @@ import {
 import { useLoanContext } from "@/context/LoanContext";
 import { useParams, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { ArrowLeft, ChevronDown, Download, File, RefreshCw } from "lucide-react";
+import { ArrowLeft, ChevronDown, Download, File, RefreshCw, Upload } from "lucide-react";
 import { DocumentTable } from "@/components/loans/DocumentTable";
 import { DocumentUpload } from "@/components/loans/DocumentUpload";
 import { LoanSummary } from "@/components/loans/LoanSummary";
@@ -158,6 +158,13 @@ export default function LoanDetail() {
           </TabsContent>
           
           <TabsContent value="data-room" className="space-y-6">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-lg font-medium">Document Management</h2>
+              <Button onClick={() => setUploadDialogOpen(true)}>
+                <Upload className="mr-2 h-4 w-4" />
+                Upload Documents
+              </Button>
+            </div>
             <DocumentTable loanId={loan.id} documents={loan.documents} />
           </TabsContent>
           
