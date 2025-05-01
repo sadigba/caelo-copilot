@@ -84,8 +84,8 @@ export function LoanInsights({ loanId, insights }: LoanInsightsProps) {
             <TableHeader>
               <TableRow>
                 <TableHead className="w-1/3">Insight</TableHead>
-                <TableHead className="w-1/3">Supporting Evidence</TableHead>
                 <TableHead className="w-1/3">Narrative</TableHead>
+                <TableHead className="w-1/3">Supporting Evidence</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -115,6 +115,7 @@ export function LoanInsights({ loanId, insights }: LoanInsightsProps) {
                       <MessageSquare className="h-4 w-4" />
                     </Button>
                   </TableCell>
+                  <TableCell>{insight.narrative}</TableCell>
                   <TableCell>
                     <div className="flex flex-wrap gap-1">
                       {insight.evidence.map((evidence, index) => (
@@ -133,7 +134,6 @@ export function LoanInsights({ loanId, insights }: LoanInsightsProps) {
                       ))}
                     </div>
                   </TableCell>
-                  <TableCell>{insight.narrative}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
