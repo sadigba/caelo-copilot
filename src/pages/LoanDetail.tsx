@@ -159,10 +159,13 @@ export default function LoanDetail() {
           
           <TabsContent value="data-room" className="space-y-6">
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-lg font-medium">Document Management</h2>
               <Button onClick={() => setUploadDialogOpen(true)}>
                 <Upload className="mr-2 h-4 w-4" />
                 Upload Documents
+              </Button>
+              <Button variant="outline" onClick={() => setIsRequestDialogOpen(true)}>
+                <FileText className="mr-2 h-4 w-4" />
+                Request Documentation
               </Button>
             </div>
             <DocumentTable loanId={loan.id} documents={loan.documents} />
@@ -170,10 +173,7 @@ export default function LoanDetail() {
           
           <TabsContent value="insights" className="space-y-6">
             {hasApprovedDocuments ? (
-              <div className="mt-8">
-                <h2 className="text-lg font-medium mb-4">Analysis Insights</h2>
-                <LoanInsights loanId={loan.id} insights={loan.insights} />
-              </div>
+              <LoanInsights loanId={loan.id} insights={loan.insights} />
             ) : (
               <Card className="p-6">
                 <div className="text-center py-8">

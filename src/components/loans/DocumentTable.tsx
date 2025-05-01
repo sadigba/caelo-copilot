@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Document, Loan, useLoanContext } from "@/context/LoanContext";
@@ -6,7 +5,7 @@ import { Check, FileText, Plus, Tag, X } from "lucide-react";
 import { formatDate } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import {
   AlertDialog,
   AlertDialogAction,
