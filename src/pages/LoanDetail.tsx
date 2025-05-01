@@ -10,7 +10,7 @@ import {
 import { useLoanContext } from "@/context/LoanContext";
 import { useParams, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { ArrowLeft, ChevronDown, Download, File, RefreshCw, Upload } from "lucide-react";
+import { ArrowLeft, ChevronDown, Download, File, FileText, RefreshCw, Upload } from "lucide-react";
 import { DocumentTable } from "@/components/loans/DocumentTable";
 import { DocumentUpload } from "@/components/loans/DocumentUpload";
 import { LoanSummary } from "@/components/loans/LoanSummary";
@@ -31,6 +31,7 @@ export default function LoanDetail() {
   const navigate = useNavigate();
 
   const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
+  const [isRequestDialogOpen, setIsRequestDialogOpen] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
 
   const loan = getLoanById(loanId || "");
