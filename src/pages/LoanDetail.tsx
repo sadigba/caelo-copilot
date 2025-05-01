@@ -24,6 +24,18 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Badge } from "@/components/ui/badge";
+import { X } from "lucide-react";
 
 export default function LoanDetail() {
   const { loanId } = useParams<{ loanId: string }>();
@@ -33,6 +45,11 @@ export default function LoanDetail() {
   const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
   const [isRequestDialogOpen, setIsRequestDialogOpen] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
+  
+  // States for the request documentation dialog
+  const [documentTags, setDocumentTags] = useState<string[]>([]);
+  const [currentTag, setCurrentTag] = useState("");
+  const [requestNote, setRequestNote] = useState("");
 
   const loan = getLoanById(loanId || "");
 
@@ -73,6 +90,20 @@ export default function LoanDetail() {
       : `${loan.businessName.replace(/\s+/g, "_")}_Credit_Memo.docx`;
     
     toast.success(`${fileName} downloaded`);
+  };
+
+  const handleRequestSubmit = () => {
+    if (documentTags.length === 0) {
+      toast.error("Please specify at least one document type");
+      return;
+    }
+
+    // In a real application, this would send a request to the backend
+    toast.success(`Documentation requested: ${documentTags.join(", ")}`);
+    setIsRequestDialogOpen(false);
+    setDocumentTags([]);
+    setRequestNote("");
+    setCurrentTag("");
   };
 
   return (
@@ -205,6 +236,92 @@ export default function LoanDetail() {
         open={uploadDialogOpen}
         setOpen={setUploadDialogOpen}
       />
+
+      {/* Add Request Documentation Dialog */}
+      <Dialog open={isRequestDialogOpen} onOpenChange={setIsRequestDialogOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Request Documentation</DialogTitle>
+            <DialogDescription>
+              Specify what types of documents you need from the borrower.
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="grid gap-4 py-4">
+            <div className="grid grid-cols-4 items-center gap-4">
+              <label htmlFor="document-type" className="text-right col-span-1">
+                Document Type
+              </label>
+              <div className="col-span-3">
+                <div className="flex items-center gap-2">
+                  <Input
+                    id="document-type"
+                    placeholder="e.g., Rent Roll, Tax Returns"
+                    value={currentTag}
+                    onChange={(e) => setCurrentTag(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' && currentTag.trim()) {
+                        e.preventDefault();
+                        if (currentTag.trim() && !documentTags.includes(currentTag.trim())) {
+                          setDocumentTags([...documentTags, currentTag.trim()]);
+                          setCurrentTag("");
+                        }
+                      }
+                    }}
+                  />
+                  <Button 
+                    type="button" 
+                    variant="secondary" 
+                    onClick={() => {
+                      if (currentTag.trim() && !documentTags.includes(currentTag.trim())) {
+                        setDocumentTags([...documentTags, currentTag.trim()]);
+                        setCurrentTag("");
+                      }
+                    }}
+                    disabled={!currentTag.trim()}
+                  >
+                    Add
+                  </Button>
+                </div>
+                {documentTags.length > 0 && (
+                  <div className="flex flex-wrap gap-2 mt-2">
+                    {documentTags.map(tag => (
+                      <Badge key={tag} variant="secondary" className="px-2 py-1">
+                        {tag}
+                        <X 
+                          className="ml-1 h-3 w-3 cursor-pointer" 
+                          onClick={() => setDocumentTags(documentTags.filter(t => t !== tag))}
+                        />
+                      </Badge>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+            <div className="grid grid-cols-4 items-start gap-4">
+              <label htmlFor="note" className="text-right col-span-1">
+                Note
+              </label>
+              <Textarea
+                id="note"
+                placeholder="Add any specific requirements or instructions"
+                className="col-span-3"
+                value={requestNote}
+                onChange={(e) => setRequestNote(e.target.value)}
+              />
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsRequestDialogOpen(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleRequestSubmit}>
+              Send Request
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }
