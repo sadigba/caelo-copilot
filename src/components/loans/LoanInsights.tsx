@@ -83,9 +83,9 @@ export function LoanInsights({ loanId, insights }: LoanInsightsProps) {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="w-1/6">Insight</TableHead>
+                <TableHead className="w-1/4">Insight</TableHead>
                 <TableHead className="w-3/5">Narrative</TableHead>
-                <TableHead className="w-1/5">Evidence</TableHead>
+                <TableHead className="w-15">Evidence</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
