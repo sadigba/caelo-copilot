@@ -10,7 +10,7 @@ import {
 import { useLoanContext } from "@/context/LoanContext";
 import { useParams, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { ArrowLeft, Download, RefreshCw } from "lucide-react";
+import { ArrowLeft, ChevronDown, Download, FileExcel, FileWord, RefreshCw } from "lucide-react";
 import { DocumentTable } from "@/components/loans/DocumentTable";
 import { DocumentUpload } from "@/components/loans/DocumentUpload";
 import { LoanSummary } from "@/components/loans/LoanSummary";
@@ -18,6 +18,12 @@ import { LoanInsights } from "@/components/loans/LoanInsights";
 import { SavedInsights } from "@/components/loans/SavedInsights";
 import { AskCaelo } from "@/components/loans/AskCaelo";
 import { toast } from "sonner";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export default function LoanDetail() {
   const { loanId } = useParams<{ loanId: string }>();
@@ -96,24 +102,36 @@ export default function LoanDetail() {
               <RefreshCw className={`mr-2 h-4 w-4 ${refreshing ? 'animate-spin' : ''}`} />
               {refreshing ? "Analyzing..." : "Refresh Analysis"}
             </Button>
-            <div className="flex gap-2">
-              <Button
-                variant="outline"
-                onClick={() => handleDownload("model")}
-                disabled={!hasApprovedDocuments}
-              >
-                <Download className="mr-2 h-4 w-4" />
-                Financial Model
-              </Button>
-              <Button
-                variant="outline"
-                onClick={() => handleDownload("memo")}
-                disabled={!hasApprovedDocuments}
-              >
-                <Download className="mr-2 h-4 w-4" />
-                Credit Memo
-              </Button>
-            </div>
+            
+            {/* Dropdown menu button replacing individual buttons */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="outline"
+                  disabled={!hasApprovedDocuments}
+                >
+                  <Download className="mr-2 h-4 w-4" />
+                  Download
+                  <ChevronDown className="ml-2 h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem 
+                  onClick={() => handleDownload("model")}
+                  className="cursor-pointer"
+                >
+                  <FileExcel className="mr-2 h-4 w-4" />
+                  Financial Model
+                </DropdownMenuItem>
+                <DropdownMenuItem 
+                  onClick={() => handleDownload("memo")}
+                  className="cursor-pointer"
+                >
+                  <FileWord className="mr-2 h-4 w-4" />
+                  Credit Memo
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
 
