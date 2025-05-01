@@ -76,9 +76,23 @@ export function LoanForm() {
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
+    // Ensure all required fields are present with their correct types
     const newLoan = {
       ...values,
       status: "In Progress" as LoanStatus,
+      // Make sure all required fields are explicitly defined, not optional
+      loanType: values.loanType,
+      loanAmount: values.loanAmount,
+      purpose: values.purpose,
+      businessName: values.businessName,
+      industry: values.industry || "",
+      yearsInOperation: values.yearsInOperation || 0,
+      sponsorName: values.sponsorName,
+      sponsorTitle: values.sponsorTitle || "",
+      sponsorEmail: values.sponsorEmail,
+      sponsorPhone: values.sponsorPhone,
+      propertyAddress: values.propertyAddress,
+      propertyType: values.propertyType
     };
     
     addLoan(newLoan);
@@ -326,3 +340,4 @@ export function LoanForm() {
     </Form>
   );
 }
+
