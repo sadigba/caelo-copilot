@@ -164,10 +164,6 @@ export default function LoanDetail() {
                 <Upload className="mr-2 h-4 w-4" />
                 Upload Documents
               </Button>
-              <Button variant="outline" onClick={() => setIsRequestDialogOpen(true)}>
-                <FileText className="mr-2 h-4 w-4" />
-                Request Documentation
-              </Button>
             </div>
             <DocumentTable loanId={loan.id} documents={loan.documents} />
           </TabsContent>
