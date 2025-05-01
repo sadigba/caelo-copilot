@@ -10,7 +10,7 @@ import {
 import { useLoanContext } from "@/context/LoanContext";
 import { useParams, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { ArrowLeft, Download, PlusCircle, RefreshCw } from "lucide-react";
+import { ArrowLeft, Download, RefreshCw } from "lucide-react";
 import { DocumentTable } from "@/components/loans/DocumentTable";
 import { DocumentUpload } from "@/components/loans/DocumentUpload";
 import { LoanSummary } from "@/components/loans/LoanSummary";
