@@ -36,12 +36,20 @@ export type Document = {
   url: string;
 };
 
+export type Comment = {
+  id: string;
+  text: string;
+  author: string;
+  timestamp: Date;
+};
+
 export type Insight = {
   id: string;
   title: string;
   evidence: string[];
   narrative: string;
   saved: boolean;
+  comments: Comment[];
 };
 
 export interface Loan {
@@ -129,14 +137,61 @@ const initialLoans: Loan[] = [
         title: 'Stable Cash Flow',
         evidence: ['Financial Statements.pdf'],
         narrative: 'The cash flow hovers around $40k/month, as obtained from the bank statement.',
-        saved: false
+        saved: false,
+        comments: [
+          {
+            id: 'comment1',
+            text: 'Verify against industry averages',
+            author: 'David Kim',
+            timestamp: new Date('2025-04-20')
+          }
+        ]
       },
       {
         id: 'insight2',
         title: 'Local Vacancy Rates are much lower than assumed property vacancy rate',
         evidence: ['Property Appraisal.pdf', 'Market Analysis.pdf'],
         narrative: 'Local Vacancy rates hover around 85%. The borrower claims a vacancy rate of 95%. Ask about this.',
-        saved: false
+        saved: false,
+        comments: []
+      },
+      {
+        id: 'insight3',
+        title: 'Annual Revenue Growth Exceeds Projections',
+        evidence: ['Financial Statements.pdf', 'Business Plan.pdf'],
+        narrative: 'Revenue has grown at 18% YoY, exceeding the 15% projection in the business plan.',
+        saved: false,
+        comments: [
+          {
+            id: 'comment2',
+            text: 'Check if growth is sustainable given current market conditions',
+            author: 'Jennifer Lee',
+            timestamp: new Date('2025-04-22')
+          }
+        ]
+      },
+      {
+        id: 'insight4',
+        title: 'Property Valuation Higher Than Comparable Properties',
+        evidence: ['Property Appraisal.pdf'],
+        narrative: 'The property is valued 12% higher than similar properties in the area.',
+        saved: false,
+        comments: []
+      },
+      {
+        id: 'insight5',
+        title: 'Strong Debt Coverage Ratio',
+        evidence: ['Financial Statements.pdf'],
+        narrative: 'DCR of 1.5 exceeds our minimum requirement of 1.25.',
+        saved: false,
+        comments: [
+          {
+            id: 'comment3',
+            text: 'This is a positive indicator for loan approval',
+            author: 'Michael Rodriguez',
+            timestamp: new Date('2025-04-21')
+          }
+        ]
       }
     ],
     savedInsights: []
@@ -180,11 +235,50 @@ const initialLoans: Loan[] = [
     ],
     insights: [
       {
-        id: 'insight3',
+        id: 'insight6',
         title: 'Missing Partner Tax Returns',
         evidence: ['Tax Returns.pdf'],
         narrative: 'The submitted tax returns only include the main sponsor, but not the other partners mentioned in the operating agreement.',
-        saved: false
+        saved: false,
+        comments: []
+      },
+      {
+        id: 'insight7',
+        title: 'Rent Roll Shows 15% Vacancy',
+        evidence: ['Rent Roll.pdf'],
+        narrative: 'Current vacancy rate is higher than market average of 8% for this area.',
+        saved: false,
+        comments: [
+          {
+            id: 'comment4',
+            text: 'Request property management plan to address vacancy',
+            author: 'Sarah Johnson',
+            timestamp: new Date('2025-04-25')
+          }
+        ]
+      },
+      {
+        id: 'insight8',
+        title: 'Property Location in Developing Area',
+        evidence: ['Property Appraisal.pdf'],
+        narrative: 'Property is located in an area with planned infrastructure improvements that could increase value.',
+        saved: false,
+        comments: [
+          {
+            id: 'comment5',
+            text: 'Verify timeline of infrastructure projects',
+            author: 'David Chen',
+            timestamp: new Date('2025-04-26')
+          }
+        ]
+      },
+      {
+        id: 'insight9',
+        title: 'Sponsor Has Multiple Late Payments',
+        evidence: ['Credit Report.pdf'],
+        narrative: 'Credit report shows 3 late payments in the last 12 months.',
+        saved: false,
+        comments: []
       }
     ],
     savedInsights: []
@@ -228,11 +322,42 @@ const initialLoans: Loan[] = [
     ],
     insights: [
       {
-        id: 'insight4',
+        id: 'insight10',
         title: 'Construction Timeline Risk',
         evidence: ['Construction Plans.pdf', 'Contractor Bids.pdf'],
         narrative: 'The proposed timeline is 30% shorter than similar projects in the area, indicating potential overoptimism.',
-        saved: false
+        saved: false,
+        comments: [
+          {
+            id: 'comment6',
+            text: 'Request detailed project timeline with milestones',
+            author: 'Lisa Williams',
+            timestamp: new Date('2025-04-15')
+          }
+        ]
+      },
+      {
+        id: 'insight11',
+        title: 'Budget Includes Limited Contingency',
+        evidence: ['Contractor Bids.pdf'],
+        narrative: 'Contingency is only 5% of total budget, below our recommended 10% for similar projects.',
+        saved: false,
+        comments: []
+      },
+      {
+        id: 'insight12',
+        title: 'Pre-leasing Agreements Secured',
+        evidence: ['Leasing Contracts.pdf'],
+        narrative: '65% of retail space already has pre-leasing agreements, reducing occupancy risk.',
+        saved: false,
+        comments: [
+          {
+            id: 'comment7',
+            text: 'Verify credit quality of pre-lease tenants',
+            author: 'Michael Rodriguez',
+            timestamp: new Date('2025-04-18')
+          }
+        ]
       }
     ],
     savedInsights: []
@@ -248,6 +373,7 @@ interface LoanContextType {
   updateDocument: (loanId: string, documentId: string, documentData: Partial<Document>) => void;
   saveInsight: (loanId: string, insightId: string) => void;
   unsaveInsight: (loanId: string, insightId: string) => void;
+  addComment: (loanId: string, insightId: string, commentText: string) => void;
 }
 
 const LoanContext = createContext<LoanContextType | undefined>(undefined);
@@ -361,6 +487,36 @@ export const LoanProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     );
   };
 
+  const addComment = (loanId: string, insightId: string, commentText: string) => {
+    const newComment: Comment = {
+      id: `comment-${Date.now()}`,
+      text: commentText,
+      author: 'You', // In a real app, this would be the current user
+      timestamp: new Date()
+    };
+
+    setLoans(prev => 
+      prev.map(loan => {
+        if (loan.id !== loanId) return loan;
+        
+        return {
+          ...loan,
+          insights: loan.insights.map(insight => 
+            insight.id === insightId 
+              ? { ...insight, comments: [...insight.comments, newComment] } 
+              : insight
+          ),
+          savedInsights: loan.savedInsights.map(insight => 
+            insight.id === insightId 
+              ? { ...insight, comments: [...insight.comments, newComment] } 
+              : insight
+          ),
+          lastUpdated: new Date()
+        };
+      })
+    );
+  };
+
   return (
     <LoanContext.Provider value={{ 
       loans, 
@@ -370,7 +526,8 @@ export const LoanProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       addDocument,
       updateDocument,
       saveInsight,
-      unsaveInsight
+      unsaveInsight,
+      addComment
     }}>
       {children}
     </LoanContext.Provider>
