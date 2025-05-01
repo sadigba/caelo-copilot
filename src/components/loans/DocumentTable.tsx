@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Document, Loan, useLoanContext } from "@/context/LoanContext";
@@ -18,6 +19,11 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 interface DocumentTableProps {
   loanId: string;
@@ -27,11 +33,11 @@ interface DocumentTableProps {
 export function DocumentTable({ loanId, documents }: DocumentTableProps) {
   const { updateDocument } = useLoanContext();
   const [isRequestDialogOpen, setIsRequestDialogOpen] = useState(false);
-  const [isTagDialogOpen, setIsTagDialogOpen] = useState(false);
   const [currentDocId, setCurrentDocId] = useState<string>("");
   const [documentTags, setDocumentTags] = useState<string[]>([]);
   const [currentTag, setCurrentTag] = useState("");
   const [requestNote, setRequestNote] = useState("");
+  const [openPopoverId, setOpenPopoverId] = useState<string | null>(null);
 
   if (documents.length === 0) {
     return (
@@ -68,22 +74,42 @@ export function DocumentTable({ loanId, documents }: DocumentTableProps) {
     toast.error("Document rejected");
   };
 
-  const handleTagKeyDown = (e: React.KeyboardEvent) => {
+  const handleTagKeyDown = (e: React.KeyboardEvent, docId: string) => {
     if (e.key === 'Enter' && currentTag.trim()) {
       e.preventDefault();
-      addTag();
+      addTag(docId);
     }
   };
 
-  const addTag = () => {
-    if (currentTag.trim() && !documentTags.includes(currentTag.trim())) {
-      setDocumentTags([...documentTags, currentTag.trim()]);
-      setCurrentTag("");
+  const addTag = (docId: string) => {
+    if (currentTag.trim()) {
+      const doc = documents.find(d => d.id === docId);
+      if (doc) {
+        const currentTags = doc.type 
+          ? doc.type.split(',').map(tag => tag.trim()).filter(Boolean) 
+          : [];
+          
+        if (!currentTags.includes(currentTag.trim())) {
+          const updatedTags = [...currentTags, currentTag.trim()];
+          updateDocument(loanId, docId, { type: updatedTags.join(', ') });
+          toast.success(`Tag "${currentTag.trim()}" added`);
+        }
+        setCurrentTag("");
+      }
     }
   };
 
-  const removeTag = (tagToRemove: string) => {
-    setDocumentTags(documentTags.filter(tag => tag !== tagToRemove));
+  const removeTag = (docId: string, tagToRemove: string) => {
+    const doc = documents.find(d => d.id === docId);
+    if (doc) {
+      const currentTags = doc.type 
+        ? doc.type.split(',').map(tag => tag.trim()).filter(Boolean) 
+        : [];
+        
+      const updatedTags = currentTags.filter(tag => tag !== tagToRemove);
+      updateDocument(loanId, docId, { type: updatedTags.join(', ') });
+      toast.success(`Tag "${tagToRemove}" removed`);
+    }
   };
 
   const handleRequestSubmit = () => {
@@ -100,24 +126,12 @@ export function DocumentTable({ loanId, documents }: DocumentTableProps) {
     setCurrentTag("");
   };
 
-  const openTagDialog = (docId: string) => {
-    const doc = documents.find(d => d.id === docId);
-    if (doc) {
-      // Split the document type by commas if it contains multiple tags
-      const tags = doc.type ? doc.type.split(',').map(tag => tag.trim()).filter(Boolean) : [];
-      setDocumentTags(tags);
-      setCurrentDocId(docId);
-      setIsTagDialogOpen(true);
-    }
-  };
-
-  const handleTagSubmit = () => {
-    if (currentDocId) {
-      const updatedType = documentTags.join(', ');
-      updateDocument(loanId, currentDocId, { type: updatedType });
-      toast.success("Document tags updated");
-      setIsTagDialogOpen(false);
-      setCurrentDocId("");
+  const togglePopover = (docId: string) => {
+    if (openPopoverId === docId) {
+      setOpenPopoverId(null);
+    } else {
+      setOpenPopoverId(docId);
+      setCurrentTag("");
     }
   };
 
@@ -162,22 +176,51 @@ export function DocumentTable({ loanId, documents }: DocumentTableProps) {
                   <div className="flex flex-wrap gap-1 items-center">
                     {doc.type ? (
                       doc.type.split(',').map(tag => (
-                        <Badge key={tag} variant="secondary" className="px-2 py-0.5">
+                        <Badge key={tag} variant="secondary" className="px-2 py-0.5 flex items-center gap-1">
                           {tag.trim()}
+                          <button
+                            onClick={() => removeTag(doc.id, tag.trim())}
+                            className="h-3.5 w-3.5 rounded-full focus:outline-none"
+                          >
+                            <X className="h-3 w-3" />
+                            <span className="sr-only">Remove tag</span>
+                          </button>
                         </Badge>
                       ))
                     ) : (
                       <span className="text-muted-foreground">No tags</span>
                     )}
-                    <Button 
-                      variant="ghost" 
-                      size="sm" 
-                      className="h-6 w-6 p-0 ml-1" 
-                      onClick={() => openTagDialog(doc.id)}
-                    >
-                      <Tag className="h-3.5 w-3.5" />
-                      <span className="sr-only">Edit tags</span>
-                    </Button>
+                    <Popover open={openPopoverId === doc.id} onOpenChange={() => togglePopover(doc.id)}>
+                      <PopoverTrigger asChild>
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          className="h-6 w-6 p-0 ml-1"
+                        >
+                          <Plus className="h-3.5 w-3.5" />
+                          <span className="sr-only">Add tag</span>
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-80 p-0" align="start">
+                        <div className="flex p-2 items-center">
+                          <Input
+                            placeholder="Add tag (e.g., Rent Roll)"
+                            value={currentTag}
+                            onChange={(e) => setCurrentTag(e.target.value)}
+                            onKeyDown={(e) => handleTagKeyDown(e, doc.id)}
+                            className="h-8 flex-1"
+                          />
+                          <Button 
+                            size="sm" 
+                            onClick={() => addTag(doc.id)}
+                            disabled={!currentTag.trim()}
+                            className="ml-2 h-8"
+                          >
+                            Add
+                          </Button>
+                        </div>
+                      </PopoverContent>
+                    </Popover>
                   </div>
                 </td>
                 <td>{formatDate(doc.dateUploaded)}</td>
@@ -237,12 +280,25 @@ export function DocumentTable({ loanId, documents }: DocumentTableProps) {
                     placeholder="e.g., Rent Roll, Tax Returns"
                     value={currentTag}
                     onChange={(e) => setCurrentTag(e.target.value)}
-                    onKeyDown={handleTagKeyDown}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' && currentTag.trim()) {
+                        e.preventDefault();
+                        if (currentTag.trim() && !documentTags.includes(currentTag.trim())) {
+                          setDocumentTags([...documentTags, currentTag.trim()]);
+                          setCurrentTag("");
+                        }
+                      }
+                    }}
                   />
                   <Button 
                     type="button" 
                     variant="secondary" 
-                    onClick={addTag}
+                    onClick={() => {
+                      if (currentTag.trim() && !documentTags.includes(currentTag.trim())) {
+                        setDocumentTags([...documentTags, currentTag.trim()]);
+                        setCurrentTag("");
+                      }
+                    }}
                     disabled={!currentTag.trim()}
                   >
                     Add
@@ -255,7 +311,7 @@ export function DocumentTable({ loanId, documents }: DocumentTableProps) {
                         {tag}
                         <X 
                           className="ml-1 h-3 w-3 cursor-pointer" 
-                          onClick={() => removeTag(tag)}
+                          onClick={() => setDocumentTags(documentTags.filter(t => t !== tag))}
                         />
                       </Badge>
                     ))}
@@ -281,64 +337,6 @@ export function DocumentTable({ loanId, documents }: DocumentTableProps) {
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction onClick={handleRequestSubmit}>
               Send Request
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-
-      <AlertDialog open={isTagDialogOpen} onOpenChange={setIsTagDialogOpen}>
-        <AlertDialogContent className="sm:max-w-[425px]">
-          <AlertDialogHeader>
-            <AlertDialogTitle>Edit Document Tags</AlertDialogTitle>
-            <AlertDialogDescription>
-              Add or remove tags to categorize this document.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          
-          <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-4 items-center gap-4">
-              <label htmlFor="tag-input" className="text-right col-span-1">
-                Add Tag
-              </label>
-              <div className="col-span-3">
-                <div className="flex items-center gap-2">
-                  <Input
-                    id="tag-input"
-                    placeholder="e.g., Rent Roll, Tax Returns"
-                    value={currentTag}
-                    onChange={(e) => setCurrentTag(e.target.value)}
-                    onKeyDown={handleTagKeyDown}
-                  />
-                  <Button 
-                    type="button" 
-                    variant="secondary" 
-                    onClick={addTag}
-                    disabled={!currentTag.trim()}
-                  >
-                    <Plus className="h-4 w-4" />
-                  </Button>
-                </div>
-                {documentTags.length > 0 && (
-                  <div className="flex flex-wrap gap-2 mt-2">
-                    {documentTags.map(tag => (
-                      <Badge key={tag} variant="secondary" className="px-2 py-1">
-                        {tag}
-                        <X 
-                          className="ml-1 h-3 w-3 cursor-pointer" 
-                          onClick={() => removeTag(tag)}
-                        />
-                      </Badge>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={handleTagSubmit}>
-              Save Tags
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
