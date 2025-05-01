@@ -135,6 +135,11 @@ export default function LoanDetail() {
           </div>
         </div>
 
+        {/* Moved AskCaelo component here, right under the loan title */}
+        <Card className="p-4">
+          <AskCaelo />
+        </Card>
+
         <Tabs defaultValue="data-room" className="space-y-6">
           <TabsList className="grid grid-cols-2 md:grid-cols-4 w-full">
             <TabsTrigger value="data-room">Data Room</TabsTrigger>
@@ -154,13 +159,10 @@ export default function LoanDetail() {
           
           <TabsContent value="insights" className="space-y-6">
             {hasApprovedDocuments ? (
-              <>
-                <AskCaelo />
-                <div className="mt-8">
-                  <h2 className="text-lg font-medium mb-4">Analysis Insights</h2>
-                  <LoanInsights loanId={loan.id} insights={loan.insights} />
-                </div>
-              </>
+              <div className="mt-8">
+                <h2 className="text-lg font-medium mb-4">Analysis Insights</h2>
+                <LoanInsights loanId={loan.id} insights={loan.insights} />
+              </div>
             ) : (
               <Card className="p-6">
                 <div className="text-center py-8">
