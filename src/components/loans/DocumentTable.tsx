@@ -1,8 +1,7 @@
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Document, Loan, useLoanContext } from "@/context/LoanContext";
-import { Check, FileText, X } from "lucide-react";
+import { Check, FileText, Plus, Tag, X } from "lucide-react";
 import { formatDate } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
@@ -28,7 +27,9 @@ interface DocumentTableProps {
 export function DocumentTable({ loanId, documents }: DocumentTableProps) {
   const { updateDocument } = useLoanContext();
   const [isRequestDialogOpen, setIsRequestDialogOpen] = useState(false);
-  const [tags, setTags] = useState<string[]>([]);
+  const [isTagDialogOpen, setIsTagDialogOpen] = useState(false);
+  const [currentDocId, setCurrentDocId] = useState<string>("");
+  const [documentTags, setDocumentTags] = useState<string[]>([]);
   const [currentTag, setCurrentTag] = useState("");
   const [requestNote, setRequestNote] = useState("");
 
@@ -75,28 +76,49 @@ export function DocumentTable({ loanId, documents }: DocumentTableProps) {
   };
 
   const addTag = () => {
-    if (currentTag.trim() && !tags.includes(currentTag.trim())) {
-      setTags([...tags, currentTag.trim()]);
+    if (currentTag.trim() && !documentTags.includes(currentTag.trim())) {
+      setDocumentTags([...documentTags, currentTag.trim()]);
       setCurrentTag("");
     }
   };
 
   const removeTag = (tagToRemove: string) => {
-    setTags(tags.filter(tag => tag !== tagToRemove));
+    setDocumentTags(documentTags.filter(tag => tag !== tagToRemove));
   };
 
   const handleRequestSubmit = () => {
-    if (tags.length === 0) {
+    if (documentTags.length === 0) {
       toast.error("Please specify at least one document type");
       return;
     }
 
     // In a real application, this would send a request to the backend
-    toast.success(`Documentation requested: ${tags.join(", ")}`);
+    toast.success(`Documentation requested: ${documentTags.join(", ")}`);
     setIsRequestDialogOpen(false);
-    setTags([]);
+    setDocumentTags([]);
     setRequestNote("");
     setCurrentTag("");
+  };
+
+  const openTagDialog = (docId: string) => {
+    const doc = documents.find(d => d.id === docId);
+    if (doc) {
+      // Split the document type by commas if it contains multiple tags
+      const tags = doc.type ? doc.type.split(',').map(tag => tag.trim()).filter(Boolean) : [];
+      setDocumentTags(tags);
+      setCurrentDocId(docId);
+      setIsTagDialogOpen(true);
+    }
+  };
+
+  const handleTagSubmit = () => {
+    if (currentDocId) {
+      const updatedType = documentTags.join(', ');
+      updateDocument(loanId, currentDocId, { type: updatedType });
+      toast.success("Document tags updated");
+      setIsTagDialogOpen(false);
+      setCurrentDocId("");
+    }
   };
 
   return (
@@ -136,7 +158,28 @@ export function DocumentTable({ loanId, documents }: DocumentTableProps) {
                     {doc.name}
                   </a>
                 </td>
-                <td>{doc.type}</td>
+                <td>
+                  <div className="flex flex-wrap gap-1 items-center">
+                    {doc.type ? (
+                      doc.type.split(',').map(tag => (
+                        <Badge key={tag} variant="secondary" className="px-2 py-0.5">
+                          {tag.trim()}
+                        </Badge>
+                      ))
+                    ) : (
+                      <span className="text-muted-foreground">No tags</span>
+                    )}
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      className="h-6 w-6 p-0 ml-1" 
+                      onClick={() => openTagDialog(doc.id)}
+                    >
+                      <Tag className="h-3.5 w-3.5" />
+                      <span className="sr-only">Edit tags</span>
+                    </Button>
+                  </div>
+                </td>
                 <td>{formatDate(doc.dateUploaded)}</td>
                 <td>
                   {doc.approved && <Badge variant="default">Approved</Badge>}
@@ -205,9 +248,9 @@ export function DocumentTable({ loanId, documents }: DocumentTableProps) {
                     Add
                   </Button>
                 </div>
-                {tags.length > 0 && (
+                {documentTags.length > 0 && (
                   <div className="flex flex-wrap gap-2 mt-2">
-                    {tags.map(tag => (
+                    {documentTags.map(tag => (
                       <Badge key={tag} variant="secondary" className="px-2 py-1">
                         {tag}
                         <X 
@@ -238,6 +281,64 @@ export function DocumentTable({ loanId, documents }: DocumentTableProps) {
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction onClick={handleRequestSubmit}>
               Send Request
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <AlertDialog open={isTagDialogOpen} onOpenChange={setIsTagDialogOpen}>
+        <AlertDialogContent className="sm:max-w-[425px]">
+          <AlertDialogHeader>
+            <AlertDialogTitle>Edit Document Tags</AlertDialogTitle>
+            <AlertDialogDescription>
+              Add or remove tags to categorize this document.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          
+          <div className="grid gap-4 py-4">
+            <div className="grid grid-cols-4 items-center gap-4">
+              <label htmlFor="tag-input" className="text-right col-span-1">
+                Add Tag
+              </label>
+              <div className="col-span-3">
+                <div className="flex items-center gap-2">
+                  <Input
+                    id="tag-input"
+                    placeholder="e.g., Rent Roll, Tax Returns"
+                    value={currentTag}
+                    onChange={(e) => setCurrentTag(e.target.value)}
+                    onKeyDown={handleTagKeyDown}
+                  />
+                  <Button 
+                    type="button" 
+                    variant="secondary" 
+                    onClick={addTag}
+                    disabled={!currentTag.trim()}
+                  >
+                    <Plus className="h-4 w-4" />
+                  </Button>
+                </div>
+                {documentTags.length > 0 && (
+                  <div className="flex flex-wrap gap-2 mt-2">
+                    {documentTags.map(tag => (
+                      <Badge key={tag} variant="secondary" className="px-2 py-1">
+                        {tag}
+                        <X 
+                          className="ml-1 h-3 w-3 cursor-pointer" 
+                          onClick={() => removeTag(tag)}
+                        />
+                      </Badge>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleTagSubmit}>
+              Save Tags
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
