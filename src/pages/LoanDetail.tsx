@@ -10,7 +10,7 @@ import {
 import { useLoanContext } from "@/context/LoanContext";
 import { useParams, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { ArrowLeft, ChevronDown, Download, FileExcel, FileWord, RefreshCw } from "lucide-react";
+import { ArrowLeft, ChevronDown, Download, File, RefreshCw } from "lucide-react";
 import { DocumentTable } from "@/components/loans/DocumentTable";
 import { DocumentUpload } from "@/components/loans/DocumentUpload";
 import { LoanSummary } from "@/components/loans/LoanSummary";
@@ -120,14 +120,14 @@ export default function LoanDetail() {
                   onClick={() => handleDownload("model")}
                   className="cursor-pointer"
                 >
-                  <FileExcel className="mr-2 h-4 w-4" />
+                  <File className="mr-2 h-4 w-4" />
                   Financial Model
                 </DropdownMenuItem>
                 <DropdownMenuItem 
                   onClick={() => handleDownload("memo")}
                   className="cursor-pointer"
                 >
-                  <FileWord className="mr-2 h-4 w-4" />
+                  <File className="mr-2 h-4 w-4" />
                   Credit Memo
                 </DropdownMenuItem>
               </DropdownMenuContent>
