@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Document, Loan, useLoanContext } from "@/context/LoanContext";
@@ -27,9 +28,16 @@ import {
 interface DocumentTableProps {
   loanId: string;
   documents: Document[];
+  onRequestDocs?: () => void;
+  showRequestButton?: boolean;
 }
 
-export function DocumentTable({ loanId, documents }: DocumentTableProps) {
+export function DocumentTable({ 
+  loanId, 
+  documents, 
+  onRequestDocs, 
+  showRequestButton = true 
+}: DocumentTableProps) {
   const { updateDocument } = useLoanContext();
   const [isRequestDialogOpen, setIsRequestDialogOpen] = useState(false);
   const [currentDocId, setCurrentDocId] = useState<string>("");
@@ -48,7 +56,7 @@ export function DocumentTable({ loanId, documents }: DocumentTableProps) {
               Upload documents or request documentation to begin the analysis process
             </p>
             <div className="flex justify-center gap-2 mt-4">
-              <Button variant="outline" onClick={() => setIsRequestDialogOpen(true)}>
+              <Button variant="outline" onClick={onRequestDocs || (() => setIsRequestDialogOpen(true))}>
                 <FileText className="mr-2 h-4 w-4" />
                 Request Documentation
               </Button>
@@ -132,12 +140,14 @@ export function DocumentTable({ loanId, documents }: DocumentTableProps) {
 
   return (
     <>
-      <div className="mb-4 flex justify-end items-center gap-2">
-        <Button variant="outline" onClick={() => setIsRequestDialogOpen(true)}>
-          <FileText className="mr-2 h-4 w-4" />
-          Request Documentation
-        </Button>
-      </div>
+      {showRequestButton && (
+        <div className="mb-4 flex justify-end items-center gap-2">
+          <Button variant="outline" onClick={onRequestDocs || (() => setIsRequestDialogOpen(true))}>
+            <FileText className="mr-2 h-4 w-4" />
+            Request Documentation
+          </Button>
+        </div>
+      )}
 
       <div className="overflow-x-auto">
         <table className="w-full loan-table">

@@ -160,12 +160,23 @@ export default function LoanDetail() {
           
           <TabsContent value="data-room" className="space-y-6">
             <div className="flex justify-between items-center mb-4">
-              <Button onClick={() => setUploadDialogOpen(true)}>
-                <Upload className="mr-2 h-4 w-4" />
-                Upload Documents
-              </Button>
+              <div className="flex gap-3">
+                <Button onClick={() => setUploadDialogOpen(true)}>
+                  <Upload className="mr-2 h-4 w-4" />
+                  Upload Documents
+                </Button>
+                <Button variant="outline" onClick={() => setIsRequestDialogOpen(true)}>
+                  <FileText className="mr-2 h-4 w-4" />
+                  Request Documentation
+                </Button>
+              </div>
             </div>
-            <DocumentTable loanId={loan.id} documents={loan.documents} />
+            <DocumentTable 
+              loanId={loan.id} 
+              documents={loan.documents} 
+              onRequestDocs={() => setIsRequestDialogOpen(true)}
+              showRequestButton={false}
+            />
           </TabsContent>
           
           <TabsContent value="insights" className="space-y-6">
