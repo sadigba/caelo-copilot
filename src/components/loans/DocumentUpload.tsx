@@ -78,7 +78,7 @@ export function DocumentUpload({ loanId, open, setOpen }: DocumentUploadProps) {
       setDocType("");
       setOpen(false);
       
-      toast.success("Document uploaded successfully");
+      toast.success("Document uploaded successfully and is now in review");
     }, 1000);
   };
 

@@ -70,7 +70,7 @@ export function DocumentTable({ loanId, documents }: DocumentTableProps) {
               <td>
                 {doc.approved && <Badge variant="default">Approved</Badge>}
                 {doc.rejected && <Badge variant="destructive">Rejected</Badge>}
-                {!doc.approved && !doc.rejected && <Badge variant="outline">Pending</Badge>}
+                {!doc.approved && !doc.rejected && <Badge variant="outline">In Review</Badge>}
               </td>
               <td className="text-right">
                 <div className="flex justify-end gap-2">
