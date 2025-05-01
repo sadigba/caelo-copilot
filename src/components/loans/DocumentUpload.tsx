@@ -8,14 +8,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { useLoanContext } from "@/context/LoanContext";
 import { useState, useCallback } from "react";
 import { toast } from "sonner";
@@ -27,23 +19,9 @@ interface DocumentUploadProps {
   setOpen: (open: boolean) => void;
 }
 
-const documentTypes = [
-  "Financial Statement",
-  "Tax Return",
-  "Bank Statement",
-  "Business Plan",
-  "Property Appraisal",
-  "Rent Roll",
-  "Lease Agreement",
-  "Title Report",
-  "Insurance Document",
-  "Other",
-];
-
 export function DocumentUpload({ loanId, open, setOpen }: DocumentUploadProps) {
   const { addDocument } = useLoanContext();
   const [files, setFiles] = useState<File[]>([]);
-  const [docType, setDocType] = useState("");
   const [uploading, setUploading] = useState(false);
   const [dragActive, setDragActive] = useState(false);
 
@@ -80,8 +58,8 @@ export function DocumentUpload({ loanId, open, setOpen }: DocumentUploadProps) {
   }, [files]);
 
   const handleUpload = useCallback(() => {
-    if (files.length === 0 || !docType) {
-      toast.error(files.length === 0 ? "Please select files to upload" : "Please select a document type");
+    if (files.length === 0) {
+      toast.error("Please select files to upload");
       return;
     }
 
@@ -93,9 +71,12 @@ export function DocumentUpload({ loanId, open, setOpen }: DocumentUploadProps) {
       files.forEach(file => {
         const fakeUrl = URL.createObjectURL(file);
         
+        // Use the file extension or name as the document type instead of the removed field
+        const fileExtension = file.name.split('.').pop()?.toUpperCase() || "Document";
+        
         addDocument(loanId, {
           name: file.name,
-          type: docType,
+          type: fileExtension,
           approved: false,
           rejected: false,
           url: fakeUrl,
@@ -104,12 +85,11 @@ export function DocumentUpload({ loanId, open, setOpen }: DocumentUploadProps) {
       
       setUploading(false);
       setFiles([]);
-      setDocType("");
       setOpen(false);
       
       toast.success(`${files.length} document${files.length > 1 ? 's' : ''} uploaded successfully`);
     }, 1000);
-  }, [files, docType, loanId, addDocument, setOpen]);
+  }, [files, loanId, addDocument, setOpen]);
 
   const handleReset = useCallback(() => {
     setFiles([]);
@@ -132,22 +112,6 @@ export function DocumentUpload({ loanId, open, setOpen }: DocumentUploadProps) {
         </DialogHeader>
         
         <div className="space-y-4 py-2">
-          <div className="space-y-2">
-            <label className="text-sm font-medium">Document Type</label>
-            <Select value={docType} onValueChange={setDocType}>
-              <SelectTrigger>
-                <SelectValue placeholder="Select document type" />
-              </SelectTrigger>
-              <SelectContent>
-                {documentTypes.map((type) => (
-                  <SelectItem key={type} value={type}>
-                    {type}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-          
           {/* Drag and drop area */}
           <div 
             className={`border-2 border-dashed rounded-md p-6 text-center cursor-pointer transition-colors 
@@ -226,7 +190,7 @@ export function DocumentUpload({ loanId, open, setOpen }: DocumentUploadProps) {
           </Button>
           <Button 
             onClick={handleUpload} 
-            disabled={files.length === 0 || !docType || uploading}
+            disabled={files.length === 0 || uploading}
           >
             {uploading ? "Uploading..." : files.length > 0 ? `Upload ${files.length} File${files.length > 1 ? 's' : ''}` : "Upload"}
           </Button>

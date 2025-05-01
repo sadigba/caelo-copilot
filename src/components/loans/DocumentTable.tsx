@@ -49,10 +49,6 @@ export function DocumentTable({ loanId, documents }: DocumentTableProps) {
               Upload documents or request documentation to begin the analysis process
             </p>
             <div className="flex justify-center gap-2 mt-4">
-              <Button>
-                <FileText className="mr-2 h-4 w-4" />
-                Upload Document
-              </Button>
               <Button variant="outline" onClick={() => setIsRequestDialogOpen(true)}>
                 <FileText className="mr-2 h-4 w-4" />
                 Request Documentation
@@ -141,10 +137,6 @@ export function DocumentTable({ loanId, documents }: DocumentTableProps) {
         <Button variant="outline" onClick={() => setIsRequestDialogOpen(true)}>
           <FileText className="mr-2 h-4 w-4" />
           Request Documentation
-        </Button>
-        <Button>
-          <FileText className="mr-2 h-4 w-4" />
-          Upload Document
         </Button>
       </div>
 
