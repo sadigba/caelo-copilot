@@ -140,8 +140,9 @@ export default function LoanDetail() {
           <AskCaelo />
         </Card>
 
-        <Tabs defaultValue="data-room" className="space-y-6">
+        <Tabs defaultValue="summary" className="space-y-6">
           <TabsList className="grid grid-cols-2 md:grid-cols-4 w-full">
+            <TabsTrigger value="summary">Application Summary</TabsTrigger>
             <TabsTrigger value="data-room">Data Room</TabsTrigger>
             <TabsTrigger 
               value="insights" 
@@ -150,8 +151,11 @@ export default function LoanDetail() {
               Insights Tracker
             </TabsTrigger>
             <TabsTrigger value="saved-insights">Saved Insights</TabsTrigger>
-            <TabsTrigger value="summary">Application Summary</TabsTrigger>
           </TabsList>
+          
+          <TabsContent value="summary">
+            <LoanSummary loan={loan} />
+          </TabsContent>
           
           <TabsContent value="data-room" className="space-y-6">
             <DocumentTable loanId={loan.id} documents={loan.documents} />
@@ -177,10 +181,6 @@ export default function LoanDetail() {
           
           <TabsContent value="saved-insights">
             <SavedInsights loanId={loan.id} savedInsights={loan.savedInsights} />
-          </TabsContent>
-          
-          <TabsContent value="summary">
-            <LoanSummary loan={loan} />
           </TabsContent>
         </Tabs>
       </div>
