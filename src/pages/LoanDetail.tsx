@@ -131,12 +131,6 @@ export default function LoanDetail() {
           </TabsList>
           
           <TabsContent value="data-room" className="space-y-6">
-            <div className="flex justify-end">
-              <Button onClick={() => setUploadDialogOpen(true)}>
-                <PlusCircle className="mr-2 h-4 w-4" />
-                Upload Document
-              </Button>
-            </div>
             <DocumentTable loanId={loan.id} documents={loan.documents} />
           </TabsContent>
           
