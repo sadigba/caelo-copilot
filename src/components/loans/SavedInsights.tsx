@@ -1,6 +1,5 @@
 
 import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Insight, useLoanContext } from "@/context/LoanContext";
 import { toast } from "sonner";
 import {
@@ -17,6 +16,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { MinusCircle } from "lucide-react";
 
 interface SavedInsightsProps {
   loanId: string;
@@ -55,13 +55,19 @@ export function SavedInsights({ loanId, savedInsights }: SavedInsightsProps) {
               <TableHead className="w-1/3">Insight</TableHead>
               <TableHead className="w-1/3">Supporting Evidence</TableHead>
               <TableHead className="w-1/3">Narrative</TableHead>
-              <TableHead className="w-20 text-right">Action</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {savedInsights.map((insight) => (
-              <TableRow key={insight.id}>
-                <TableCell className="font-medium">{insight.title}</TableCell>
+              <TableRow 
+                key={insight.id}
+                onClick={() => handleRemoveInsight(insight.id)}
+                style={{ cursor: "pointer" }}
+              >
+                <TableCell className="font-medium">
+                  <MinusCircle className="inline mr-2 h-4 w-4 text-destructive" />
+                  {insight.title}
+                </TableCell>
                 <TableCell>
                   <div className="flex flex-wrap gap-1">
                     {insight.evidence.map((evidence, index) => (
@@ -81,15 +87,6 @@ export function SavedInsights({ loanId, savedInsights }: SavedInsightsProps) {
                   </div>
                 </TableCell>
                 <TableCell>{insight.narrative}</TableCell>
-                <TableCell className="text-right">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => handleRemoveInsight(insight.id)}
-                  >
-                    Remove
-                  </Button>
-                </TableCell>
               </TableRow>
             ))}
           </TableBody>
