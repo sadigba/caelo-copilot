@@ -1,8 +1,7 @@
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Document, Loan, useLoanContext } from "@/context/LoanContext";
-import { Check, FileText, Plus, Tag, X } from "lucide-react";
+import { Document, useLoanContext } from "@/context/LoanContext";
+import { Check, FileText, Plus, Tag, X, Search } from "lucide-react";
 import { formatDate } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
@@ -24,6 +23,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { RentRollViewer } from "./RentRollViewer";
 
 interface DocumentTableProps {
   loanId: string;
@@ -40,11 +40,12 @@ export function DocumentTable({
 }: DocumentTableProps) {
   const { updateDocument } = useLoanContext();
   const [isRequestDialogOpen, setIsRequestDialogOpen] = useState(false);
-  const [currentDocId, setCurrentDocId] = useState<string>("");
   const [documentTags, setDocumentTags] = useState<string[]>([]);
   const [currentTag, setCurrentTag] = useState("");
   const [requestNote, setRequestNote] = useState("");
   const [openPopoverId, setOpenPopoverId] = useState<string | null>(null);
+  const [selectedDocument, setSelectedDocument] = useState<Document | null>(null);
+  const [rentRollViewerOpen, setRentRollViewerOpen] = useState(false);
 
   if (documents.length === 0) {
     return (
@@ -138,6 +139,19 @@ export function DocumentTable({
     }
   };
 
+  const handleViewDocument = (doc: Document) => {
+    const docType = doc.type?.toLowerCase() || '';
+    
+    // Check if it's a rent roll document
+    if (docType.includes('rent roll')) {
+      setSelectedDocument(doc);
+      setRentRollViewerOpen(true);
+    } else {
+      // For other document types, just open the URL
+      window.open(doc.url, '_blank');
+    }
+  };
+
   return (
     <>
       {showRequestButton && (
@@ -165,9 +179,11 @@ export function DocumentTable({
               <tr key={doc.id}>
                 <td>
                   <a 
-                    href={doc.url} 
-                    target="_blank" 
-                    rel="noreferrer" 
+                    href="#"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleViewDocument(doc);
+                    }}
                     className="text-primary hover:underline"
                   >
                     {doc.name}
@@ -232,6 +248,16 @@ export function DocumentTable({
                 </td>
                 <td className="text-right">
                   <div className="flex justify-end gap-2">
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => handleViewDocument(doc)}
+                      className="h-8 w-8 p-0"
+                    >
+                      <Search className="h-4 w-4" />
+                      <span className="sr-only">View</span>
+                    </Button>
+                    
                     {!doc.approved && (
                       <Button 
                         size="sm" 
@@ -342,6 +368,16 @@ export function DocumentTable({
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* Add the RentRollViewer component */}
+      <RentRollViewer 
+        document={selectedDocument}
+        open={rentRollViewerOpen}
+        onClose={() => {
+          setRentRollViewerOpen(false);
+          setSelectedDocument(null);
+        }}
+      />
     </>
   );
 }
