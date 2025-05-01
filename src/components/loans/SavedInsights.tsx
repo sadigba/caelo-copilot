@@ -1,8 +1,22 @@
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Insight, useLoanContext } from "@/context/LoanContext";
 import { toast } from "sonner";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface SavedInsightsProps {
   loanId: string;
@@ -33,39 +47,54 @@ export function SavedInsights({ loanId, savedInsights }: SavedInsightsProps) {
   }
 
   return (
-    <div className="space-y-6">
-      {savedInsights.map((insight) => (
-        <Card key={insight.id} className="border-caelo-200 bg-caelo-50">
-          <CardHeader className="pb-2">
-            <div className="flex justify-between items-start">
-              <CardTitle className="text-lg font-medium">{insight.title}</CardTitle>
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                onClick={() => handleRemoveInsight(insight.id)}
-              >
-                Remove
-              </Button>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <p className="text-muted-foreground mb-3">{insight.narrative}</p>
-            <div className="text-sm">
-              <span className="font-medium">Supporting Evidence:</span>
-              <div className="flex flex-wrap gap-2 mt-1">
-                {insight.evidence.map((evidence, index) => (
-                  <span 
-                    key={index}
-                    className="bg-caelo-100 px-2 py-1 rounded text-caelo-700"
+    <Card className="bg-caelo-50">
+      <CardContent className="p-6">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="w-1/3">Insight</TableHead>
+              <TableHead className="w-1/3">Supporting Evidence</TableHead>
+              <TableHead className="w-1/3">Narrative</TableHead>
+              <TableHead className="w-20 text-right">Action</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {savedInsights.map((insight) => (
+              <TableRow key={insight.id}>
+                <TableCell className="font-medium">{insight.title}</TableCell>
+                <TableCell>
+                  <div className="flex flex-wrap gap-1">
+                    {insight.evidence.map((evidence, index) => (
+                      <TooltipProvider key={index}>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <span className="cursor-help underline-offset-4 underline decoration-dotted">
+                              ({index + 1})
+                            </span>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>{evidence}</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    ))}
+                  </div>
+                </TableCell>
+                <TableCell>{insight.narrative}</TableCell>
+                <TableCell className="text-right">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => handleRemoveInsight(insight.id)}
                   >
-                    {evidence}
-                  </span>
-                ))}
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      ))}
-    </div>
+                    Remove
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </CardContent>
+    </Card>
   );
 }
