@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import {
@@ -9,7 +8,7 @@ import {
 } from "@/components/ui/tabs";
 import { useLoanContext } from "@/context/LoanContext";
 import { useParams, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ArrowLeft, ChevronDown, Download, File, FileText, RefreshCw, Upload } from "lucide-react";
 import { DocumentTable } from "@/components/loans/DocumentTable";
 import { DocumentUpload } from "@/components/loans/DocumentUpload";
@@ -39,7 +38,7 @@ import { X } from "lucide-react";
 
 export default function LoanDetail() {
   const { loanId } = useParams<{ loanId: string }>();
-  const { getLoanById } = useLoanContext();
+  const { getLoanById, updateDocument } = useLoanContext();
   const navigate = useNavigate();
 
   const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
@@ -52,6 +51,19 @@ export default function LoanDetail() {
   const [requestNote, setRequestNote] = useState("");
 
   const loan = getLoanById(loanId || "");
+
+  // Add a useEffect to tag the first document as a rent roll for demo purposes
+  useEffect(() => {
+    if (loan && loan.documents.length > 0) {
+      const firstDoc = loan.documents[0];
+      if (firstDoc && !firstDoc.type?.includes("Rent Roll")) {
+        console.log("Tagging first document as Rent Roll");
+        updateDocument(loan.id, firstDoc.id, { 
+          type: firstDoc.type ? `${firstDoc.type}, Rent Roll` : "Rent Roll" 
+        });
+      }
+    }
+  }, [loan?.id]);
 
   if (!loan) {
     return (
@@ -172,7 +184,7 @@ export default function LoanDetail() {
           <AskCaelo />
         </Card>
 
-        <Tabs defaultValue="summary" className="space-y-6">
+        <Tabs defaultValue="data-room" className="space-y-6">
           <TabsList className="grid grid-cols-2 md:grid-cols-4 w-full">
             <TabsTrigger value="summary">Application Summary</TabsTrigger>
             <TabsTrigger value="data-room">Data Room</TabsTrigger>

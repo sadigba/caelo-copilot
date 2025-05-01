@@ -6,6 +6,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogDescription,
+  DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -19,6 +20,7 @@ import {
 } from "@/components/ui/table";
 import { Document } from "@/context/LoanContext";
 import { FileText } from "lucide-react";
+import { toast } from "sonner";
 
 // Mock rent roll data - in a real app, this would come from parsing the uploaded file
 const mockRentRollData = [
@@ -100,13 +102,17 @@ export function RentRollViewer({ document, open, onClose }: RentRollViewerProps)
 
   if (!document) return null;
 
+  const handleDownloadRentRoll = () => {
+    toast.success("Rent roll downloaded");
+  };
+
   return (
     <Dialog open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>
-      <DialogContent className="sm:max-w-4xl max-h-[80vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-5xl max-h-[85vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <FileText className="h-5 w-5" />
-            {document.name}
+          <DialogTitle className="flex items-center gap-2 text-xl">
+            <FileText className="h-6 w-6" />
+            Rent Roll: {document.name}
           </DialogTitle>
           <DialogDescription>
             Rent roll document uploaded on {new Date(document.dateUploaded).toLocaleDateString()}
@@ -222,6 +228,15 @@ export function RentRollViewer({ document, open, onClose }: RentRollViewerProps)
             </div>
           )}
         </div>
+        
+        <DialogFooter className="mt-4">
+          <Button variant="outline" onClick={onClose}>
+            Close
+          </Button>
+          <Button onClick={handleDownloadRentRoll}>
+            Download Rent Roll
+          </Button>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

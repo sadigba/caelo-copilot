@@ -140,15 +140,19 @@ export function DocumentTable({
   };
 
   const handleViewDocument = (doc: Document) => {
+    console.log("Viewing document:", doc);
     const docType = doc.type?.toLowerCase() || '';
     
     // Check if it's a rent roll document
     if (docType.includes('rent roll')) {
+      console.log("Opening rent roll viewer");
       setSelectedDocument(doc);
       setRentRollViewerOpen(true);
+      toast.info(`Opening ${doc.name}`);
     } else {
       // For other document types, just open the URL
       window.open(doc.url, '_blank');
+      toast.info(`Opening ${doc.name} in new tab`);
     }
   };
 
