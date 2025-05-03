@@ -23,7 +23,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { RentRollViewer } from "./RentRollViewer";
+import { DocumentViewer } from "./DocumentViewer";
 
 interface DocumentTableProps {
   loanId: string;
@@ -45,7 +45,7 @@ export function DocumentTable({
   const [requestNote, setRequestNote] = useState("");
   const [openPopoverId, setOpenPopoverId] = useState<string | null>(null);
   const [selectedDocument, setSelectedDocument] = useState<Document | null>(null);
-  const [rentRollViewerOpen, setRentRollViewerOpen] = useState(false);
+  const [documentViewerOpen, setDocumentViewerOpen] = useState(false);
 
   if (documents.length === 0) {
     return (
@@ -141,19 +141,9 @@ export function DocumentTable({
 
   const handleViewDocument = (doc: Document) => {
     console.log("Viewing document:", doc);
-    const docType = doc.type?.toLowerCase() || '';
-    
-    // Check if it's a rent roll document
-    if (docType.includes('rent roll')) {
-      console.log("Opening rent roll viewer");
-      setSelectedDocument(doc);
-      setRentRollViewerOpen(true);
-      toast.info(`Opening ${doc.name}`);
-    } else {
-      // For other document types, just open the URL
-      window.open(doc.url, '_blank');
-      toast.info(`Opening ${doc.name} in new tab`);
-    }
+    setSelectedDocument(doc);
+    setDocumentViewerOpen(true);
+    toast.info(`Opening ${doc.name}`);
   };
 
   return (
@@ -270,6 +260,7 @@ export function DocumentTable({
                         className="h-8 w-8 p-0 text-green-600"
                       >
                         <Check className="h-4 w-4" />
+                        <span className="sr-only">Approve</span>
                       </Button>
                     )}
                     {!doc.rejected && (
@@ -280,6 +271,7 @@ export function DocumentTable({
                         className="h-8 w-8 p-0 text-red-600"
                       >
                         <X className="h-4 w-4" />
+                        <span className="sr-only">Reject</span>
                       </Button>
                     )}
                   </div>
@@ -373,12 +365,12 @@ export function DocumentTable({
         </AlertDialogContent>
       </AlertDialog>
 
-      {/* Add the RentRollViewer component */}
-      <RentRollViewer 
+      {/* Replace RentRollViewer with DocumentViewer */}
+      <DocumentViewer 
         document={selectedDocument}
-        open={rentRollViewerOpen}
+        open={documentViewerOpen}
         onClose={() => {
-          setRentRollViewerOpen(false);
+          setDocumentViewerOpen(false);
           setSelectedDocument(null);
         }}
       />

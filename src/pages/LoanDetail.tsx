@@ -75,6 +75,8 @@ export default function LoanDetail() {
   }
 
   const hasApprovedDocuments = loan.documents.some((doc) => doc.approved);
+  const allDocumentsReviewed = loan.documents.length > 0 && 
+    loan.documents.every((doc) => doc.approved || doc.rejected);
 
   const handleRefresh = () => {
     if (!hasApprovedDocuments) {
@@ -190,11 +192,18 @@ export default function LoanDetail() {
             <TabsTrigger value="data-room">Data Room</TabsTrigger>
             <TabsTrigger 
               value="insights" 
-              disabled={!hasApprovedDocuments}
+              disabled={!allDocumentsReviewed}
+              title={allDocumentsReviewed ? "View insights" : "All documents must be approved or rejected to view insights"}
             >
               Insights Tracker
             </TabsTrigger>
-            <TabsTrigger value="saved-insights">Saved Insights</TabsTrigger>
+            <TabsTrigger 
+              value="saved-insights"
+              disabled={!allDocumentsReviewed}
+              title={allDocumentsReviewed ? "View saved insights" : "All documents must be approved or rejected to view saved insights"}
+            >
+              Saved Insights
+            </TabsTrigger>
           </TabsList>
           
           <TabsContent value="summary">
@@ -223,14 +232,25 @@ export default function LoanDetail() {
           </TabsContent>
           
           <TabsContent value="insights" className="space-y-6">
-            {hasApprovedDocuments ? (
-              <LoanInsights loanId={loan.id} insights={loan.insights} />
+            {allDocumentsReviewed ? (
+              hasApprovedDocuments ? (
+                <LoanInsights loanId={loan.id} insights={loan.insights} />
+              ) : (
+                <Card className="p-6">
+                  <div className="text-center py-8">
+                    <p className="text-muted-foreground mb-2">No approved documents</p>
+                    <p className="text-sm text-muted-foreground">
+                      You've reviewed all documents, but none were approved. At least one document needs to be approved to view insights.
+                    </p>
+                  </div>
+                </Card>
+              )
             ) : (
               <Card className="p-6">
                 <div className="text-center py-8">
-                  <p className="text-muted-foreground mb-2">No approved documents</p>
+                  <p className="text-muted-foreground mb-2">Document review required</p>
                   <p className="text-sm text-muted-foreground">
-                    Approve documents in the Data Room to view insights
+                    All documents must be approved or rejected before insights can be viewed
                   </p>
                 </div>
               </Card>
@@ -238,7 +258,21 @@ export default function LoanDetail() {
           </TabsContent>
           
           <TabsContent value="saved-insights">
-            <SavedInsights loanId={loan.id} savedInsights={loan.savedInsights} />
+            {allDocumentsReviewed && hasApprovedDocuments ? (
+              <SavedInsights loanId={loan.id} savedInsights={loan.savedInsights} />
+            ) : (
+              <Card className="p-6">
+                <div className="text-center py-8">
+                  <p className="text-muted-foreground mb-2">Document review required</p>
+                  <p className="text-sm text-muted-foreground">
+                    {!allDocumentsReviewed 
+                      ? "All documents must be approved or rejected before saved insights can be viewed"
+                      : "You've reviewed all documents, but none were approved. At least one document needs to be approved to view saved insights."
+                    }
+                  </p>
+                </div>
+              </Card>
+            )}
           </TabsContent>
         </Tabs>
       </div>
