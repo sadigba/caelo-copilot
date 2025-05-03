@@ -17,7 +17,7 @@ import { Link } from "react-router-dom";
 // Menu items
 const mainItems = [
   {
-    title: "Dashboard",
+    title: "Applications",
     url: "/",
     icon: Home,
   },
