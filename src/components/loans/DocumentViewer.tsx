@@ -43,8 +43,8 @@ export function DocumentViewer({ document, open, onClose }: DocumentViewerProps)
   return (
     <Dialog open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>
       <DialogContent className="sm:max-w-6xl max-h-[90vh] p-0 gap-0 overflow-hidden">
-        <style jsx global>{`
-          .DialogContent > button[data-dialog-close] {
+        <style>{`
+          [data-dialog-close] {
             display: none;
           }
         `}</style>
@@ -77,8 +77,8 @@ export function DocumentViewer({ document, open, onClose }: DocumentViewerProps)
           </DialogHeader>
 
           {/* Document content */}
-          <div className="flex-1 overflow-auto bg-slate-100 p-8 flex justify-center">
-            <div className="bg-white shadow-lg w-full max-w-4xl min-h-[800px] p-8 rounded">
+          <div className="flex-1 overflow-auto bg-secondary p-8 flex justify-center">
+            <div className="bg-white shadow-sm w-full max-w-4xl min-h-[800px] p-8 rounded">
               {/* Mock document content */}
               <div className="prose max-w-none">
                 <h1>{document.name.replace('.pdf', '')}</h1>
@@ -90,7 +90,7 @@ export function DocumentViewer({ document, open, onClose }: DocumentViewerProps)
                     <p>This document contains information about the rental properties, including unit details, tenant information, lease terms, and rental rates.</p>
                     <table className="w-full border-collapse my-4">
                       <thead>
-                        <tr className="bg-gray-100">
+                        <tr className="bg-gray-50">
                           <th className="border p-2 text-left">Unit</th>
                           <th className="border p-2 text-left">Tenant</th>
                           <th className="border p-2 text-right">Rent</th>
