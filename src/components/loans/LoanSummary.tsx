@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -51,7 +50,6 @@ export function LoanSummary({ loan }: LoanSummaryProps) {
     <Card>
       <CardContent className="p-6">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-lg font-medium">Application Summary</h2>
           {isEditing ? (
             <div className="flex gap-2">
               <Button size="sm" variant="ghost" onClick={handleCancel}>
