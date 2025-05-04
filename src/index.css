@@ -111,6 +111,7 @@
   border-collapse: collapse;
   width: 100%;
   border: 1px solid var(--border);
+  table-layout: fixed; /* Added fixed table layout for better column control */
 }
 
 .loan-table th {
@@ -127,9 +128,15 @@
   border: 1px solid var(--border);
 }
 
+/* Reduced the width of the insight (first) column */
+.loan-table th:nth-child(2),
+.loan-table td:nth-child(2) {
+  width: 20%;
+}
+
 /* Styles for the narrative column to make it wider */
 .loan-table .narrative-column {
-  width: 40%;
+  width: 55%;
   min-width: 350px;
   white-space: normal;
   word-break: break-word;

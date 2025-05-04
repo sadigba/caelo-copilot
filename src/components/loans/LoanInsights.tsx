@@ -1,4 +1,3 @@
-
 import { Card, CardContent } from "@/components/ui/card";
 import { Insight, useLoanContext } from "@/context/LoanContext";
 import { toast } from "sonner";
@@ -76,7 +75,7 @@ export function LoanInsights({ loanId, insights }: LoanInsightsProps) {
                       </button>
                     )}
                   </TableCell>
-                  <TableCell className="font-medium">
+                  <TableCell>
                     {insight.title}
                   </TableCell>
                   <TableCell className="narrative-column">

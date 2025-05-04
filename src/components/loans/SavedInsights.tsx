@@ -1,4 +1,3 @@
-
 import { Card, CardContent } from "@/components/ui/card";
 import { Insight, useLoanContext } from "@/context/LoanContext";
 import { toast } from "sonner";
@@ -71,7 +70,7 @@ export function SavedInsights({ loanId, savedInsights }: SavedInsightsProps) {
                       <span className="sr-only">Remove insight</span>
                     </button>
                   </TableCell>
-                  <TableCell className="font-medium">
+                  <TableCell>
                     {insight.title}
                   </TableCell>
                   <TableCell className="narrative-column">
