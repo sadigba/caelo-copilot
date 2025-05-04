@@ -110,12 +110,16 @@
 .loan-table {
   border-collapse: collapse;
   width: 100%;
+  border: 1px solid var(--border);
 }
 
 .loan-table th {
   @apply bg-muted/50 font-medium text-muted-foreground px-4 py-3 text-left text-sm;
   border: 1px solid var(--border);
   border-bottom-width: 2px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
 }
 
 .loan-table td {
@@ -125,8 +129,8 @@
 
 /* Styles for the narrative column to make it wider */
 .loan-table .narrative-column {
-  width: 35%;
-  min-width: 300px;
+  width: 40%;
+  min-width: 350px;
   white-space: normal;
   word-break: break-word;
 }
@@ -142,3 +146,12 @@
   text-align: center;
 }
 
+/* Add zebra striping for better readability */
+.loan-table tbody tr:nth-child(even) {
+  @apply bg-muted/20;
+}
+
+/* Add hover effect on rows */
+.loan-table tbody tr:hover {
+  @apply bg-muted/40;
+}
