@@ -106,10 +106,39 @@
   }
 }
 
+/* Updated table styles to make it look more like a spreadsheet */
+.loan-table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
 .loan-table th {
   @apply bg-muted/50 font-medium text-muted-foreground px-4 py-3 text-left text-sm;
+  border: 1px solid var(--border);
+  border-bottom-width: 2px;
 }
 
 .loan-table td {
-  @apply border-b border-muted px-4 py-3 text-sm;
+  @apply px-4 py-3 text-sm;
+  border: 1px solid var(--border);
 }
+
+/* Styles for the narrative column to make it wider */
+.loan-table .narrative-column {
+  width: 35%;
+  min-width: 300px;
+  white-space: normal;
+  word-break: break-word;
+}
+
+/* Style for the evidence column */
+.loan-table .evidence-column {
+  width: 15%;
+}
+
+/* Style for the action column (with +/- buttons) */
+.loan-table .action-column {
+  width: 50px;
+  text-align: center;
+}
+
