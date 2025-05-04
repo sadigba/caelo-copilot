@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -102,6 +101,7 @@ export default function Dashboard() {
             <table className="w-full loan-table">
               <thead>
                 <tr>
+                  <th>Loan ID</th>
                   <th>Business</th>
                   <th>Loan Type</th>
                   <th>Amount</th>

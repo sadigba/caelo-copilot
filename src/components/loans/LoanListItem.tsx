@@ -12,6 +12,11 @@ export function LoanListItem({ loan }: LoanListItemProps) {
   return (
     <tr>
       <td>
+        <span className="text-sm text-muted-foreground font-mono">
+          {loan.id.substring(0, 8)}
+        </span>
+      </td>
+      <td>
         <Link to={`/loans/${loan.id}`} className="font-medium text-primary hover:underline">
           {loan.businessName}
         </Link>
