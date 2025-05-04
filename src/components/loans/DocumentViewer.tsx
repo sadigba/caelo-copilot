@@ -42,7 +42,12 @@ export function DocumentViewer({ document, open, onClose }: DocumentViewerProps)
 
   return (
     <Dialog open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>
-      <DialogContent className="sm:max-w-6xl max-h-[90vh] p-0 gap-0 overflow-hidden" hideCloseButton>
+      <DialogContent className="sm:max-w-6xl max-h-[90vh] p-0 gap-0 overflow-hidden">
+        <style jsx global>{`
+          .DialogContent > button[data-dialog-close] {
+            display: none;
+          }
+        `}</style>
         <div className="flex flex-col h-full">
           {/* Header with controls */}
           <DialogHeader className="px-6 py-4 border-b flex flex-row items-center justify-between">
