@@ -15,7 +15,8 @@ import {
   PaperclipIcon, 
   MessageSquare,
   Maximize2,
-  X
+  X,
+  GripHorizontal
 } from "lucide-react";
 import { useCaeloChat } from "@/hooks/use-caelo-chat";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
@@ -31,6 +32,12 @@ export function AIChatPopup() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  
+  // Drag functionality
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [isDragging, setIsDragging] = useState(false);
+  const popupRef = useRef<HTMLDivElement>(null);
+  const dragStartRef = useRef({ x: 0, y: 0 });
   
   // Scroll to bottom whenever messages change
   useEffect(() => {
@@ -69,15 +76,65 @@ export function AIChatPopup() {
     }
   };
 
+  // Drag handlers
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (popupRef.current) {
+      setIsDragging(true);
+      dragStartRef.current = {
+        x: e.clientX - position.x,
+        y: e.clientY - position.y
+      };
+    }
+  };
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (isDragging) {
+        const newX = e.clientX - dragStartRef.current.x;
+        const newY = e.clientY - dragStartRef.current.y;
+        setPosition({ x: newX, y: newY });
+      }
+    };
+
+    const handleMouseUp = () => {
+      setIsDragging(false);
+    };
+
+    if (isDragging) {
+      document.addEventListener('mousemove', handleMouseMove);
+      document.addEventListener('mouseup', handleMouseUp);
+    }
+
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, [isDragging]);
+
   if (!isChatOpen) return null;
 
   // Render the popup version
   if (layoutMode === "popup") {
     return (
       <Dialog open={isChatOpen} onOpenChange={closeCaeloChat} modal={false}>
-        <DialogContent className="sm:max-w-[550px] h-[600px] flex flex-col p-0 gap-0 border-caelo-200 shadow-lg overflow-hidden">
-          <DialogHeader className="flex flex-row items-center justify-between border-b p-4">
+        <DialogContent 
+          ref={popupRef}
+          style={
+            isDragging ? 
+            { 
+              transform: `translate(${position.x}px, ${position.y}px)`, 
+              transition: 'none' 
+            } : 
+            position.x !== 0 || position.y !== 0 ? 
+            { 
+              transform: `translate(${position.x}px, ${position.y}px)` 
+            } : undefined
+          }
+          className="sm:max-w-[550px] h-[600px] flex flex-col p-0 gap-0 border-caelo-200 shadow-lg overflow-hidden"
+        >
+          <DialogHeader className="flex flex-row items-center justify-between border-b p-4 cursor-move" onMouseDown={handleMouseDown}>
             <div className="flex items-center gap-2">
+              <GripHorizontal className="w-5 h-5 text-muted-foreground" />
               <MessageSquare className="w-5 h-5" />
               <DialogTitle className="font-medium">Ask Caelo</DialogTitle>
             </div>
