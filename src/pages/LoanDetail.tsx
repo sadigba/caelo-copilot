@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import {
@@ -15,7 +16,6 @@ import { DocumentUpload } from "@/components/loans/DocumentUpload";
 import { LoanSummary } from "@/components/loans/LoanSummary";
 import { LoanInsights } from "@/components/loans/LoanInsights";
 import { SavedInsights } from "@/components/loans/SavedInsights";
-import { AskCaelo } from "@/components/loans/AskCaelo";
 import { toast } from "sonner";
 import {
   DropdownMenu,
@@ -180,11 +180,6 @@ export default function LoanDetail() {
             </DropdownMenu>
           </div>
         </div>
-
-        {/* Moved AskCaelo component here, right under the loan title */}
-        <Card className="p-4">
-          <AskCaelo />
-        </Card>
 
         <Tabs defaultValue="data-room" className="space-y-6">
           <TabsList className="grid grid-cols-2 md:grid-cols-4 w-full">
