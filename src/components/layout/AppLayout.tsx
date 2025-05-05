@@ -17,12 +17,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
         <div className="flex flex-1 w-full">
           <AppSidebar />
           <main className="flex-1">
-            <div className="p-6">
-              <div className="mb-4">
-                <SidebarTrigger />
-              </div>
-              {children}
-            </div>
+            {children}
           </main>
           <AIChatSidebar isOpen={isChatOpen} onClose={closeCaeloChat} />
         </div>

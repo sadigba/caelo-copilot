@@ -35,6 +35,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { X } from "lucide-react";
+import { SidebarTrigger } from "@/components/ui/sidebar";
 
 export default function LoanDetail() {
   const { loanId } = useParams<{ loanId: string }>();
@@ -122,30 +123,36 @@ export default function LoanDetail() {
 
   return (
     <>
-      <div className="space-y-6">
-        <div className="flex items-center justify-between gap-4">
-          <div className="flex items-center gap-4">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => navigate("/")}
-              className="-ml-2"
-            >
-              <ArrowLeft className="mr-1 h-4 w-4" />
-              Back
-            </Button>
-            <div>
-              <h1 className="text-2xl md:text-3xl font-bold">{loan.businessName}</h1>
-              <p className="text-muted-foreground">
-                {loan.loanType} · {loan.propertyType}
-              </p>
+      {/* Header with sidebar toggle, title and action buttons */}
+      <div className="border-b">
+        <div className="flex items-center justify-between px-6 py-3">
+          <div className="flex items-center gap-3">
+            <SidebarTrigger />
+            <div className="flex items-center gap-3">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => navigate("/")}
+                className="h-8"
+              >
+                <ArrowLeft className="h-4 w-4 mr-1" />
+                Back
+              </Button>
+              <div>
+                <h1 className="text-lg font-medium leading-tight">{loan.businessName}</h1>
+                <p className="text-sm text-muted-foreground">
+                  {loan.loanType} · {loan.propertyType}
+                </p>
+              </div>
             </div>
           </div>
-          <div className="flex flex-wrap gap-3">
+          <div className="flex gap-3">
             <Button
+              size="sm"
               variant="outline"
               onClick={handleRefresh}
               disabled={!hasApprovedDocuments || refreshing}
+              className="h-8"
             >
               <RefreshCw className={`mr-2 h-4 w-4 ${refreshing ? 'animate-spin' : ''}`} />
               {refreshing ? "Analyzing..." : "Refresh Analysis"}
@@ -155,8 +162,10 @@ export default function LoanDetail() {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
+                  size="sm"
                   variant="outline"
                   disabled={!hasApprovedDocuments}
+                  className="h-8"
                 >
                   <Download className="mr-2 h-4 w-4" />
                   Download
@@ -182,7 +191,9 @@ export default function LoanDetail() {
             </DropdownMenu>
           </div>
         </div>
+      </div>
 
+      <div className="p-6">
         <Tabs defaultValue="data-room" className="space-y-6">
           <TabsList className="grid grid-cols-2 md:grid-cols-4 w-full">
             <TabsTrigger value="summary">Application Summary</TabsTrigger>
