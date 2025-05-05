@@ -1,5 +1,5 @@
 
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "./AppSidebar";
 import { TopBar } from "./TopBar";
 import { AIChatSidebar } from "../caelo/AIChatSidebar";
@@ -23,12 +23,8 @@ export default function AppLayout({ children }: AppLayoutProps) {
             {children}
           </main>
           
-          {/* Render the appropriate chat interface based on layout mode */}
-          {layoutMode === "sidebar" ? (
-            <AIChatSidebar isOpen={isChatOpen} onClose={closeCaeloChat} />
-          ) : (
-            <AIChatPopup />
-          )}
+          {/* Always use sidebar mode for the chat */}
+          <AIChatSidebar isOpen={isChatOpen} onClose={closeCaeloChat} />
         </div>
       </div>
     </SidebarProvider>
