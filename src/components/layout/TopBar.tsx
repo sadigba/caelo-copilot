@@ -20,6 +20,8 @@ export function TopBar() {
   
   // Check if we're on a loan detail page
   const isLoanDetailPage = location.pathname.startsWith('/loans/');
+  // Check if we're on application or settings pages where we want to hide the sidebar trigger
+  const hideSidebarTrigger = location.pathname === '/' || location.pathname === '/settings';
   
   const handleRefresh = () => {
     setRefreshing(true);
@@ -45,7 +47,7 @@ export function TopBar() {
   return (
     <div className="h-14 bg-background flex items-center justify-between px-4">
       <div className="flex items-center">
-        <SidebarTrigger />
+        {!hideSidebarTrigger && <SidebarTrigger />}
         {isLoanDetailPage && (
           <div className="flex items-center ml-2">
             <Button
