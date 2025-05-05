@@ -58,20 +58,6 @@ export function AIChatSidebar({ isOpen, onClose }: AIChatSidebarProps) {
     }
   };
 
-  // Example suggested questions
-  const researchQuestions = [
-    "Find research ideas for the loan type",
-    "Explain in simple words this loan's terms",
-  ];
-
-  const writingHelp = [
-    "Help me outline a paper on this property",
-    "Review my draft for clarity - what parts might confuse readers?",
-    "Check for overuse of passive voice",
-    "Check for technical language",
-    "Draft an abstract and keywords for this document"
-  ];
-
   if (!isOpen) return null;
 
   return (
@@ -110,48 +96,12 @@ export function AIChatSidebar({ isOpen, onClose }: AIChatSidebarProps) {
             </div>
           ))
         ) : (
-          <div className="h-full flex flex-col justify-between">
-            <div className="space-y-8 pt-8">
-              <div className="space-y-4">
-                <h3 className="text-sm font-medium text-muted-foreground">Research questions</h3>
-                {researchQuestions.map((question, index) => (
-                  <Button 
-                    key={index} 
-                    variant="ghost" 
-                    className="w-full justify-start h-auto py-2 px-3 text-left font-normal"
-                    onClick={() => {
-                      setInputValue(question);
-                      setMessages([
-                        ...messages, 
-                        { type: 'user', content: question, timestamp: new Date() }
-                      ]);
-                    }}
-                  >
-                    {question}
-                  </Button>
-                ))}
-              </div>
-
-              <div className="space-y-4">
-                <h3 className="text-sm font-medium text-muted-foreground">Writing help</h3>
-                {writingHelp.map((help, index) => (
-                  <Button 
-                    key={index} 
-                    variant="ghost" 
-                    className="w-full justify-start h-auto py-2 px-3 text-left font-normal"
-                    onClick={() => {
-                      setInputValue(help);
-                      setMessages([
-                        ...messages, 
-                        { type: 'user', content: help, timestamp: new Date() }
-                      ]);
-                    }}
-                  >
-                    {help}
-                  </Button>
-                ))}
-              </div>
-            </div>
+          <div className="h-full flex flex-col justify-center items-center text-center p-4">
+            <MessageSquare className="w-12 h-12 text-muted-foreground mb-4" />
+            <h3 className="font-medium text-lg">Ask Caelo</h3>
+            <p className="text-muted-foreground mt-2">
+              Ask any questions about the loan, property documents, or what information you might need.
+            </p>
           </div>
         )}
       </div>
