@@ -9,7 +9,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useState } from "react";
-import { SidebarTrigger } from "@/components/ui/sidebar";
 import { 
   NavigationMenu, 
   NavigationMenuContent, 
@@ -50,7 +49,7 @@ export function TopBar() {
     if (isLoanDetailPage) {
       return ""; // Removed "Loan Details" heading
     } else if (location.pathname === "/") {
-      return "Applications";
+      return "";  // Removed "Applications" heading
     } else if (location.pathname === "/settings") {
       return "Settings";
     } else if (location.pathname === "/new-loan") {
@@ -63,8 +62,6 @@ export function TopBar() {
   return (
     <div className="h-14 bg-background flex items-center justify-between px-4">
       <div className="flex items-center gap-4">
-        {!isLoanDetailPage && <SidebarTrigger className="h-8 w-8" />}
-        
         <NavigationMenu>
           <NavigationMenuList>
             <NavigationMenuItem>

@@ -10,7 +10,6 @@ import {
 import { LoanListItem } from "@/components/loans/LoanListItem";
 import { useLoanContext } from "@/context/LoanContext";
 import { useState } from "react";
-import { SidebarTrigger } from "@/components/ui/sidebar";
 
 export default function Dashboard() {
   const { loans } = useLoanContext();
@@ -44,8 +43,7 @@ export default function Dashboard() {
   return (
     <div className="p-6">
       <div className="flex items-center gap-4 mb-6">
-        <SidebarTrigger />
-        <h1 className="text-2xl font-bold">Loan Applications</h1>
+        {/* Removed the SidebarTrigger and "Loan Applications" text */}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
