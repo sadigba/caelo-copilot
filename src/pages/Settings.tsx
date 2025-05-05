@@ -2,7 +2,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
 
@@ -14,11 +13,6 @@ export default function Settings() {
 
   return (
     <div className="p-6">
-      <div className="flex items-center gap-4 mb-6">
-        <SidebarTrigger />
-        <h1 className="text-2xl font-bold">Settings</h1>
-      </div>
-
       <div className="grid gap-6 md:grid-cols-2">
         <form onSubmit={handleSave}>
           <Card>
