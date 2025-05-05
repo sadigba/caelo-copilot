@@ -1,9 +1,9 @@
 
+import { SidebarProvider } from "@/components/ui/sidebar";
+import { AppSidebar } from "./AppSidebar";
 import { TopBar } from "./TopBar";
 import { AIChatSidebar } from "../caelo/AIChatSidebar";
 import { useCaeloChat } from "@/hooks/use-caelo-chat";
-import { SidebarProvider } from "@/components/ui/sidebar";
-import { AppSidebar } from "./AppSidebar";
 
 interface AppLayoutProps {
   children: React.ReactNode;

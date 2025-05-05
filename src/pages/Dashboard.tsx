@@ -1,3 +1,4 @@
+
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -42,6 +43,11 @@ export default function Dashboard() {
 
   return (
     <div className="p-6">
+      <div className="flex items-center gap-4 mb-6">
+        <SidebarTrigger />
+        <h1 className="text-2xl font-bold">Loan Applications</h1>
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
         <div className="col-span-2">
           <Input

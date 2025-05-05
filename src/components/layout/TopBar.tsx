@@ -1,7 +1,7 @@
 
 import { Button } from "@/components/ui/button";
 import { useCaeloChat } from "@/hooks/use-caelo-chat";
-import { useLocation, Link } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,6 +9,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useState } from "react";
+import { SidebarTrigger } from "@/components/ui/sidebar";
 import { 
   NavigationMenu, 
   NavigationMenuContent, 
@@ -16,8 +17,6 @@ import {
   NavigationMenuList, 
   NavigationMenuTrigger 
 } from "@/components/ui/navigation-menu";
-import { ArrowLeft, FileText, Settings, FilePlus, Menu } from "lucide-react";
-import { SidebarTrigger } from "@/components/ui/sidebar";
 
 export function TopBar() {
   const { toggleCaeloChat } = useCaeloChat();
@@ -45,6 +44,21 @@ export function TopBar() {
     window.dispatchEvent(event);
   };
 
+  // Get the current page title
+  const getPageTitle = () => {
+    if (isLoanDetailPage) {
+      return "Loan Details";
+    } else if (location.pathname === "/") {
+      return "Applications";
+    } else if (location.pathname === "/settings") {
+      return "Settings";
+    } else if (location.pathname === "/new-loan") {
+      return "New Application";
+    } else {
+      return "Caelo AI";
+    }
+  };
+
   return (
     <div className="h-14 bg-background flex items-center justify-between px-4">
       <div className="flex items-center gap-4">
@@ -53,51 +67,7 @@ export function TopBar() {
         <NavigationMenu>
           <NavigationMenuList>
             <NavigationMenuItem>
-              {isLoanDetailPage ? (
-                <Link to="/" className="flex items-center">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-8 px-2"
-                  >
-                    <ArrowLeft className="h-4 w-4 mr-1" />
-                    Back
-                  </Button>
-                </Link>
-              ) : (
-                <div className="flex items-center gap-2">
-                  <Link to="/" className="flex items-center">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="h-8 px-2"
-                    >
-                      <FileText className="h-4 w-4 mr-1" />
-                      Applications
-                    </Button>
-                  </Link>
-                  <Link to="/new-loan" className="flex items-center">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="h-8 px-2"
-                    >
-                      <FilePlus className="h-4 w-4 mr-1" />
-                      New Application
-                    </Button>
-                  </Link>
-                  <Link to="/settings" className="flex items-center">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="h-8 px-2"
-                    >
-                      <Settings className="h-4 w-4 mr-1" />
-                      Settings
-                    </Button>
-                  </Link>
-                </div>
-              )}
+              <span className="text-lg font-medium">{getPageTitle()}</span>
             </NavigationMenuItem>
           </NavigationMenuList>
         </NavigationMenu>
