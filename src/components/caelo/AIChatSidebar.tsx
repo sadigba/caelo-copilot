@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { 
@@ -8,8 +8,10 @@ import {
   X, 
   SendHorizontal, 
   PaperclipIcon, 
-  MessageSquare 
+  MessageSquare,
+  Minimize2 
 } from "lucide-react";
+import { useCaeloChat } from "@/hooks/use-caelo-chat";
 
 interface Message {
   type: 'user' | 'ai';
@@ -25,6 +27,13 @@ interface AIChatSidebarProps {
 export function AIChatSidebar({ isOpen, onClose }: AIChatSidebarProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
+  const { toggleLayoutMode } = useCaeloChat();
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  
+  // Scroll to bottom whenever messages change
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
   
   const handleSend = () => {
     if (!inputValue.trim()) return;
@@ -69,13 +78,16 @@ export function AIChatSidebar({ isOpen, onClose }: AIChatSidebarProps) {
           <span className="font-medium">Ask Caelo</span>
         </div>
         <div className="flex items-center gap-2">
-          <Button variant="ghost" size="icon">
+          <Button variant="ghost" size="icon" title="History">
             <Clock className="w-4 h-4" />
           </Button>
-          <Button variant="ghost" size="icon">
+          <Button variant="ghost" size="icon" title="New Chat">
             <Plus className="w-4 h-4" />
           </Button>
-          <Button variant="ghost" size="icon" onClick={onClose}>
+          <Button variant="ghost" size="icon" title="Switch to Popup" onClick={toggleLayoutMode}>
+            <Minimize2 className="w-4 h-4" />
+          </Button>
+          <Button variant="ghost" size="icon" onClick={onClose} title="Close">
             <X className="w-4 h-4" />
           </Button>
         </div>
@@ -104,6 +116,7 @@ export function AIChatSidebar({ isOpen, onClose }: AIChatSidebarProps) {
             </p>
           </div>
         )}
+        <div ref={messagesEndRef} />
       </div>
 
       {/* Input area */}

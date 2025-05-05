@@ -2,6 +2,7 @@
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "./AppSidebar";
 import { AIChatSidebar } from "../caelo/AIChatSidebar";
+import { AIChatPopup } from "../caelo/AIChatPopup";
 import { useCaeloChat } from "@/hooks/use-caelo-chat";
 
 interface AppLayoutProps {
@@ -9,7 +10,7 @@ interface AppLayoutProps {
 }
 
 export default function AppLayout({ children }: AppLayoutProps) {
-  const { isChatOpen, closeCaeloChat } = useCaeloChat();
+  const { isChatOpen, closeCaeloChat, layoutMode } = useCaeloChat();
 
   return (
     <SidebarProvider>
@@ -19,7 +20,13 @@ export default function AppLayout({ children }: AppLayoutProps) {
           <main className="flex-1">
             {children}
           </main>
-          <AIChatSidebar isOpen={isChatOpen} onClose={closeCaeloChat} />
+          
+          {/* Render the appropriate chat interface based on layout mode */}
+          {layoutMode === "sidebar" ? (
+            <AIChatSidebar isOpen={isChatOpen} onClose={closeCaeloChat} />
+          ) : (
+            <AIChatPopup />
+          )}
         </div>
       </div>
     </SidebarProvider>
