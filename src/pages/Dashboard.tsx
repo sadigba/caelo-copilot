@@ -1,4 +1,3 @@
-
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -122,7 +121,6 @@ export default function Dashboard() {
               <TableHead>Status</TableHead>
               <TableHead>Submission Date</TableHead>
               <TableHead>Last Updated</TableHead>
-              <TableHead>Documents</TableHead>
             </TableHeader>
             <TableBody>
               {sortedLoans.map((loan) => (

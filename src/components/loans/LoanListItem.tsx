@@ -1,15 +1,9 @@
 
 import React from "react";
 import {
-  Building,
-  CreditCard,
   Calendar,
   MapPin,
   Clock,
-  File,
-  CheckCircle2,
-  XCircle,
-  FileCheck,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
@@ -57,16 +51,6 @@ export function LoanListItem({ loan }: LoanListItemProps) {
     }
   };
 
-  const getDocumentStatus = () => {
-    const totalDocs = loan.documents.length;
-    const approvedDocs = loan.documents.filter((doc) => doc.approved).length;
-    const rejectedDocs = loan.documents.filter((doc) => doc.rejected).length;
-    const pendingDocs = totalDocs - approvedDocs - rejectedDocs;
-
-    return { totalDocs, approvedDocs, rejectedDocs, pendingDocs };
-  };
-
-  const { totalDocs, approvedDocs, rejectedDocs, pendingDocs } = getDocumentStatus();
   const submissionDate = new Date(loan.submissionDate).toLocaleDateString();
   const lastUpdated = new Date(loan.lastUpdated).toLocaleDateString();
 
@@ -80,16 +64,11 @@ export function LoanListItem({ loan }: LoanListItemProps) {
       
       <TableCell>
         <Link to={`/loans/${loan.id}`} className="hover:underline">
-          <div className="flex items-start gap-3">
-            <div className="rounded-md bg-primary/10 p-1.5">
-              <Building className="h-4 w-4 text-primary" />
-            </div>
-            <div>
-              <p className="font-medium">{loan.businessName}</p>
-              <div className="flex items-center gap-1.5 text-xs text-muted-foreground mt-1">
-                <MapPin className="h-3 w-3" />
-                <span>{loan.propertyType}</span>
-              </div>
+          <div>
+            <p className="font-medium">{loan.businessName}</p>
+            <div className="flex items-center gap-1.5 text-xs text-muted-foreground mt-1">
+              <MapPin className="h-3 w-3" />
+              <span>{loan.propertyType}</span>
             </div>
           </div>
         </Link>
@@ -121,29 +100,6 @@ export function LoanListItem({ loan }: LoanListItemProps) {
         <div className="flex items-center gap-1.5">
           <Clock className="h-3.5 w-3.5 text-muted-foreground" />
           <span>{lastUpdated}</span>
-        </div>
-      </TableCell>
-      
-      <TableCell>
-        <div className="flex items-center gap-1.5 text-sm">
-          <div className="flex items-center" title="Total documents">
-            <File className="h-3.5 w-3.5 mr-1 text-muted-foreground" />
-            <span>{totalDocs}</span>
-          </div>
-          
-          {approvedDocs > 0 && (
-            <div className="flex items-center ml-2" title="Approved documents">
-              <CheckCircle2 className="h-3.5 w-3.5 mr-1 text-green-500" />
-              <span>{approvedDocs}</span>
-            </div>
-          )}
-          
-          {rejectedDocs > 0 && (
-            <div className="flex items-center ml-2" title="Rejected documents">
-              <XCircle className="h-3.5 w-3.5 mr-1 text-red-500" />
-              <span>{rejectedDocs}</span>
-            </div>
-          )}
         </div>
       </TableCell>
     </TableRow>
