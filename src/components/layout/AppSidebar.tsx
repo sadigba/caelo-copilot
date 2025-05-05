@@ -41,10 +41,10 @@ const managementItems = [
 export function AppSidebar() {
   return (
     <Sidebar className="border-r">
-      <SidebarHeader className="px-4 py-3">
+      <SidebarHeader className="py-1 px-3">
         <DropdownMenu>
-          <DropdownMenuTrigger className="flex items-center gap-2 rounded-md p-1 hover:bg-accent outline-none">
-            <Avatar className="h-6 w-6 bg-muted">
+          <DropdownMenuTrigger className="flex items-center gap-1 rounded-md p-1 hover:bg-accent outline-none">
+            <Avatar className="h-5 w-5 bg-muted">
               <AvatarFallback>J</AvatarFallback>
             </Avatar>
             <span className="text-sm font-medium">John</span>
@@ -109,7 +109,7 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter className="p-4 border-t">
+      <SidebarFooter className="p-4">
         <div className="text-sm text-muted-foreground">
           Caelo AI Co-Pilot v1.0
         </div>

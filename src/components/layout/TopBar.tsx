@@ -1,6 +1,5 @@
 
 import { Button } from "@/components/ui/button";
-import { MessageSquare, RefreshCw, Download, ChevronDown, BarChart2 } from "lucide-react";
 import { useCaeloChat } from "@/hooks/use-caelo-chat";
 import { useLocation } from "react-router-dom";
 import {
@@ -45,7 +44,6 @@ export function TopBar() {
               onClick={handleRefresh}
               className="h-8"
             >
-              <RefreshCw className={`mr-2 h-4 w-4 ${refreshing ? 'animate-spin' : ''}`} />
               {refreshing ? "Analyzing..." : "Refresh"}
             </Button>
             
@@ -56,9 +54,7 @@ export function TopBar() {
                   variant="outline"
                   className="h-8"
                 >
-                  <Download className="mr-2 h-4 w-4" />
                   Download
-                  <ChevronDown className="ml-2 h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
@@ -86,7 +82,6 @@ export function TopBar() {
                 console.log("Toggle deal summary");
               }}
             >
-              <BarChart2 className="mr-2 h-4 w-4" />
               Deal Summary
             </Button>
           </>
@@ -95,10 +90,9 @@ export function TopBar() {
         <Button 
           variant="ghost" 
           onClick={toggleCaeloChat} 
-          className="flex items-center gap-2"
+          className="flex items-center"
           size="sm"
         >
-          <MessageSquare className="h-5 w-5" />
           <span>Ask Caelo</span>
         </Button>
       </div>
