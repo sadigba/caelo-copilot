@@ -1,7 +1,7 @@
 
 import { Button } from "@/components/ui/button";
 import { useCaeloChat } from "@/hooks/use-caelo-chat";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,15 +12,15 @@ import { useState } from "react";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { 
   NavigationMenu, 
+  NavigationMenuContent, 
   NavigationMenuItem, 
-  NavigationMenuList,
+  NavigationMenuList, 
+  NavigationMenuTrigger 
 } from "@/components/ui/navigation-menu";
-import { ArrowLeft } from "lucide-react";
 
 export function TopBar() {
   const { toggleCaeloChat } = useCaeloChat();
   const location = useLocation();
-  const navigate = useNavigate();
   const [refreshing, setRefreshing] = useState(false);
   
   // Check if we're on a loan detail page
@@ -60,34 +60,18 @@ export function TopBar() {
   };
 
   return (
-    <div className="h-14 bg-background border-b flex items-center justify-between px-4">
-      <div className="flex items-center gap-3">
+    <div className="h-14 bg-background flex items-center justify-between px-4">
+      <div className="flex items-center gap-4">
         <SidebarTrigger className="h-8 w-8" />
         
-        {isLoanDetailPage && (
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => navigate("/")}
-            className="h-8 flex items-center gap-1"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Back
-          </Button>
-        )}
-        
-        <div className="flex flex-col">
-          <h1 className="text-lg font-medium leading-tight">
-            {isLoanDetailPage ? "Urban Living Investments" : getPageTitle()}
-          </h1>
-          {isLoanDetailPage && (
-            <p className="text-sm text-muted-foreground">
-              Investment Property · Multifamily
-            </p>
-          )}
-        </div>
+        <NavigationMenu>
+          <NavigationMenuList>
+            <NavigationMenuItem>
+              <span className="text-lg font-medium">{getPageTitle()}</span>
+            </NavigationMenuItem>
+          </NavigationMenuList>
+        </NavigationMenu>
       </div>
-      
       <div className="flex items-center space-x-2">
         {isLoanDetailPage && (
           <>
