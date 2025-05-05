@@ -12,7 +12,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { 
   DropdownMenu,
   DropdownMenuContent,
@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { cn } from "@/lib/utils";
 
 // Menu items
 const mainItems = [
@@ -40,6 +41,22 @@ const managementItems = [
 ];
 
 export function AppSidebar() {
+  const location = useLocation();
+  const currentPath = location.pathname;
+  
+  // Function to check if a menu item is active
+  const isActive = (path: string): boolean => {
+    if (path === '/') {
+      // Only highlight home when we're exactly at root
+      return currentPath === '/';
+    }
+    // For other paths, check if the current path starts with the item's path
+    return currentPath.startsWith(path);
+  };
+  
+  // Function to determine if we're on the new loan page
+  const isNewLoanActive = currentPath === '/new-loan';
+  
   return (
     <Sidebar className="border-r">
       <SidebarHeader className="py-3 px-4">
@@ -68,7 +85,13 @@ export function AppSidebar() {
       <SidebarContent className="p-4">
         <SidebarMenuItem className="mb-1">
           <SidebarMenuButton asChild>
-            <Link to="/new-loan" className="flex items-center text-sm">
+            <Link 
+              to="/new-loan" 
+              className={cn(
+                "flex items-center text-sm", 
+                isNewLoanActive ? "bg-accent text-accent-foreground font-medium rounded-md" : ""
+              )}
+            >
               <FilePlus className="mr-2 h-4 w-4" />
               <span>New Application</span>
             </Link>
@@ -82,7 +105,13 @@ export function AppSidebar() {
               {mainItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <Link to={item.url} className="flex items-center">
+                    <Link 
+                      to={item.url} 
+                      className={cn(
+                        "flex items-center",
+                        isActive(item.url) ? "bg-accent text-accent-foreground font-medium rounded-md" : ""
+                      )}
+                    >
                       <item.icon className="mr-2 h-5 w-5" />
                       <span>{item.title}</span>
                     </Link>
@@ -99,7 +128,13 @@ export function AppSidebar() {
               {managementItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <Link to={item.url} className="flex items-center">
+                    <Link 
+                      to={item.url} 
+                      className={cn(
+                        "flex items-center",
+                        isActive(item.url) ? "bg-accent text-accent-foreground font-medium rounded-md" : ""
+                      )}
+                    >
                       <item.icon className="mr-2 h-5 w-5" />
                       <span>{item.title}</span>
                     </Link>

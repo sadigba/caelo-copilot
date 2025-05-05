@@ -1,382 +1,148 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState, ReactNode } from "react";
 
-export interface Comment {
-  id?: string;
-  text: string;
-  author?: string;
-  timestamp?: string;
-}
-
-export interface Insight {
-  id: string;
-  title: string;
-  narrative: string;
-  evidence: string[];
-  saved?: boolean;
-  comments?: Comment[];
-}
-
-export interface Document {
-  id: string;
-  name: string;
-  url: string;
-  type?: string;
-  approved: boolean;
-  rejected: boolean;
-  dateUploaded: string; // Adding the missing property
-}
-
-export type LoanType = "Owner-Occupied CRE" | "Investment Property" | "Construction" | "Land Loans" | "Bridge" | "Refinance/Cash Out";
-export type PropertyType = "Multifamily" | "Retail" | "Office" | "Warehouse" | "Industrial" | "Mixed-Use" | "Other";
-export type LoanStatus = "In Progress" | "Ready for Review" | "Awaiting Docs" | "Approved" | "Declined" | "Active" | "Pending";
-
-export interface Loan {
+interface Loan {
   id: string;
   businessName: string;
   loanType: string;
   propertyType: string;
   loanAmount: number;
-  loanTerm: number;
-  interestRate: number;
-  originationDate: string;
-  maturityDate: string;
-  status: string;
-  documents: Document[];
-  insights: Insight[];
-  savedInsights: Insight[];
-  
-  // Adding missing properties
-  submissionDate?: string;
-  lastUpdated?: string;
-  purpose?: string;
-  industry?: string;
-  yearsInOperation?: number;
-  sponsorName?: string;
-  sponsorTitle?: string;
-  sponsorEmail?: string;
-  sponsorPhone?: string;
-  propertyAddress?: string;
+  purpose: string;
+  industry: string;
+  yearsInOperation: number;
+  sponsorName: string;
+  sponsorTitle: string;
+  sponsorEmail: string;
+  sponsorPhone: string;
+  propertyAddress: string;
+  submissionDate: string;
+  lastUpdated: string;
+  status?: string;
 }
 
 interface LoanContextType {
   loans: Loan[];
-  getLoanById: (id: string) => Loan | undefined;
-  addLoan: (loan: Omit<Loan, 'id' | 'documents' | 'insights' | 'savedInsights'>) => void;
-  updateLoan: (id: string, updates: Partial<Loan>) => void;
+  addLoan: (loan: Omit<Loan, "id" | "submissionDate" | "lastUpdated" | "status">) => void;
+  getLoan: (id: string) => Loan | undefined;
+  updateLoan: (id: string, loan: Partial<Loan>) => void;
   deleteLoan: (id: string) => void;
-  addDocument: (loanId: string, document: Omit<Document, 'id'>) => void;
-  updateDocument: (loanId: string, documentId: string, updates: Partial<Document>) => void;
-  deleteDocument: (loanId: string, documentId: string) => void;
-  saveInsight: (loanId: string, insightId: string) => void;
-  unsaveInsight: (loanId: string, insightId: string) => void;
-  addInsight: (loanId: string, insight: Omit<Insight, 'id' | 'saved'>) => void;
-  addComment: (loanId: string, insightId: string, comment: Comment) => void;
 }
 
-const mockLoans: Loan[] = [
-  {
-    id: "1",
-    businessName: "Acme Corp",
-    loanType: "Commercial Real Estate",
-    propertyType: "Office",
-    loanAmount: 5000000,
-    loanTerm: 36,
-    interestRate: 0.05,
-    originationDate: "2023-01-01",
-    maturityDate: "2026-01-01",
-    status: "Active",
-    documents: [
-      {
-        id: "101",
-        name: "Appraisal Report",
-        url: "https://example.com/appraisal.pdf",
-        type: "Appraisal",
-        approved: true,
-        rejected: false,
-        dateUploaded: "2023-01-05",
-      },
-      {
-        id: "102",
-        name: "Title Insurance",
-        url: "https://example.com/title.pdf",
-        type: "Insurance",
-        approved: true,
-        rejected: false,
-        dateUploaded: "2023-01-10",
-      },
-    ],
-    insights: [
-      {
-        id: "insight-1",
-        title: "High Occupancy Rate",
-        narrative: "The property has a consistently high occupancy rate, indicating strong demand.",
-        evidence: ["Appraisal Report"],
-        saved: true,
-        comments: [
-          {
-            id: "comment-1",
-            text: "This is great news!",
-            author: "John Doe",
-            timestamp: "2024-03-15T10:00:00.000Z",
-          },
-        ],
-      },
-      {
-        id: "insight-2",
-        title: "Positive Market Trends",
-        narrative: "The local market shows positive trends with increasing property values.",
-        evidence: ["Market Analysis"],
-        saved: false,
-        comments: [],
-      },
-    ],
-    savedInsights: [
-      {
-        id: "insight-1",
-        title: "High Occupancy Rate",
-        narrative: "The property has a consistently high occupancy rate, indicating strong demand.",
-        evidence: ["Appraisal Report"],
-        saved: true,
-        comments: [
-          {
-            id: "comment-1",
-            text: "This is great news!",
-            author: "John Doe",
-            timestamp: "2024-03-15T10:00:00.000Z",
-          },
-        ],
-      },
-    ],
-  },
-  {
-    id: "2",
-    businessName: "Beta Industries",
-    loanType: "SBA Loan",
-    propertyType: "Industrial",
-    loanAmount: 2500000,
-    loanTerm: 60,
-    interestRate: 0.06,
-    originationDate: "2022-07-15",
-    maturityDate: "2027-07-15",
-    status: "Pending",
-    documents: [
-      {
-        id: "201",
-        name: "Business Plan",
-        url: "https://example.com/plan.pdf",
-        type: "Plan",
-        approved: false,
-        rejected: false,
-        dateUploaded: "2022-07-20",
-      },
-      {
-        id: "202",
-        name: "Financial Statements",
-        url: "https://example.com/financials.pdf",
-        type: "Financial",
-        approved: false,
-        rejected: false,
-        dateUploaded: "2022-07-22",
-      },
-    ],
-    insights: [],
-    savedInsights: [],
-  },
-];
+const LoanContext = createContext<LoanContextType | undefined>(undefined);
 
-export const LoanContext = createContext<LoanContextType | undefined>(undefined);
+export function useLoan() {
+  const context = useContext(LoanContext);
+  if (!context) {
+    throw new Error("useLoan must be used within a LoanProvider");
+  }
+  return context;
+}
 
-export const LoanProvider = ({ children }: { children: React.ReactNode }) => {
-  const [loans, setLoans] = useState<Loan[]>(mockLoans);
+interface LoanProviderProps {
+  children: ReactNode;
+}
 
-  const getLoanById = (id: string): Loan | undefined => {
-    return loans.find((loan) => loan.id === id);
-  };
+export function LoanProvider({ children }: LoanProviderProps) {
+  const [loans, setLoans] = useState<Loan[]>([
+    {
+      id: "1",
+      businessName: "Skyline Apartments",
+      loanType: "Investment Property",
+      propertyType: "Multifamily",
+      loanAmount: 5000000,
+      purpose: "Acquisition",
+      industry: "Real Estate",
+      yearsInOperation: 5,
+      sponsorName: "John Smith",
+      sponsorTitle: "CEO",
+      sponsorEmail: "john@skylineapts.com",
+      sponsorPhone: "(555) 123-4567",
+      propertyAddress: "123 Main St, Anytown, USA",
+      submissionDate: "2023-06-15T10:30:00Z",
+      lastUpdated: "2023-06-15T10:30:00Z",
+      status: "In Review"
+    },
+    {
+      id: "2",
+      businessName: "Downtown Retail Plaza",
+      loanType: "Commercial Real Estate",
+      propertyType: "Retail",
+      loanAmount: 3500000,
+      purpose: "Refinance",
+      industry: "Retail",
+      yearsInOperation: 8,
+      sponsorName: "Sarah Johnson",
+      sponsorTitle: "Owner",
+      sponsorEmail: "sarah@retailplaza.com",
+      sponsorPhone: "(555) 987-6543",
+      propertyAddress: "456 Market St, Metropolis, USA",
+      submissionDate: "2023-06-10T14:45:00Z",
+      lastUpdated: "2023-06-12T09:15:00Z",
+      status: "Approved"
+    },
+    {
+      id: "3",
+      businessName: "Riverside Hotel",
+      loanType: "Hospitality",
+      propertyType: "Hotel",
+      loanAmount: 7500000,
+      purpose: "Renovation",
+      industry: "Hospitality",
+      yearsInOperation: 12,
+      sponsorName: "Michael Brown",
+      sponsorTitle: "Managing Partner",
+      sponsorEmail: "michael@riversidehotel.com",
+      sponsorPhone: "(555) 456-7890",
+      propertyAddress: "789 River Rd, Laketown, USA",
+      submissionDate: "2023-06-05T11:20:00Z",
+      lastUpdated: "2023-06-14T16:30:00Z",
+      status: "Under Review"
+    }
+  ]);
 
-  const addLoan = (loan: Omit<Loan, 'id' | 'documents' | 'insights' | 'savedInsights'>) => {
+  const addLoan = (loan: Omit<Loan, "id" | "submissionDate" | "lastUpdated" | "status">) => {
+    const now = new Date().toISOString();
     const newLoan: Loan = {
-      id: `loan-${Date.now()}`,
       ...loan,
-      documents: [],
-      insights: [],
-      savedInsights: [],
-      loanTerm: loan.loanTerm || 36, // Default values for required properties
-      interestRate: loan.interestRate || 0.05,
-      originationDate: loan.originationDate || new Date().toISOString(),
-      maturityDate: loan.maturityDate || new Date(new Date().setFullYear(new Date().getFullYear() + 3)).toISOString(),
-      submissionDate: new Date().toISOString(),
-      lastUpdated: new Date().toISOString()
+      id: Math.random().toString(36).substring(2, 9),
+      submissionDate: now,
+      lastUpdated: now,
+      status: "New Application",
+      // Provide defaults for any missing required fields
+      businessName: loan.businessName || "Untitled Business",
+      loanType: loan.loanType || "Investment Property",
+      propertyType: loan.propertyType || "Multifamily",
+      loanAmount: loan.loanAmount || 0,
+      purpose: loan.purpose || "",
+      industry: loan.industry || "",
+      yearsInOperation: loan.yearsInOperation || 0,
+      sponsorName: loan.sponsorName || "",
+      sponsorTitle: loan.sponsorTitle || "",
+      sponsorEmail: loan.sponsorEmail || "",
+      sponsorPhone: loan.sponsorPhone || "",
+      propertyAddress: loan.propertyAddress || ""
     };
-    setLoans((prevLoans) => [...prevLoans, newLoan]);
+    setLoans([...loans, newLoan]);
   };
 
-  const updateLoan = (id: string, updates: Partial<Loan>) => {
-    setLoans((prevLoans) =>
-      prevLoans.map((loan) => (loan.id === id ? { ...loan, ...updates } : loan))
-    );
+  const getLoan = (id: string) => {
+    return loans.find(loan => loan.id === id);
+  };
+
+  const updateLoan = (id: string, updatedLoan: Partial<Loan>) => {
+    setLoans(loans.map(loan => 
+      loan.id === id 
+        ? { ...loan, ...updatedLoan, lastUpdated: new Date().toISOString() } 
+        : loan
+    ));
   };
 
   const deleteLoan = (id: string) => {
-    setLoans((prevLoans) => prevLoans.filter((loan) => loan.id !== id));
-  };
-
-  const addDocument = (loanId: string, document: Omit<Document, 'id'>) => {
-    const newDocument: Document = {
-      id: `doc-${Date.now()}`,
-      ...document,
-      approved: false,
-      rejected: false,
-      dateUploaded: new Date().toISOString(), // Make sure to set the dateUploaded
-    };
-
-    setLoans((prevLoans) =>
-      prevLoans.map((loan) =>
-        loan.id === loanId ? { ...loan, documents: [...loan.documents, newDocument] } : loan
-      )
-    );
-  };
-
-  const updateDocument = (loanId: string, documentId: string, updates: Partial<Document>) => {
-    setLoans((prevLoans) =>
-      prevLoans.map((loan) => {
-        if (loan.id === loanId) {
-          const updatedDocuments = loan.documents.map((doc) =>
-            doc.id === documentId ? { ...doc, ...updates } : doc
-          );
-          return { ...loan, documents: updatedDocuments };
-        }
-        return loan;
-      })
-    );
-  };
-
-  const deleteDocument = (loanId: string, documentId: string) => {
-    setLoans((prevLoans) =>
-      prevLoans.map((loan) =>
-        loan.id === loanId
-          ? { ...loan, documents: loan.documents.filter((doc) => doc.id !== documentId) }
-          : loan
-      )
-    );
-  };
-
-  const saveInsight = (loanId: string, insightId: string) => {
-    setLoans((prevLoans) =>
-      prevLoans.map((loan) => {
-        if (loan.id === loanId) {
-          const insightToSave = loan.insights.find((insight) => insight.id === insightId);
-          if (insightToSave) {
-            const updatedInsights = loan.insights.map((insight) =>
-              insight.id === insightId ? { ...insight, saved: true } : insight
-            );
-            const updatedSavedInsights = [...loan.savedInsights, { ...insightToSave, saved: true }];
-            return { ...loan, insights: updatedInsights, savedInsights: updatedSavedInsights };
-          }
-        }
-        return loan;
-      })
-    );
-  };
-
-  const unsaveInsight = (loanId: string, insightId: string) => {
-    setLoans((prevLoans) =>
-      prevLoans.map((loan) => {
-        if (loan.id === loanId) {
-          const updatedSavedInsights = loan.savedInsights.filter((insight) => insight.id !== insightId);
-          return { ...loan, savedInsights: updatedSavedInsights };
-        }
-        return loan;
-      })
-    );
-  };
-
-  const addInsight = (loanId: string, insight: Omit<Insight, 'id' | 'saved'>) => {
-    const newInsight: Insight = {
-      id: `insight-${Date.now()}`,
-      ...insight,
-      saved: false,
-      comments: [],
-    };
-
-    setLoans((prevLoans) =>
-      prevLoans.map((loan) =>
-        loan.id === loanId ? { ...loan, insights: [...loan.insights, newInsight] } : loan
-      )
-    );
-  };
-
-  const addComment = (loanId: string, insightId: string, comment: Comment) => {
-    setLoans(prevLoans => 
-      prevLoans.map(loan => {
-        if (loan.id !== loanId) return loan;
-        
-        // Add comment to regular insights
-        const updatedInsights = loan.insights.map(insight => {
-          if (insight.id !== insightId) return insight;
-          
-          const comments = insight.comments || [];
-          return {
-            ...insight,
-            comments: [
-              ...comments,
-              {
-                id: `comment-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`,
-                ...comment
-              }
-            ]
-          };
-        });
-        
-        // Also add comment to saved insights if the insight is saved
-        const updatedSavedInsights = loan.savedInsights.map(insight => {
-          if (insight.id !== insightId) return insight;
-          
-          const comments = insight.comments || [];
-          return {
-            ...insight,
-            comments: [
-              ...comments,
-              {
-                id: `comment-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`,
-                ...comment
-              }
-            ]
-          };
-        });
-        
-        return {
-          ...loan,
-          insights: updatedInsights,
-          savedInsights: updatedSavedInsights
-        };
-      })
-    );
+    setLoans(loans.filter(loan => loan.id !== id));
   };
 
   return (
-    <LoanContext.Provider value={{
-      loans,
-      getLoanById,
-      addLoan,
-      updateLoan,
-      deleteLoan,
-      addDocument,
-      updateDocument,
-      deleteDocument,
-      saveInsight,
-      unsaveInsight,
-      addInsight,
-      addComment
-    }}>
+    <LoanContext.Provider value={{ loans, addLoan, getLoan, updateLoan, deleteLoan }}>
       {children}
     </LoanContext.Provider>
   );
 }
-
-export const useLoanContext = () => {
-  const context = useContext(LoanContext);
-  if (context === undefined) {
-    throw new Error("useLoanContext must be used within a LoanProvider");
-  }
-  return context;
-};
