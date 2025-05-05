@@ -16,6 +16,7 @@ const CaeloChatContext = createContext<CaeloChatContextType>({
 });
 
 export function CaeloChatProvider({ children }: { children: React.ReactNode }) {
+  // Start with just the collapsed view showing
   const [isChatOpen, setIsChatOpen] = useState(false);
 
   const openCaeloChat = () => setIsChatOpen(true);

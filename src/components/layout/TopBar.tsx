@@ -79,7 +79,6 @@ export function TopBar() {
               variant="outline"
               className="h-8"
               onClick={() => {
-                // This would toggle the deal summary view in the actual app
                 window.location.href = `${location.pathname}?view=deal-summary`;
               }}
             >

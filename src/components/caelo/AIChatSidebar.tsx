@@ -8,12 +8,17 @@ import {
   X, 
   SendHorizontal, 
   PaperclipIcon, 
-  ChevronRight,
   ChevronLeft,
   MessageSquare
 } from "lucide-react";
 import { useCaeloChat } from "@/hooks/use-caelo-chat";
 import { Separator } from "@/components/ui/separator";
+import {
+  Drawer,
+  DrawerContent,
+  DrawerClose,
+} from "@/components/ui/drawer";
+import { cn } from "@/lib/utils";
 
 interface Message {
   type: 'user' | 'ai';
@@ -84,119 +89,133 @@ export function AIChatSidebar({ isOpen, onClose }: AIChatSidebarProps) {
 
   return (
     <div 
-      className={`fixed top-0 right-0 h-screen w-[380px] bg-background border-l shadow-lg z-50 transition-transform duration-300 ease-in-out ${
-        isOpen ? 'translate-x-0' : 'translate-x-full'
-      }`}
+      className={cn(
+        "fixed top-0 right-0 h-screen w-[280px] bg-background border-l shadow-lg z-40 transition-transform duration-300 ease-in-out",
+        isOpen ? "translate-x-0" : "translate-x-[calc(100%-30px)]"
+      )}
     >
-      <div className="flex flex-col h-full">
-        <div className="p-4 border-b flex justify-between items-center">
-          <div className="flex items-center gap-2">
-            <MessageSquare className="h-5 w-5" />
-            <span className="font-medium text-lg">Ask Caelo</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <Button variant="ghost" size="icon" className="h-8 w-8" title="History">
-              <Clock className="h-4 w-4" />
-            </Button>
-            <Button variant="ghost" size="icon" className="h-8 w-8" title="New Chat">
-              <Plus className="h-4 w-4" />
-            </Button>
-            <Button variant="ghost" size="icon" onClick={onClose} className="h-8 w-8" title="Close">
-              <ChevronRight className="h-4 w-4" />
-            </Button>
-          </div>
-        </div>
-        
-        <div className="flex-1 overflow-y-auto p-4">
-          {messages.length > 0 ? (
-            <div className="space-y-4">
-              {messages.map((message, index) => (
-                <div key={index} className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}>
-                  <div className={`max-w-[80%] p-3 rounded-lg ${
-                    message.type === 'user' 
-                      ? 'bg-primary text-primary-foreground' 
-                      : 'bg-muted'
-                  }`}>
-                    {message.content}
-                  </div>
-                </div>
-              ))}
-              <div ref={messagesEndRef} />
-            </div>
-          ) : (
-            <div className="space-y-8 py-8">
-              <div className="text-center mb-10">
-                <MessageSquare className="h-16 w-16 mx-auto mb-4 text-muted-foreground/60" />
-                <h2 className="text-xl font-semibold mb-2">Ask Caelo</h2>
-                <p className="text-muted-foreground">
-                  Ask any questions about the loan in front of you, property documents, or whatever information you might need.
-                </p>
-              </div>
-
-              <div className="space-y-4">
-                <h3 className="text-sm font-medium text-muted-foreground">Research questions</h3>
-                {researchPrompts.map((prompt, index) => (
-                  <Button 
-                    key={index} 
-                    variant="outline" 
-                    className="w-full justify-start h-auto p-4 text-base font-normal"
-                    onClick={() => setInputValue(`${prompt.title} ${prompt.placeholder}`)}
-                  >
-                    {prompt.title} <span className="text-muted-foreground ml-1">{prompt.placeholder}</span>
-                  </Button>
-                ))}
-              </div>
-
-              <div className="space-y-4">
-                <h3 className="text-sm font-medium text-muted-foreground">Writing help</h3>
-                {writingPrompts.map((prompt, index) => (
-                  <Button 
-                    key={index} 
-                    variant="outline" 
-                    className="w-full justify-start h-auto p-4 text-base font-normal"
-                    onClick={() => {
-                      const promptText = prompt.placeholder ? `${prompt.title} ${prompt.placeholder}` : prompt.title;
-                      setInputValue(promptText);
-                    }}
-                  >
-                    {prompt.title} {prompt.placeholder && <span className="text-muted-foreground ml-1">{prompt.placeholder}</span>}
-                  </Button>
-                ))}
-              </div>
-            </div>
+      <div className="flex h-full">
+        {/* Collapsed handle bar */}
+        <div 
+          className={cn(
+            "absolute left-0 top-1/2 -translate-x-[15px] h-24 w-[30px] bg-background border-l border-t border-b rounded-l-md cursor-pointer flex items-center justify-center",
+            isOpen ? "opacity-0 pointer-events-none" : "opacity-100"
           )}
+          onClick={onClose}
+        >
+          <MessageSquare className="h-5 w-5" />
         </div>
 
-        <div className="p-4 border-t space-y-4">
-          <div className="flex gap-2">
-            <Button className="flex-1" variant="outline" size="sm">
-              <span className="truncate">Current document</span>
-              <X className="ml-1 h-3 w-3" />
-            </Button>
-            <Button className="flex-1" variant="outline" size="sm">
-              <span className="truncate">Web</span>
-              <X className="ml-1 h-3 w-3" />
-            </Button>
-          </div>
-          <Button className="w-32" variant="outline" size="sm">
-            <span className="truncate">Library</span>
-            <X className="ml-1 h-3 w-3" />
-          </Button>
-          <div className="flex items-center gap-2 border rounded-md px-4 py-2">
-            <Input
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-              onKeyPress={handleKeyPress}
-              placeholder="Ask Caelo a question..."
-              className="border-0 flex-1 focus-visible:ring-0 focus-visible:ring-offset-0"
-            />
+        <div className="flex flex-col h-full w-full">
+          <div className="p-4 border-b flex justify-between items-center">
             <div className="flex items-center gap-2">
-              <Button variant="ghost" size="icon" className="h-8 w-8">
-                <PaperclipIcon className="h-4 w-4" />
+              <MessageSquare className="h-5 w-5" />
+              <span className="font-medium text-lg">Ask Caelo</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Button variant="ghost" size="icon" className="h-8 w-8" title="History">
+                <Clock className="h-4 w-4" />
               </Button>
-              <Button onClick={handleSend} size="icon" className="h-8 w-8" variant="default">
-                <SendHorizontal className="h-4 w-4" />
+              <Button variant="ghost" size="icon" className="h-8 w-8" title="New Chat">
+                <Plus className="h-4 w-4" />
               </Button>
+              <Button variant="ghost" size="icon" onClick={onClose} className="h-8 w-8" title="Collapse">
+                <ChevronLeft className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
+          
+          <div className="flex-1 overflow-y-auto p-4">
+            {messages.length > 0 ? (
+              <div className="space-y-4">
+                {messages.map((message, index) => (
+                  <div key={index} className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}>
+                    <div className={`max-w-[80%] p-3 rounded-lg ${
+                      message.type === 'user' 
+                        ? 'bg-primary text-primary-foreground' 
+                        : 'bg-muted'
+                    }`}>
+                      {message.content}
+                    </div>
+                  </div>
+                ))}
+                <div ref={messagesEndRef} />
+              </div>
+            ) : (
+              <div className="space-y-8 py-8">
+                <div className="text-center mb-10">
+                  <MessageSquare className="h-16 w-16 mx-auto mb-4 text-muted-foreground/60" />
+                  <h2 className="text-xl font-semibold mb-2">Ask Caelo</h2>
+                  <p className="text-muted-foreground">
+                    Ask any questions about the loan in front of you, property documents, or whatever information you might need.
+                  </p>
+                </div>
+
+                <div className="space-y-4">
+                  <h3 className="text-sm font-medium text-muted-foreground">Research questions</h3>
+                  {researchPrompts.map((prompt, index) => (
+                    <Button 
+                      key={index} 
+                      variant="outline" 
+                      className="w-full justify-start h-auto p-4 text-base font-normal"
+                      onClick={() => setInputValue(`${prompt.title} ${prompt.placeholder}`)}
+                    >
+                      {prompt.title} <span className="text-muted-foreground ml-1">{prompt.placeholder}</span>
+                    </Button>
+                  ))}
+                </div>
+
+                <div className="space-y-4">
+                  <h3 className="text-sm font-medium text-muted-foreground">Writing help</h3>
+                  {writingPrompts.map((prompt, index) => (
+                    <Button 
+                      key={index} 
+                      variant="outline" 
+                      className="w-full justify-start h-auto p-4 text-base font-normal"
+                      onClick={() => {
+                        const promptText = prompt.placeholder ? `${prompt.title} ${prompt.placeholder}` : prompt.title;
+                        setInputValue(promptText);
+                      }}
+                    >
+                      {prompt.title} {prompt.placeholder && <span className="text-muted-foreground ml-1">{prompt.placeholder}</span>}
+                    </Button>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
+          <div className="p-4 border-t space-y-4">
+            <div className="flex gap-2">
+              <Button className="flex-1" variant="outline" size="sm">
+                <span className="truncate">Current document</span>
+                <X className="ml-1 h-3 w-3" />
+              </Button>
+              <Button className="flex-1" variant="outline" size="sm">
+                <span className="truncate">Web</span>
+                <X className="ml-1 h-3 w-3" />
+              </Button>
+            </div>
+            <Button className="w-32" variant="outline" size="sm">
+              <span className="truncate">Library</span>
+              <X className="ml-1 h-3 w-3" />
+            </Button>
+            <div className="flex items-center gap-2 border rounded-md px-4 py-2">
+              <Input
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+                onKeyPress={handleKeyPress}
+                placeholder="Ask Caelo a question..."
+                className="border-0 flex-1 focus-visible:ring-0 focus-visible:ring-offset-0"
+              />
+              <div className="flex items-center gap-2">
+                <Button variant="ghost" size="icon" className="h-8 w-8">
+                  <PaperclipIcon className="h-4 w-4" />
+                </Button>
+                <Button onClick={handleSend} size="icon" className="h-8 w-8" variant="default">
+                  <SendHorizontal className="h-4 w-4" />
+                </Button>
+              </div>
             </div>
           </div>
         </div>
