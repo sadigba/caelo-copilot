@@ -21,7 +21,6 @@ export default function AppLayout({ children }: AppLayoutProps) {
           <main className="flex-1 relative">
             {children}
           </main>
-          
           <AIChatSidebar isOpen={isChatOpen} onClose={closeCaeloChat} />
         </div>
       </div>
