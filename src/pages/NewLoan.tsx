@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -48,6 +47,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Textarea } from "@/components/ui/textarea";
 
 // Form schema
 const formSchema = z.object({
@@ -257,6 +257,7 @@ export default function NewLoan() {
                               <SelectItem value="construction">Construction</SelectItem>
                               <SelectItem value="bridge">Bridge</SelectItem>
                               <SelectItem value="permanent">Permanent</SelectItem>
+                              <SelectItem value="owner-occupied-cre">Owner-Occupied CRE</SelectItem>
                             </SelectContent>
                           </Select>
                           <FormMessage />
@@ -270,20 +271,16 @@ export default function NewLoan() {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Loan Purpose</FormLabel>
-                          <Select onValueChange={field.onChange} defaultValue={field.value}>
-                            <FormControl>
-                              <SelectTrigger>
-                                <SelectValue placeholder="Select loan purpose" />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              <SelectItem value="purchase">Purchase</SelectItem>
-                              <SelectItem value="refinance">Refinance</SelectItem>
-                              <SelectItem value="cashout">Cash-Out Refinance</SelectItem>
-                              <SelectItem value="renovation">Renovation</SelectItem>
-                              <SelectItem value="expansion">Business Expansion</SelectItem>
-                            </SelectContent>
-                          </Select>
+                          <FormControl>
+                            <Textarea 
+                              placeholder="Describe the purpose of this loan in detail" 
+                              className="min-h-[100px]"
+                              {...field} 
+                            />
+                          </FormControl>
+                          <FormDescription>
+                            Please provide detailed information about how you plan to use the loan
+                          </FormDescription>
                           <FormMessage />
                         </FormItem>
                       )}
