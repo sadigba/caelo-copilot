@@ -124,7 +124,7 @@ export default function LoanDetail() {
   return (
     <>
       {/* Header with sidebar toggle, title and action buttons */}
-      <div className="border-b">
+      <div>
         <div className="flex items-center justify-between px-6 py-3">
           <div className="flex items-center gap-3">
             <SidebarTrigger />
