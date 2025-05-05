@@ -1,11 +1,11 @@
 
-import { LoanForm } from "./LoanForm";
-import { useLoan } from "@/context/LoanContext";
+import LoanForm from "./LoanForm";
+import { useLoanContext } from "@/context/LoanContext";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 
 export function LoanFormWrapper() {
-  const { addLoan } = useLoan();
+  const { addLoan } = useLoanContext();
   const navigate = useNavigate();
   const { toast } = useToast();
   

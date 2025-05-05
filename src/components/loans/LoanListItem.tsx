@@ -44,6 +44,9 @@ function StatusBadge({ status }: { status: Loan["status"] }) {
       variant = "secondary";
       break;
     case "Ready for Review":
+    case "In Review":
+    case "Under Review":
+    case "New Application":
       variant = "default";
       break;
     case "Awaiting Docs":

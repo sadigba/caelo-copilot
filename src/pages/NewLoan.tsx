@@ -1,5 +1,5 @@
 
-import { LoanForm } from "@/components/loans/LoanForm";
+import LoanForm from "@/components/loans/LoanForm";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { useEffect } from "react";
 
