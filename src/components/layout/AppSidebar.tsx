@@ -1,5 +1,5 @@
 
-import { Home, FileText, Settings, MessageSquare, Plus } from "lucide-react";
+import { Home, FileText, Settings, MessageSquare, Plus, FilePlus } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -21,7 +21,7 @@ const mainItems = [
   {
     title: "Applications",
     url: "/",
-    icon: Home,
+    icon: FileText, // Using FileText icon for "Applications" as shown in the image
   },
 ];
 
@@ -48,7 +48,7 @@ export function AppSidebar() {
         <SidebarMenuItem className="mb-1">
           <SidebarMenuButton asChild>
             <Link to="/new-loan" className="flex items-center text-sm">
-              <Plus className="mr-2 h-4 w-4" />
+              <FilePlus className="mr-2 h-4 w-4" />
               <span>New Application</span>
             </Link>
           </SidebarMenuButton>
