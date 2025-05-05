@@ -9,19 +9,13 @@ import {
 import { useLoanContext } from "@/context/LoanContext";
 import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { ArrowLeft, ChevronDown, Download, File, FileText, RefreshCw, Upload, AlertTriangle, BarChart2 } from "lucide-react";
+import { ArrowLeft, FileText, Upload, AlertTriangle, BarChart2 } from "lucide-react";
 import { DocumentTable } from "@/components/loans/DocumentTable";
 import { DocumentUpload } from "@/components/loans/DocumentUpload";
 import { LoanSummary } from "@/components/loans/LoanSummary";
 import { LoanInsights } from "@/components/loans/LoanInsights";
 import { SavedInsights } from "@/components/loans/SavedInsights";
 import { toast } from "sonner";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import {
   Dialog,
   DialogContent,
@@ -45,7 +39,6 @@ export default function LoanDetail() {
 
   const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
   const [isRequestDialogOpen, setIsRequestDialogOpen] = useState(false);
-  const [refreshing, setRefreshing] = useState(false);
   const [showDealSummary, setShowDealSummary] = useState(false);
   
   // States for the request documentation dialog
@@ -80,34 +73,6 @@ export default function LoanDetail() {
   const hasApprovedDocuments = loan.documents.some((doc) => doc.approved);
   const allDocumentsReviewed = loan.documents.length > 0 && 
     loan.documents.every((doc) => doc.approved || doc.rejected);
-
-  const handleRefresh = () => {
-    if (!hasApprovedDocuments) {
-      toast.error("No approved documents to analyze");
-      return;
-    }
-
-    setRefreshing(true);
-    
-    // Simulate refresh delay
-    setTimeout(() => {
-      setRefreshing(false);
-      toast.success("Loan analysis refreshed");
-    }, 2000);
-  };
-
-  const handleDownload = (type: "model" | "memo") => {
-    if (!hasApprovedDocuments) {
-      toast.error("Approve documents to enable downloads");
-      return;
-    }
-    
-    const fileName = type === "model" 
-      ? `${loan.businessName.replace(/\s+/g, "_")}_Financial_Model.xlsx` 
-      : `${loan.businessName.replace(/\s+/g, "_")}_Credit_Memo.docx`;
-    
-    toast.success(`${fileName} downloaded`);
-  };
 
   const handleRequestSubmit = () => {
     if (documentTags.length === 0) {
@@ -274,7 +239,7 @@ export default function LoanDetail() {
 
   return (
     <>
-      {/* Header with sidebar toggle, title and action buttons */}
+      {/* Header with sidebar trigger, title and navigation */}
       <div>
         <div className="flex items-center justify-between px-6 py-3">
           <div className="flex items-center gap-3">
@@ -296,60 +261,6 @@ export default function LoanDetail() {
                 </p>
               </div>
             </div>
-          </div>
-          <div className="flex gap-3">
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={handleRefresh}
-              disabled={!hasApprovedDocuments || refreshing}
-              className="h-8"
-            >
-              <RefreshCw className={`mr-2 h-4 w-4 ${refreshing ? 'animate-spin' : ''}`} />
-              {refreshing ? "Analyzing..." : "Refresh"}
-            </Button>
-            
-            {/* Dropdown menu button replacing individual buttons */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  size="sm"
-                  variant="outline"
-                  disabled={!hasApprovedDocuments}
-                  className="h-8"
-                >
-                  <Download className="mr-2 h-4 w-4" />
-                  Download
-                  <ChevronDown className="ml-2 h-4 w-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem 
-                  onClick={() => handleDownload("model")}
-                  className="cursor-pointer"
-                >
-                  <File className="mr-2 h-4 w-4" />
-                  Financial Model
-                </DropdownMenuItem>
-                <DropdownMenuItem 
-                  onClick={() => handleDownload("memo")}
-                  className="cursor-pointer"
-                >
-                  <File className="mr-2 h-4 w-4" />
-                  Credit Memo
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-            
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={toggleDealSummary}
-              className="h-8"
-            >
-              <BarChart2 className="mr-2 h-4 w-4" />
-              Deal Summary
-            </Button>
           </div>
         </div>
       </div>

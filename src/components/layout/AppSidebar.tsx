@@ -41,14 +41,14 @@ const managementItems = [
 export function AppSidebar() {
   return (
     <Sidebar className="border-r">
-      <SidebarHeader className="px-6 py-5 border-b">
+      <SidebarHeader className="px-4 py-3">
         <DropdownMenu>
-          <DropdownMenuTrigger className="flex items-center gap-2 rounded-md p-1.5 hover:bg-accent outline-none">
-            <Avatar className="h-8 w-8 bg-muted">
+          <DropdownMenuTrigger className="flex items-center gap-2 rounded-md p-1 hover:bg-accent outline-none">
+            <Avatar className="h-6 w-6 bg-muted">
               <AvatarFallback>J</AvatarFallback>
             </Avatar>
-            <span className="text-lg font-medium">John</span>
-            <ChevronDown className="h-4 w-4 text-muted-foreground" />
+            <span className="text-sm font-medium">John</span>
+            <ChevronDown className="h-3 w-3 text-muted-foreground" />
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start" className="w-56">
             <DropdownMenuItem asChild>
