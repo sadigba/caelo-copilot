@@ -9,6 +9,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useState } from "react";
+import { User, LogOut, ChevronDown } from "lucide-react";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 export function TopBar() {
   const { toggleCaeloChat } = useCaeloChat();
@@ -41,9 +43,29 @@ export function TopBar() {
   };
 
   return (
-    <div className="h-14 bg-background flex items-center justify-between px-4">
+    <div className="h-14 bg-background border-b flex items-center justify-between px-4">
       <div className="flex items-center">
-        {/* Left side content would go here */}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size="sm" className="h-8 gap-1">
+              <Avatar className="h-5 w-5">
+                <AvatarFallback>J</AvatarFallback>
+              </Avatar>
+              <span>John</span>
+              <ChevronDown className="h-3 w-3" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="start" className="w-56">
+            <DropdownMenuItem className="cursor-pointer flex items-center gap-2">
+              <User className="h-4 w-4" />
+              <span>Manage Account</span>
+            </DropdownMenuItem>
+            <DropdownMenuItem className="cursor-pointer flex items-center gap-2">
+              <LogOut className="h-4 w-4" />
+              <span>Logout</span>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
       <div className="flex items-center space-x-2">
         {isLoanDetailPage && (
@@ -97,10 +119,10 @@ export function TopBar() {
         <Button 
           variant="ghost" 
           onClick={toggleCaeloChat} 
-          className="flex items-center"
           size="sm"
+          className="h-8"
         >
-          <span>Ask Caelo</span>
+          Ask Caelo
         </Button>
       </div>
     </div>

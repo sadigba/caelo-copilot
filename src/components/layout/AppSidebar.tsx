@@ -1,5 +1,5 @@
 
-import { FileText, Settings, FilePlus, User, LogOut, ChevronDown } from "lucide-react";
+import { FileText, Settings, FilePlus } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -13,13 +13,6 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { Link } from "react-router-dom";
-import { 
-  DropdownMenu, 
-  DropdownMenuContent, 
-  DropdownMenuItem, 
-  DropdownMenuTrigger 
-} from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 // Menu items
 const mainItems = [
@@ -42,27 +35,7 @@ export function AppSidebar() {
   return (
     <Sidebar className="border-r">
       <SidebarHeader className="py-1 px-3">
-        <DropdownMenu>
-          <DropdownMenuTrigger className="flex items-center gap-1 rounded-md p-1 hover:bg-accent outline-none">
-            <Avatar className="h-5 w-5 bg-muted">
-              <AvatarFallback>J</AvatarFallback>
-            </Avatar>
-            <span className="text-sm font-medium">John</span>
-            <ChevronDown className="h-3 w-3 text-muted-foreground" />
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="start" className="w-56">
-            <DropdownMenuItem asChild>
-              <Link to="/settings" className="flex items-center gap-2">
-                <User className="h-4 w-4" />
-                <span>Manage Account</span>
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <LogOut className="h-4 w-4 mr-2" />
-              <span>Logout</span>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        {/* Logo or app name could go here */}
       </SidebarHeader>
       <SidebarContent className="p-4">
         <SidebarMenuItem className="mb-1">

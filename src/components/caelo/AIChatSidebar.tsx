@@ -10,11 +10,6 @@ import {
   SendHorizontal, 
   PaperclipIcon
 } from "lucide-react";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
 
 interface Message {
   type: 'user' | 'ai';

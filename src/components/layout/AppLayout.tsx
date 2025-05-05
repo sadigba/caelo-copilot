@@ -15,12 +15,14 @@ export default function AppLayout({ children }: AppLayoutProps) {
   return (
     <SidebarProvider>
       <div className="min-h-screen flex flex-col w-full">
-        <TopBar />
-        <div className="flex flex-1 w-full">
+        <div className="flex flex-1">
           <AppSidebar />
-          <main className="flex-1 relative">
-            {children}
-          </main>
+          <div className="flex-1 flex flex-col">
+            <TopBar />
+            <main className="flex-1">
+              {children}
+            </main>
+          </div>
           <AIChatSidebar isOpen={isChatOpen} onClose={closeCaeloChat} />
         </div>
       </div>
