@@ -1,3 +1,3 @@
 
-// Add a named export for the LoanForm component
+// Update the CommentsSidebar export to use named export syntax
 export { CommentsSidebar } from './CommentsSidebar';
