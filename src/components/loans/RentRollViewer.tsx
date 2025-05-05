@@ -115,7 +115,7 @@ export function RentRollViewer({ document, open, onClose }: RentRollViewerProps)
             Rent Roll: {document.name}
           </DialogTitle>
           <DialogDescription>
-            Rent roll document uploaded on {new Date(document.dateUploaded).toLocaleDateString()}
+            Rent roll document uploaded on {document.dateUploaded ? new Date(document.dateUploaded).toLocaleDateString() : "N/A"}
           </DialogDescription>
         </DialogHeader>
 

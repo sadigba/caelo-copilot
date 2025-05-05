@@ -1,4 +1,3 @@
-
 import { useParams } from "react-router-dom";
 import { useLoanContext } from "@/context/LoanContext";
 import { AlertTriangle, ArrowLeft } from "lucide-react";
@@ -41,7 +40,7 @@ export default function DealSummary() {
     issues.push("Tax return not uploaded");
   }
   
-  if (personalFinancialDoc) {
+  if (personalFinancialDoc && personalFinancialDoc.dateUploaded) {
     const docDate = new Date(personalFinancialDoc.dateUploaded);
     const oneYearAgo = new Date();
     oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
@@ -50,11 +49,7 @@ export default function DealSummary() {
       issues.push("Personal financial statement is over 12 months old");
     }
   }
-  
-  if (financialStatementsDoc) {
-    issues.push("Business plan contains mismatched revenue* values");
-  }
-  
+
   // Audit trail entries
   const auditTrail = [
     {
@@ -121,7 +116,7 @@ export default function DealSummary() {
               <div className="grid grid-cols-3 py-4 border-b border-gray-200">
                 <div className="font-medium">Financial Statements</div>
                 <div>{financialStatementsDoc ? "Uploaded" : "Missing"}</div>
-                <div>{financialStatementsDoc ? formatDate(new Date(financialStatementsDoc.dateUploaded)) : "—"}</div>
+                <div>{financialStatementsDoc && financialStatementsDoc.dateUploaded ? formatDate(financialStatementsDoc.dateUploaded) : "—"}</div>
               </div>
               
               <div className="grid grid-cols-3 py-4 border-b border-gray-200">
@@ -132,7 +127,7 @@ export default function DealSummary() {
                   )}
                   <span>{taxReturnsDoc ? "Uploaded" : "Missing"}</span>
                 </div>
-                <div>{taxReturnsDoc ? formatDate(new Date(taxReturnsDoc.dateUploaded)) : "—"}</div>
+                <div>{taxReturnsDoc && taxReturnsDoc.dateUploaded ? formatDate(taxReturnsDoc.dateUploaded) : "—"}</div>
               </div>
               
               <div className="grid grid-cols-3 py-4 border-b border-gray-200">

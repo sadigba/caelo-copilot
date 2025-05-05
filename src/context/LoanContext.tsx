@@ -23,7 +23,12 @@ export interface Document {
   type?: string;
   approved: boolean;
   rejected: boolean;
+  dateUploaded: string; // Adding the missing property
 }
+
+export type LoanType = "Owner-Occupied CRE" | "Investment Property" | "Construction" | "Land Loans" | "Bridge" | "Refinance/Cash Out";
+export type PropertyType = "Multifamily" | "Retail" | "Office" | "Warehouse" | "Industrial" | "Mixed-Use" | "Other";
+export type LoanStatus = "In Progress" | "Ready for Review" | "Awaiting Docs" | "Approved" | "Declined" | "Active" | "Pending";
 
 export interface Loan {
   id: string;
@@ -39,6 +44,18 @@ export interface Loan {
   documents: Document[];
   insights: Insight[];
   savedInsights: Insight[];
+  
+  // Adding missing properties
+  submissionDate?: string;
+  lastUpdated?: string;
+  purpose?: string;
+  industry?: string;
+  yearsInOperation?: number;
+  sponsorName?: string;
+  sponsorTitle?: string;
+  sponsorEmail?: string;
+  sponsorPhone?: string;
+  propertyAddress?: string;
 }
 
 interface LoanContextType {
@@ -76,6 +93,7 @@ const mockLoans: Loan[] = [
         type: "Appraisal",
         approved: true,
         rejected: false,
+        dateUploaded: "2023-01-05",
       },
       {
         id: "102",
@@ -84,6 +102,7 @@ const mockLoans: Loan[] = [
         type: "Insurance",
         approved: true,
         rejected: false,
+        dateUploaded: "2023-01-10",
       },
     ],
     insights: [
@@ -148,6 +167,7 @@ const mockLoans: Loan[] = [
         type: "Plan",
         approved: false,
         rejected: false,
+        dateUploaded: "2022-07-20",
       },
       {
         id: "202",
@@ -156,6 +176,7 @@ const mockLoans: Loan[] = [
         type: "Financial",
         approved: false,
         rejected: false,
+        dateUploaded: "2022-07-22",
       },
     ],
     insights: [],
@@ -165,7 +186,7 @@ const mockLoans: Loan[] = [
 
 export const LoanContext = createContext<LoanContextType | undefined>(undefined);
 
-export function LoanProvider({ children }: { children: React.ReactNode }) {
+export const LoanProvider = ({ children }: { children: React.ReactNode }) => {
   const [loans, setLoans] = useState<Loan[]>(mockLoans);
 
   const getLoanById = (id: string): Loan | undefined => {
@@ -179,6 +200,12 @@ export function LoanProvider({ children }: { children: React.ReactNode }) {
       documents: [],
       insights: [],
       savedInsights: [],
+      loanTerm: loan.loanTerm || 36, // Default values for required properties
+      interestRate: loan.interestRate || 0.05,
+      originationDate: loan.originationDate || new Date().toISOString(),
+      maturityDate: loan.maturityDate || new Date(new Date().setFullYear(new Date().getFullYear() + 3)).toISOString(),
+      submissionDate: new Date().toISOString(),
+      lastUpdated: new Date().toISOString()
     };
     setLoans((prevLoans) => [...prevLoans, newLoan]);
   };
@@ -199,6 +226,7 @@ export function LoanProvider({ children }: { children: React.ReactNode }) {
       ...document,
       approved: false,
       rejected: false,
+      dateUploaded: new Date().toISOString(), // Make sure to set the dateUploaded
     };
 
     setLoans((prevLoans) =>

@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -89,19 +88,11 @@ export function LoanForm() {
     const newLoan = {
       ...values,
       status: "In Progress" as LoanStatus,
-      // Make sure all required fields are explicitly defined, not optional
-      loanType: values.loanType,
-      loanAmount: values.loanAmount,
-      purpose: values.purpose,
-      businessName: values.businessName,
-      industry: values.industry || "",
-      yearsInOperation: values.yearsInOperation || 0,
-      sponsorName: values.sponsorName,
-      sponsorTitle: values.sponsorTitle || "",
-      sponsorEmail: values.sponsorEmail,
-      sponsorPhone: values.sponsorPhone,
-      propertyAddress: values.propertyAddress,
-      propertyType: values.propertyType
+      // Add required fields for Loan type
+      loanTerm: 36, // Default to 36 months
+      interestRate: 0.05, // Default to 5%
+      originationDate: new Date().toISOString(),
+      maturityDate: new Date(new Date().setFullYear(new Date().getFullYear() + 3)).toISOString(),
     };
     
     addLoan(newLoan);

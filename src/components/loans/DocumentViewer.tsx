@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import {
   Dialog,
@@ -141,7 +140,7 @@ export function DocumentViewer({ document, open, onClose }: DocumentViewerProps)
           {/* Footer with page controls */}
           <div className="px-6 py-4 border-t flex justify-between items-center">
             <div className="text-sm text-muted-foreground">
-              Document uploaded on {new Date(document.dateUploaded).toLocaleDateString()}
+              Document uploaded on {document.dateUploaded ? new Date(document.dateUploaded).toLocaleDateString() : "N/A"}
             </div>
             <div className="flex items-center gap-2">
               <Button 
