@@ -10,7 +10,6 @@ import {
   PaperclipIcon, 
   MessageSquare,
   ChevronRight,
-  ChevronLeft,
   X
 } from "lucide-react";
 import { useCaeloChat } from "@/hooks/use-caelo-chat";
@@ -67,24 +66,10 @@ export function AIChatPopup() {
 
   if (!isChatOpen) return null;
 
-  // Example prompts
-  const researchPrompts = [
-    { title: "Find research ideas for the", placeholder: "topic" },
-    { title: "Explain in simple words this", placeholder: "concept" }
-  ];
-
-  const writingPrompts = [
-    { title: "Help me outline a paper on", placeholder: "topic" },
-    { title: "Review my draft for clarity - what parts might confuse readers?" },
-    { title: "Check for overuse of passive voice" },
-    { title: "Check for technical language" },
-    { title: "Draft an abstract and keywords for this document" }
-  ];
-
   return (
     <Popover open={isChatOpen} onOpenChange={closeCaeloChat}>
       <PopoverContent 
-        className="w-[380px] h-[85vh] p-0 mr-4" 
+        className="w-[380px] h-[550px] p-0 mr-4" 
         align="end" 
         sideOffset={16}
       >
@@ -126,65 +111,18 @@ export function AIChatPopup() {
                 <div ref={messagesEndRef} />
               </div>
             ) : (
-              <div className="space-y-8 py-8">
-                <div className="text-center mb-10">
-                  <MessageSquare className="h-16 w-16 mx-auto mb-4 text-muted-foreground/60" />
-                  <h2 className="text-xl font-semibold mb-2">Ask Caelo</h2>
-                  <p className="text-muted-foreground">
-                    Ask any questions about the loan in front of you, property documents, or whatever information you might need.
-                  </p>
-                </div>
-
-                <div className="space-y-4">
-                  <h3 className="text-sm font-medium text-muted-foreground">Research questions</h3>
-                  {researchPrompts.map((prompt, index) => (
-                    <Button 
-                      key={index} 
-                      variant="outline" 
-                      className="w-full justify-start h-auto p-4 text-base font-normal"
-                      onClick={() => setInputValue(`${prompt.title} ${prompt.placeholder}`)}
-                    >
-                      {prompt.title} <span className="text-muted-foreground ml-1">{prompt.placeholder}</span>
-                    </Button>
-                  ))}
-                </div>
-
-                <div className="space-y-4">
-                  <h3 className="text-sm font-medium text-muted-foreground">Writing help</h3>
-                  {writingPrompts.map((prompt, index) => (
-                    <Button 
-                      key={index} 
-                      variant="outline" 
-                      className="w-full justify-start h-auto p-4 text-base font-normal"
-                      onClick={() => {
-                        const promptText = prompt.placeholder ? `${prompt.title} ${prompt.placeholder}` : prompt.title;
-                        setInputValue(promptText);
-                      }}
-                    >
-                      {prompt.title} {prompt.placeholder && <span className="text-muted-foreground ml-1">{prompt.placeholder}</span>}
-                    </Button>
-                  ))}
-                </div>
+              <div className="text-center py-6">
+                <MessageSquare className="h-12 w-12 mx-auto mb-3 text-muted-foreground/60" />
+                <h2 className="text-lg font-semibold mb-1">Ask Caelo</h2>
+                <p className="text-sm text-muted-foreground">
+                  Ask any questions about the loan or documents.
+                </p>
               </div>
             )}
           </div>
 
           {/* Context buttons and input */}
           <div className="border-t p-4 space-y-4">
-            <div className="flex gap-2">
-              <Button className="flex-1" variant="outline" size="sm">
-                <span className="truncate">Current document</span>
-                <X className="ml-1 h-3 w-3" />
-              </Button>
-              <Button className="flex-1" variant="outline" size="sm">
-                <span className="truncate">Web</span>
-                <X className="ml-1 h-3 w-3" />
-              </Button>
-            </div>
-            <Button className="w-32" variant="outline" size="sm">
-              <span className="truncate">Library</span>
-              <X className="ml-1 h-3 w-3" />
-            </Button>
             <div className="flex items-center gap-2 rounded-md border px-3 py-2">
               <Input
                 value={inputValue}

@@ -42,7 +42,7 @@ export default function DealSummary() {
   }
   
   if (personalFinancialDoc) {
-    const docDate = new Date(personalFinancialDoc.uploadDate);
+    const docDate = new Date(personalFinancialDoc.dateUploaded);
     const oneYearAgo = new Date();
     oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
     
@@ -109,7 +109,7 @@ export default function DealSummary() {
               <div className="grid grid-cols-3 py-4 border-b border-gray-200">
                 <div className="font-medium">Financial Statements</div>
                 <div>{financialStatementsDoc ? "Uploaded" : "Missing"}</div>
-                <div>{financialStatementsDoc ? formatDate(new Date(financialStatementsDoc.uploadDate)) : "—"}</div>
+                <div>{financialStatementsDoc ? formatDate(new Date(financialStatementsDoc.dateUploaded)) : "—"}</div>
               </div>
               
               <div className="grid grid-cols-3 py-4 border-b border-gray-200">
@@ -120,7 +120,7 @@ export default function DealSummary() {
                   )}
                   <span>{taxReturnsDoc ? "Uploaded" : "Missing"}</span>
                 </div>
-                <div>{taxReturnsDoc ? formatDate(new Date(taxReturnsDoc.uploadDate)) : "—"}</div>
+                <div>{taxReturnsDoc ? formatDate(new Date(taxReturnsDoc.dateUploaded)) : "—"}</div>
               </div>
               
               <div className="grid grid-cols-3 py-4 border-b border-gray-200">
@@ -161,7 +161,7 @@ export default function DealSummary() {
             <div className="space-y-4">
               {auditTrail.map((entry, index) => (
                 <div key={index} className="border-b border-gray-100 pb-4 last:border-0 last:pb-0">
-                  <p className="text-muted-foreground">{formatDate(entry.date, true)}</p>
+                  <p className="text-muted-foreground">{formatDate(entry.date)}</p>
                   <p>{entry.user} {entry.action}</p>
                 </div>
               ))}
