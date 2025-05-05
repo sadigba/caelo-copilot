@@ -9,14 +9,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useState } from "react";
-import { SidebarTrigger } from "@/components/ui/sidebar";
-import { 
-  NavigationMenu, 
-  NavigationMenuContent, 
-  NavigationMenuItem, 
-  NavigationMenuList, 
-  NavigationMenuTrigger 
-} from "@/components/ui/navigation-menu";
 
 export function TopBar() {
   const { toggleCaeloChat } = useCaeloChat();
@@ -37,40 +29,11 @@ export function TopBar() {
   const handleDownload = (type: string) => {
     console.log(`Downloading ${type}`);
   };
-  
-  const toggleDealSummary = () => {
-    // We'll use this to communicate with the LoanDetail page
-    const event = new CustomEvent('toggle-deal-summary');
-    window.dispatchEvent(event);
-  };
-
-  // Get the current page title
-  const getPageTitle = () => {
-    if (isLoanDetailPage) {
-      return "Loan Details";
-    } else if (location.pathname === "/") {
-      return "Applications";
-    } else if (location.pathname === "/settings") {
-      return "Settings";
-    } else if (location.pathname === "/new-loan") {
-      return "New Application";
-    } else {
-      return "Caelo AI";
-    }
-  };
 
   return (
-    <div className="h-14 bg-background flex items-center justify-between px-4">
-      <div className="flex items-center gap-4">
-        <SidebarTrigger className="h-8 w-8" />
-        
-        <NavigationMenu>
-          <NavigationMenuList>
-            <NavigationMenuItem>
-              <span className="text-lg font-medium">{getPageTitle()}</span>
-            </NavigationMenuItem>
-          </NavigationMenuList>
-        </NavigationMenu>
+    <div className="h-14 border-b bg-background flex items-center justify-between px-4">
+      <div className="flex items-center">
+        {/* Left side content would go here */}
       </div>
       <div className="flex items-center space-x-2">
         {isLoanDetailPage && (
@@ -114,7 +77,10 @@ export function TopBar() {
               size="sm"
               variant="outline"
               className="h-8"
-              onClick={toggleDealSummary}
+              onClick={() => {
+                // This would toggle the deal summary view in the actual app
+                console.log("Toggle deal summary");
+              }}
             >
               Deal Summary
             </Button>

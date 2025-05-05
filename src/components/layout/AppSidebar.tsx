@@ -40,15 +40,15 @@ const managementItems = [
 
 export function AppSidebar() {
   return (
-    <Sidebar>
-      <SidebarHeader className="p-4">
+    <Sidebar className="border-r">
+      <SidebarHeader className="py-1 px-3">
         <DropdownMenu>
-          <DropdownMenuTrigger className="flex w-full items-center gap-2 rounded-md p-2 hover:bg-accent outline-none">
-            <Avatar className="h-6 w-6">
+          <DropdownMenuTrigger className="flex items-center gap-1 rounded-md p-1 hover:bg-accent outline-none">
+            <Avatar className="h-5 w-5 bg-muted">
               <AvatarFallback>J</AvatarFallback>
             </Avatar>
             <span className="text-sm font-medium">John</span>
-            <ChevronDown className="h-3 w-3 ml-auto text-muted-foreground" />
+            <ChevronDown className="h-3 w-3 text-muted-foreground" />
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start" className="w-56">
             <DropdownMenuItem asChild>
