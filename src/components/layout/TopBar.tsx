@@ -31,7 +31,7 @@ export function TopBar() {
   };
 
   return (
-    <div className="h-14 border-b bg-background flex items-center justify-between px-4">
+    <div className="h-14 bg-background flex items-center justify-between px-4">
       <div className="flex items-center">
         {/* Left side content would go here */}
       </div>
