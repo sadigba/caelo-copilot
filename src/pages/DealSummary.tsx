@@ -1,3 +1,4 @@
+
 import { useParams } from "react-router-dom";
 import { useLoanContext } from "@/context/LoanContext";
 import { AlertTriangle, ArrowLeft } from "lucide-react";
@@ -41,12 +42,22 @@ export default function DealSummary() {
   }
   
   if (personalFinancialDoc && personalFinancialDoc.dateUploaded) {
-    const docDate = new Date(personalFinancialDoc.dateUploaded);
-    const oneYearAgo = new Date();
-    oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
+    let docDate: Date;
     
-    if (docDate < oneYearAgo) {
-      issues.push("Personal financial statement is over 12 months old");
+    try {
+      docDate = personalFinancialDoc.dateUploaded instanceof Date 
+        ? personalFinancialDoc.dateUploaded 
+        : new Date(personalFinancialDoc.dateUploaded);
+        
+      const oneYearAgo = new Date();
+      oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
+      
+      if (!isNaN(docDate.getTime()) && docDate < oneYearAgo) {
+        issues.push("Personal financial statement is over 12 months old");
+      }
+    } catch (error) {
+      console.error("Error processing document date:", error);
+      issues.push("Personal financial statement date is invalid");
     }
   }
 
@@ -116,7 +127,7 @@ export default function DealSummary() {
               <div className="grid grid-cols-3 py-4 border-b border-gray-200">
                 <div className="font-medium">Financial Statements</div>
                 <div>{financialStatementsDoc ? "Uploaded" : "Missing"}</div>
-                <div>{financialStatementsDoc && financialStatementsDoc.dateUploaded ? formatDate(financialStatementsDoc.dateUploaded) : "—"}</div>
+                <div>{formatDate(financialStatementsDoc?.dateUploaded)}</div>
               </div>
               
               <div className="grid grid-cols-3 py-4 border-b border-gray-200">
@@ -127,7 +138,7 @@ export default function DealSummary() {
                   )}
                   <span>{taxReturnsDoc ? "Uploaded" : "Missing"}</span>
                 </div>
-                <div>{taxReturnsDoc && taxReturnsDoc.dateUploaded ? formatDate(taxReturnsDoc.dateUploaded) : "—"}</div>
+                <div>{formatDate(taxReturnsDoc?.dateUploaded)}</div>
               </div>
               
               <div className="grid grid-cols-3 py-4 border-b border-gray-200">

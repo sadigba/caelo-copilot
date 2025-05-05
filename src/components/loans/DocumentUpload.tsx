@@ -80,6 +80,7 @@ export function DocumentUpload({ loanId, open, setOpen }: DocumentUploadProps) {
           approved: false,
           rejected: false,
           url: fakeUrl,
+          dateUploaded: new Date(), // Add current date as upload date
         });
       });
       

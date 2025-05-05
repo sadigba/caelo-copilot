@@ -234,7 +234,7 @@ export function DocumentTable({
                     </Popover>
                   </div>
                 </td>
-                <td>{doc.dateUploaded ? formatDate(doc.dateUploaded) : "N/A"}</td>
+                <td>{formatDate(doc.dateUploaded)}</td>
                 <td>
                   {doc.approved && <Badge variant="default">Approved</Badge>}
                   {doc.rejected && <Badge variant="destructive">Rejected</Badge>}
