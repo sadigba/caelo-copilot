@@ -9,7 +9,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useState } from "react";
-import { RefreshCcw, Download, FileText, Search } from "lucide-react";
+import { RefreshCcw, Download, FileText, Search, PanelLeft, User, LogOut, ChevronDown } from "lucide-react";
+import { SidebarTrigger } from "@/components/ui/sidebar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 export function TopBar() {
   const { toggleCaeloChat } = useCaeloChat();
@@ -41,10 +43,21 @@ export function TopBar() {
     }
   };
 
+  // Determine the page title based on the current route
+  const getPageTitle = () => {
+    if (location.pathname === '/') return "Loan Applications";
+    if (location.pathname === '/new-loan') return "New Loan Application";
+    if (location.pathname.includes('/deal-summary')) return "Deal Summary";
+    if (isLoanDetailPage) return "Loan Details";
+    if (location.pathname === '/settings') return "Settings";
+    return "";
+  };
+
   return (
     <div className="h-14 bg-background flex items-center justify-between px-4">
-      <div className="flex items-center">
-        {/* Left side content would go here */}
+      <div className="flex items-center gap-4">
+        <SidebarTrigger className="h-7 w-7" />
+        <h1 className="text-2xl font-bold">{getPageTitle()}</h1>
       </div>
       <div className="flex items-center space-x-2">
         {isLoanDetailPage && (
@@ -101,16 +114,38 @@ export function TopBar() {
           </>
         )}
         
-        <Button 
-          variant="ghost" 
-          onClick={toggleCaeloChat} 
-          size="sm"
-          className="h-8"
-          title="Ask Caelo"
-        >
-          <Search />
-          <span className="sr-only">Ask Caelo</span>
-        </Button>
+        <div className="flex items-center gap-2">
+          <DropdownMenu>
+            <DropdownMenuTrigger className="flex items-center gap-1 rounded-md p-1 hover:bg-accent outline-none">
+              <Avatar className="h-5 w-5 bg-muted">
+                <AvatarFallback>J</AvatarFallback>
+              </Avatar>
+              <span className="text-sm font-medium">John</span>
+              <ChevronDown className="h-3 w-3 text-muted-foreground" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-56">
+              <DropdownMenuItem className="cursor-pointer flex items-center gap-2">
+                <User className="h-4 w-4" />
+                <span>Manage Account</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem className="cursor-pointer flex items-center gap-2">
+                <LogOut className="h-4 w-4" />
+                <span>Logout</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        
+          <Button 
+            variant="ghost" 
+            onClick={toggleCaeloChat} 
+            size="sm"
+            className="h-8"
+            title="Ask Caelo"
+          >
+            <Search />
+            <span className="sr-only">Ask Caelo</span>
+          </Button>
+        </div>
       </div>
     </div>
   );
