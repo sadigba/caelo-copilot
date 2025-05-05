@@ -42,7 +42,7 @@ export function TopBar() {
   };
 
   return (
-    <div className="h-14 bg-background flex items-center justify-end px-4">
+    <div className="h-14 bg-background flex items-center justify-end px-4 border-b">
       <div className="flex items-center space-x-2">
         {isLoanDetailPage && (
           <>

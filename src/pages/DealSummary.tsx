@@ -2,9 +2,8 @@
 import { useParams } from "react-router-dom";
 import { useLoanContext } from "@/context/LoanContext";
 import { AlertTriangle, ArrowLeft } from "lucide-react";
-import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
+import { Card } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
 import { formatDate } from "@/lib/utils";
 
@@ -19,35 +18,40 @@ export default function DealSummary() {
     return (
       <div className="text-center py-12">
         <h2 className="text-2xl font-bold mb-4">Loan Not Found</h2>
-        <Button onClick={() => navigate("/")}>Return to Dashboard</Button>
+        <Button onClick={() => navigate("/loans")}>Return to Loan Dashboard</Button>
       </div>
     );
   }
   
-  // Calculate completion percentage based on documents
-  const totalDocuments = 3; // Expected documents (financial statements, tax returns, personal financial statement)
-  const uploadedDocuments = loan.documents.filter(doc => doc.approved).length;
-  const completionPercentage = Math.min(100, Math.round((uploadedDocuments / totalDocuments) * 100));
+  // Check for issues with the deal
+  const issues: string[] = [];
   
-  // Determine document statuses
-  const financialStatementsDoc = loan.documents.find(doc => doc.type?.includes("Financial Statement"));
+  // Check for required documents
+  const rentRollDoc = loan.documents.find(doc => doc.type?.includes("Rent Roll"));
+  const financialStatementsDoc = loan.documents.find(doc => doc.type?.includes("Financial"));
   const taxReturnsDoc = loan.documents.find(doc => doc.type?.includes("Tax"));
   const personalFinancialDoc = loan.documents.find(doc => doc.type?.includes("Personal"));
   
-  // Check for flagged issues
-  const issues = [];
+  if (!rentRollDoc) {
+    issues.push("Rent Roll missing");
+  }
+  
+  if (!financialStatementsDoc) {
+    issues.push("Financial statements missing");
+  }
   
   if (!taxReturnsDoc) {
-    issues.push("Tax return not uploaded");
+    issues.push("Tax returns missing");
   }
   
   if (personalFinancialDoc && personalFinancialDoc.dateUploaded) {
     let docDate: Date;
     
     try {
-      docDate = personalFinancialDoc.dateUploaded instanceof Date 
-        ? personalFinancialDoc.dateUploaded 
-        : new Date(personalFinancialDoc.dateUploaded);
+      // Fix the instance of check by comparing string or Date
+      docDate = typeof personalFinancialDoc.dateUploaded === 'string'
+        ? new Date(personalFinancialDoc.dateUploaded)
+        : personalFinancialDoc.dateUploaded;
         
       const oneYearAgo = new Date();
       oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
@@ -61,69 +65,75 @@ export default function DealSummary() {
     }
   }
 
-  // Audit trail entries
-  const auditTrail = [
-    {
-      date: new Date("2025-03-15T10:23:00"),
-      user: "John Smith",
-      action: "uploaded Financial Statements"
-    },
-    {
-      date: new Date("2025-03-15T10:21:00"),
-      user: "Jane Doe",
-      action: "commented on Business Plan"
-    },
-    {
-      date: new Date("2025-01-10T15:45:00"),
-      user: "John Smith",
-      action: "uploaded outdated doc"
-    }
-  ];
-  
   return (
-    <div className="container py-8 max-w-7xl">
-      {/* Back button */}
-      <div className="mb-6">
-        <Button 
-          variant="ghost" 
-          onClick={() => navigate(`/loans/${loanId}`)} 
-          className="flex items-center gap-2"
+    <div className="container max-w-5xl py-8">
+      <div className="flex items-center mb-6">
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => navigate(`/loans/${loanId}`)}
+          className="mr-4"
         >
-          <ArrowLeft className="h-4 w-4" />
+          <ArrowLeft className="h-4 w-4 mr-1" />
           Back to Loan
         </Button>
+        <h1 className="text-2xl font-semibold">Deal Summary</h1>
       </div>
       
-      <h1 className="text-2xl font-bold mb-8">DEAL SUMMARY</h1>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {/* Deal Information */}
-        <Card className="p-6">
-          <div className="grid grid-cols-2 gap-y-6 gap-x-4">
-            <div>
-              <p className="text-muted-foreground mb-1">Borrower</p>
-              <p className="font-medium">{loan.businessName}</p>
-            </div>
-            <div>
-              <p className="text-muted-foreground mb-1">Loan Type</p>
-              <p className="font-medium">{loan.loanType}</p>
-            </div>
-            <div>
-              <p className="text-muted-foreground mb-1">Requested</p>
-              <p className="font-medium">${loan.loanAmount.toLocaleString()}</p>
-            </div>
-            <div>
-              <p className="text-muted-foreground mb-1">Status</p>
-              <div className="inline-block bg-blue-500 text-white px-4 py-1 rounded-md">
-                In Progress
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="md:col-span-2">
+          <Card className="p-6 mb-6">
+            <h2 className="text-lg font-medium mb-4">Deal Overview</h2>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <p className="text-sm text-muted-foreground mb-1">Property Type</p>
+                <p className="font-medium">{loan.propertyType}</p>
+              </div>
+              <div>
+                <p className="text-sm text-muted-foreground mb-1">Loan Type</p>
+                <p className="font-medium">{loan.loanType}</p>
+              </div>
+              <div>
+                <p className="text-sm text-muted-foreground mb-1">Loan Amount</p>
+                <p className="font-medium">${loan.loanAmount.toLocaleString()}</p>
+              </div>
+              <div>
+                <p className="text-sm text-muted-foreground mb-1">Interest Rate</p>
+                <p className="font-medium">{loan.interestRate}%</p>
+              </div>
+              <div>
+                <p className="text-sm text-muted-foreground mb-1">Loan Term</p>
+                <p className="font-medium">{loan.loanTerm} months</p>
+              </div>
+              <div>
+                <p className="text-sm text-muted-foreground mb-1">Status</p>
+                <p className="font-medium">{loan.status}</p>
               </div>
             </div>
-          </div>
+          </Card>
           
-          <div className="mt-8">
-            <h3 className="text-lg font-bold mb-4">DOCUMENTS OVERVIEW</h3>
-            
-            <div className="border-t border-gray-200">
+          <Card className="p-6">
+            <h2 className="text-lg font-medium mb-4">Documentation Status</h2>
+            <div className="space-y-2">
+              <div className="grid grid-cols-3 py-4 border-b border-gray-200">
+                <div className="font-medium">Document Type</div>
+                <div className="font-medium">Status</div>
+                <div className="font-medium">Date Received</div>
+              </div>
+              
+              <div className="grid grid-cols-3 py-4 border-b border-gray-200">
+                <div className="font-medium">Rent Roll</div>
+                <div>
+                  {!rentRollDoc && (
+                    <span className="inline-flex items-center gap-1 text-amber-600">
+                      <AlertTriangle className="h-4 w-4" /> Missing
+                    </span>
+                  )}
+                  <span>{rentRollDoc ? "Uploaded" : ""}</span>
+                </div>
+                <div>{formatDate(rentRollDoc?.dateUploaded)}</div>
+              </div>
+              
               <div className="grid grid-cols-3 py-4 border-b border-gray-200">
                 <div className="font-medium">Financial Statements</div>
                 <div>{financialStatementsDoc ? "Uploaded" : "Missing"}</div>
@@ -132,9 +142,11 @@ export default function DealSummary() {
               
               <div className="grid grid-cols-3 py-4 border-b border-gray-200">
                 <div className="font-medium">Tax Returns</div>
-                <div className="flex items-center">
+                <div>
                   {!taxReturnsDoc && (
-                    <AlertTriangle className="h-5 w-5 text-amber-500 mr-2" />
+                    <span className="inline-flex items-center gap-1 text-amber-600">
+                      <AlertTriangle className="h-4 w-4" /> Missing
+                    </span>
                   )}
                   <span>{taxReturnsDoc ? "Uploaded" : "Missing"}</span>
                 </div>
@@ -143,46 +155,70 @@ export default function DealSummary() {
               
               <div className="grid grid-cols-3 py-4 border-b border-gray-200">
                 <div className="font-medium">Personal Financial Statement</div>
-                <div className="text-red-500">
-                  {personalFinancialDoc ? "Outdated" : "Missing"}
-                </div>
-                <div>{personalFinancialDoc ? "Jan 10, 2023" : "—"}</div>
+                <div>{personalFinancialDoc ? "Uploaded" : "Missing"}</div>
+                <div>{formatDate(personalFinancialDoc?.dateUploaded)}</div>
               </div>
             </div>
-            
-            <div className="mt-6">
-              <div className="flex justify-between mb-2">
-                <span className="font-medium">Completion</span>
-                <span>{completionPercentage}%</span>
-              </div>
-              <Progress value={completionPercentage} className="h-2" />
-            </div>
-          </div>
-        </Card>
+          </Card>
+        </div>
         
-        {/* Flagged Issues and Audit Trail */}
-        <div className="space-y-8">
-          <Card className="p-6">
-            <h3 className="text-lg font-bold mb-4">FLAGGED ISSUES</h3>
-            <div className="space-y-4">
-              {issues.map((issue, index) => (
-                <div key={index} className="flex items-start gap-2">
-                  <AlertTriangle className="h-5 w-5 text-red-500 mt-1" />
-                  <p>{issue}</p>
-                </div>
-              ))}
-            </div>
+        <div className="md:col-span-1">
+          <Card className="p-6 mb-6">
+            <h2 className="text-lg font-medium mb-4">Issues</h2>
+            {issues.length > 0 ? (
+              <div className="space-y-3">
+                {issues.map((issue, index) => (
+                  <div key={index} className="flex items-start gap-2 text-sm">
+                    <AlertTriangle className="h-4 w-4 text-amber-600 mt-0.5" />
+                    <span>{issue}</span>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-sm text-muted-foreground">No issues found with this deal.</p>
+            )}
           </Card>
           
           <Card className="p-6">
-            <h3 className="text-lg font-bold mb-4">AUDIT TRAIL</h3>
+            <h2 className="text-lg font-medium mb-4">Deal Timeline</h2>
             <div className="space-y-4">
-              {auditTrail.map((entry, index) => (
-                <div key={index} className="border-b border-gray-100 pb-4 last:border-0 last:pb-0">
-                  <p className="text-muted-foreground">{formatDate(entry.date)}</p>
-                  <p>{entry.user} {entry.action}</p>
+              <div className="flex items-start gap-2">
+                <div className="relative">
+                  <div className="flex items-center justify-center w-6 h-6 bg-primary rounded-full">
+                    <span className="text-xs text-white">1</span>
+                  </div>
+                  <div className="absolute top-6 bottom-0 left-3 w-px bg-muted"></div>
                 </div>
-              ))}
+                <div>
+                  <p className="font-medium">Application Received</p>
+                  <p className="text-sm text-muted-foreground">{formatDate(loan.originationDate)}</p>
+                </div>
+              </div>
+              
+              <div className="flex items-start gap-2">
+                <div className="relative">
+                  <div className="flex items-center justify-center w-6 h-6 bg-secondary rounded-full">
+                    <span className="text-xs">2</span>
+                  </div>
+                  <div className="absolute top-6 bottom-0 left-3 w-px bg-muted"></div>
+                </div>
+                <div>
+                  <p className="font-medium">Document Collection</p>
+                  <p className="text-sm text-muted-foreground">In Progress</p>
+                </div>
+              </div>
+              
+              <div className="flex items-start gap-2">
+                <div className="relative">
+                  <div className="flex items-center justify-center w-6 h-6 bg-muted rounded-full">
+                    <span className="text-xs text-muted-foreground">3</span>
+                  </div>
+                </div>
+                <div>
+                  <p className="font-medium text-muted-foreground">Underwriting</p>
+                  <p className="text-sm text-muted-foreground">Pending</p>
+                </div>
+              </div>
             </div>
           </Card>
         </div>

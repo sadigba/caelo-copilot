@@ -80,7 +80,7 @@ export function DocumentUpload({ loanId, open, setOpen }: DocumentUploadProps) {
           approved: false,
           rejected: false,
           url: fakeUrl,
-          dateUploaded: new Date(), // Add current date as upload date
+          dateUploaded: new Date().toISOString(), // Store as ISO string to fix the type error
         });
       });
       
@@ -108,7 +108,7 @@ export function DocumentUpload({ loanId, open, setOpen }: DocumentUploadProps) {
         <DialogHeader>
           <DialogTitle>Upload Documents</DialogTitle>
           <DialogDescription>
-            Upload documents for this loan application. Drag and drop files or select multiple files at once.
+            Upload documents for this real estate loan application. Drag and drop files or select multiple files at once.
           </DialogDescription>
         </DialogHeader>
         

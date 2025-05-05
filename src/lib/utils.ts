@@ -19,10 +19,10 @@ export function formatDate(date: Date | string | undefined | null): string {
   if (!date) return "N/A";
   
   try {
-    const dateObj = date instanceof Date ? date : new Date(date);
+    const dateObj = typeof date === 'string' ? new Date(date) : date;
     
     // Check if the date is valid
-    if (isNaN(dateObj.getTime())) {
+    if (!(dateObj instanceof Date) || isNaN(dateObj.getTime())) {
       return "Invalid date";
     }
     
