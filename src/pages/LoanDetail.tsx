@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import {
@@ -10,7 +9,7 @@ import {
 import { useLoanContext } from "@/context/LoanContext";
 import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { FileText, Upload, AlertTriangle, BarChart2 } from "lucide-react";
+import { ArrowLeft, FileText, Upload, AlertTriangle, BarChart2 } from "lucide-react";
 import { DocumentTable } from "@/components/loans/DocumentTable";
 import { DocumentUpload } from "@/components/loans/DocumentUpload";
 import { LoanSummary } from "@/components/loans/LoanSummary";
@@ -31,6 +30,7 @@ import { Badge } from "@/components/ui/badge";
 import { X } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { SidebarTrigger } from "@/components/ui/sidebar";
 
 export default function LoanDetail() {
   const { loanId } = useParams<{ loanId: string }>();
@@ -105,6 +105,22 @@ export default function LoanDetail() {
   if (showDealSummary) {
     return (
       <>
+        <div className="flex items-center justify-between px-6 py-3">
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setShowDealSummary(false)}
+                className="h-8"
+              >
+                <ArrowLeft className="h-4 w-4 mr-1" />
+                Back to Loan
+              </Button>
+            </div>
+          </div>
+        </div>
+        
         <div className="p-6">
           <div className="bg-white rounded-lg p-6 shadow-sm">
             <h2 className="text-xl font-bold mb-8">DEAL SUMMARY</h2>
@@ -225,6 +241,32 @@ export default function LoanDetail() {
 
   return (
     <>
+      {/* Header with sidebar trigger, title and navigation */}
+      <div>
+        <div className="flex items-center justify-between px-6 py-3">
+          <div className="flex items-center gap-3">
+            <SidebarTrigger />
+            <div className="flex items-center gap-3">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => navigate("/")}
+                className="h-8"
+              >
+                <ArrowLeft className="h-4 w-4 mr-1" />
+                Back
+              </Button>
+              <div>
+                <h1 className="text-lg font-medium leading-tight">{loan.businessName}</h1>
+                <p className="text-sm text-muted-foreground">
+                  {loan.loanType} · {loan.propertyType}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div className="p-6">
         <Tabs defaultValue="data-room" className="space-y-6">
           <TabsList className="grid grid-cols-2 md:grid-cols-4 w-full">

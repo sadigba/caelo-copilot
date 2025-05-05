@@ -17,7 +17,7 @@ import {
   NavigationMenuList, 
   NavigationMenuTrigger 
 } from "@/components/ui/navigation-menu";
-import { ArrowLeft } from "lucide-react";
+import { FileText, Settings, FilePlus } from "lucide-react";
 
 export function TopBar() {
   const { toggleCaeloChat } = useCaeloChat();
@@ -48,7 +48,7 @@ export function TopBar() {
   // Get the current page title
   const getPageTitle = () => {
     if (isLoanDetailPage) {
-      return ""; // Removed "Loan Details" heading
+      return "Loan Details";
     } else if (location.pathname === "/") {
       return "Applications";
     } else if (location.pathname === "/settings") {
@@ -61,32 +61,43 @@ export function TopBar() {
   };
 
   return (
-    <div className="h-14 bg-background flex items-center justify-between px-4">
+    <div className="h-14 bg-background flex items-center justify-between px-4 border-b">
       <div className="flex items-center gap-4">
-        {!isLoanDetailPage && <SidebarTrigger className="h-8 w-8" />}
+        <SidebarTrigger className="h-8 w-8" />
         
         <NavigationMenu>
           <NavigationMenuList>
             <NavigationMenuItem>
-              {isLoanDetailPage ? (
-                <Link to="/" className="flex items-center">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-8 px-2"
-                  >
-                    <ArrowLeft className="h-4 w-4 mr-1" />
-                    Back
-                  </Button>
-                </Link>
-              ) : (
-                <span className="text-lg font-medium">{getPageTitle()}</span>
-              )}
+              <span className="text-lg font-medium">{getPageTitle()}</span>
             </NavigationMenuItem>
           </NavigationMenuList>
         </NavigationMenu>
       </div>
+      
       <div className="flex items-center space-x-2">
+        <NavigationMenu>
+          <NavigationMenuList className="gap-1">
+            <NavigationMenuItem>
+              <Link to="/new-loan" className="flex items-center px-3 py-2 text-sm rounded-md hover:bg-accent">
+                <FilePlus className="mr-2 h-4 w-4" />
+                <span>New Application</span>
+              </Link>
+            </NavigationMenuItem>
+            <NavigationMenuItem>
+              <Link to="/" className="flex items-center px-3 py-2 text-sm rounded-md hover:bg-accent">
+                <FileText className="mr-2 h-4 w-4" />
+                <span>Applications</span>
+              </Link>
+            </NavigationMenuItem>
+            <NavigationMenuItem>
+              <Link to="/settings" className="flex items-center px-3 py-2 text-sm rounded-md hover:bg-accent">
+                <Settings className="mr-2 h-4 w-4" />
+                <span>Settings</span>
+              </Link>
+            </NavigationMenuItem>
+          </NavigationMenuList>
+        </NavigationMenu>
+        
         {isLoanDetailPage && (
           <>
             <Button
