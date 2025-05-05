@@ -9,8 +9,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useState } from "react";
-import { User, LogOut, ChevronDown } from "lucide-react";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { RefreshCw, Download, MessageSquare, ChevronDown } from "lucide-react";
 
 export function TopBar() {
   const { toggleCaeloChat } = useCaeloChat();
@@ -43,50 +42,29 @@ export function TopBar() {
   };
 
   return (
-    <div className="h-14 bg-background border-b flex items-center justify-between px-4">
-      <div className="flex items-center">
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="sm" className="h-8 gap-1">
-              <Avatar className="h-5 w-5">
-                <AvatarFallback>J</AvatarFallback>
-              </Avatar>
-              <span>John</span>
-              <ChevronDown className="h-3 w-3" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="start" className="w-56">
-            <DropdownMenuItem className="cursor-pointer flex items-center gap-2">
-              <User className="h-4 w-4" />
-              <span>Manage Account</span>
-            </DropdownMenuItem>
-            <DropdownMenuItem className="cursor-pointer flex items-center gap-2">
-              <LogOut className="h-4 w-4" />
-              <span>Logout</span>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
+    <div className="h-14 bg-background flex items-center justify-end px-4">
       <div className="flex items-center space-x-2">
         {isLoanDetailPage && (
           <>
             <Button
-              size="sm"
-              variant="outline"
+              size="icon"
+              variant="ghost"
               onClick={handleRefresh}
-              className="h-8"
+              className="h-8 w-8"
+              title="Refresh"
             >
-              {refreshing ? "Analyzing..." : "Refresh"}
+              <RefreshCw className="h-4 w-4" />
             </Button>
             
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
-                  size="sm"
-                  variant="outline"
-                  className="h-8"
+                  size="icon"
+                  variant="ghost"
+                  className="h-8 w-8"
+                  title="Download"
                 >
-                  Download
+                  <Download className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
@@ -106,12 +84,13 @@ export function TopBar() {
             </DropdownMenu>
 
             <Button 
-              size="sm" 
-              variant="outline" 
-              className="h-8"
+              size="icon" 
+              variant="ghost" 
+              className="h-8 w-8"
               onClick={navigateToDealSummary}
+              title="Deal Summary"
             >
-              Deal Summary
+              <span className="text-xs font-medium">DS</span>
             </Button>
           </>
         )}
@@ -119,10 +98,11 @@ export function TopBar() {
         <Button 
           variant="ghost" 
           onClick={toggleCaeloChat} 
-          size="sm"
-          className="h-8"
+          size="icon"
+          className="h-8 w-8"
+          title="Ask Caelo"
         >
-          Ask Caelo
+          <MessageSquare className="h-4 w-4" />
         </Button>
       </div>
     </div>
