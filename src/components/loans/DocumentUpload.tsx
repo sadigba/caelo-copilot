@@ -81,6 +81,7 @@ export function DocumentUpload({ loanId, open, setOpen }: DocumentUploadProps) {
           rejected: false,
           url: fakeUrl,
           dateUploaded: new Date().toISOString(), // Store as ISO string to fix the type error
+          uploadedBy: "Jane Doe", // Add this field to track who uploaded the document
         });
       });
       

@@ -10,6 +10,7 @@ export interface Document {
   dateUploaded: string;
   approved?: boolean;
   rejected?: boolean;
+  uploadedBy?: string; // Add this field to track who uploaded the document
 }
 
 // Define the Insight interface

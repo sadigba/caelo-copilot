@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
 import { formatDate } from "@/lib/utils";
+import { AuditTrail, generateAuditEntries } from "@/components/loans/AuditTrail";
 
 export default function DealSummary() {
   const { loanId } = useParams<{ loanId: string }>();
@@ -65,6 +66,9 @@ export default function DealSummary() {
     }
   }
 
+  // Generate audit entries from documents
+  const auditEntries = generateAuditEntries(loan.documents);
+
   return (
     <div className="container max-w-5xl py-8">
       <div className="flex items-center mb-6">
@@ -112,7 +116,7 @@ export default function DealSummary() {
             </div>
           </Card>
           
-          <Card className="p-6">
+          <Card className="p-6 mb-6">
             <h2 className="text-lg font-medium mb-4">Documentation Status</h2>
             <div className="space-y-2">
               <div className="grid grid-cols-3 py-4 border-b border-gray-200">
@@ -160,6 +164,11 @@ export default function DealSummary() {
               </div>
             </div>
           </Card>
+          
+          {/* Add the Audit Trail component */}
+          <div className="mb-6">
+            <AuditTrail entries={auditEntries} />
+          </div>
         </div>
         
         <div className="md:col-span-1">
