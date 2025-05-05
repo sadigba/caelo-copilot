@@ -1,7 +1,7 @@
 
 import { Button } from "@/components/ui/button";
 import { useCaeloChat } from "@/hooks/use-caelo-chat";
-import { useLocation } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,6 +17,7 @@ import {
   NavigationMenuList, 
   NavigationMenuTrigger 
 } from "@/components/ui/navigation-menu";
+import { ArrowLeft } from "lucide-react";
 
 export function TopBar() {
   const { toggleCaeloChat } = useCaeloChat();
@@ -47,7 +48,7 @@ export function TopBar() {
   // Get the current page title
   const getPageTitle = () => {
     if (isLoanDetailPage) {
-      return "Loan Details";
+      return ""; // Removed "Loan Details" heading
     } else if (location.pathname === "/") {
       return "Applications";
     } else if (location.pathname === "/settings") {
@@ -62,12 +63,25 @@ export function TopBar() {
   return (
     <div className="h-14 bg-background flex items-center justify-between px-4">
       <div className="flex items-center gap-4">
-        <SidebarTrigger className="h-8 w-8" />
+        {!isLoanDetailPage && <SidebarTrigger className="h-8 w-8" />}
         
         <NavigationMenu>
           <NavigationMenuList>
             <NavigationMenuItem>
-              <span className="text-lg font-medium">{getPageTitle()}</span>
+              {isLoanDetailPage ? (
+                <Link to="/" className="flex items-center">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-8 px-2"
+                  >
+                    <ArrowLeft className="h-4 w-4 mr-1" />
+                    Back
+                  </Button>
+                </Link>
+              ) : (
+                <span className="text-lg font-medium">{getPageTitle()}</span>
+              )}
             </NavigationMenuItem>
           </NavigationMenuList>
         </NavigationMenu>
