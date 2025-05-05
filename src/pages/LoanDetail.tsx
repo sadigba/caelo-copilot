@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import {
@@ -29,9 +28,9 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { X } from "lucide-react";
-import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Progress } from "@/components/ui/progress";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { SidebarTrigger } from "@/components/ui/sidebar";
 
 export default function LoanDetail() {
   const { loanId } = useParams<{ loanId: string }>();
@@ -118,12 +117,6 @@ export default function LoanDetail() {
                 <ArrowLeft className="h-4 w-4 mr-1" />
                 Back to Loan
               </Button>
-              <div>
-                <h1 className="text-lg font-medium leading-tight">{loan.businessName}</h1>
-                <p className="text-sm text-muted-foreground">
-                  {loan.loanType} · {loan.propertyType}
-                </p>
-              </div>
             </div>
           </div>
         </div>
