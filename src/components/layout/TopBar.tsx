@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { useCaeloChat } from "@/hooks/use-caelo-chat";
 import { useLocation, useNavigate, Link } from "react-router-dom";
