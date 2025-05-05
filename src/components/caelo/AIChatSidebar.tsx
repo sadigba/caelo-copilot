@@ -70,33 +70,41 @@ export function AIChatSidebar({ isOpen, onClose }: AIChatSidebarProps) {
   }
 
   return (
-    <div className="border-l h-full bg-background w-[320px] min-w-[320px] flex flex-col">
-      {/* Header */}
-      <div className="h-14 border-b flex items-center justify-between px-4">
-        <div className="flex items-center gap-2">
-          <MessageSquare className="h-5 w-5" />
-          <span className="font-medium">Ask Caelo</span>
-        </div>
-        <Button 
-          variant="ghost" 
-          size="icon" 
-          onClick={onClose} 
-          className="h-8 w-8"
-        >
-          <ChevronLeft className="h-4 w-4" />
-        </Button>
-      </div>
-      
+    <div className="border-l h-full bg-background w-[320px] min-w-[320px] flex flex-col pt-4">
       {/* Content area */}
       <div className="flex-1 flex flex-col">
         {/* Tools bar */}
-        <div className="p-2 border-b flex justify-between">
-          <Button variant="ghost" size="icon" className="h-8 w-8" title="History">
-            <Clock className="h-4 w-4" />
-          </Button>
-          <Button variant="ghost" size="icon" className="h-8 w-8" title="New Chat">
-            <Plus className="h-4 w-4" />
-          </Button>
+        <div className="px-4 pb-2 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <MessageSquare className="h-5 w-5" />
+            <span className="font-medium">Ask Caelo</span>
+          </div>
+          <div className="flex items-center">
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="h-8 w-8"
+              title="History"
+            >
+              <Clock className="h-4 w-4" />
+            </Button>
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="h-8 w-8"
+              title="New Chat"
+            >
+              <Plus className="h-4 w-4" />
+            </Button>
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              onClick={onClose} 
+              className="h-8 w-8"
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </Button>
+          </div>
         </div>
         
         {/* Messages area */}
