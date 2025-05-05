@@ -18,10 +18,10 @@ export default function AppLayout({ children }: AppLayoutProps) {
         <TopBar />
         <div className="flex flex-1 w-full">
           <AppSidebar />
+          <AIChatSidebar isOpen={isChatOpen} onClose={closeCaeloChat} />
           <main className="flex-1 relative">
             {children}
           </main>
-          <AIChatSidebar isOpen={isChatOpen} onClose={closeCaeloChat} />
         </div>
       </div>
     </SidebarProvider>

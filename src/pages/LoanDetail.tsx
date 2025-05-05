@@ -10,7 +10,7 @@ import {
 import { useLoanContext } from "@/context/LoanContext";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { ArrowLeft, FileText, Upload, AlertTriangle, BarChart2 } from "lucide-react";
+import { ArrowLeft, FileText, Upload, AlertTriangle } from "lucide-react";
 import { DocumentTable } from "@/components/loans/DocumentTable";
 import { DocumentUpload } from "@/components/loans/DocumentUpload";
 import { LoanSummary } from "@/components/loans/LoanSummary";
@@ -30,16 +30,11 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { X } from "lucide-react";
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import { Progress } from "@/components/ui/progress";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 export default function LoanDetail() {
   const { loanId } = useParams<{ loanId: string }>();
   const { getLoanById, updateDocument } = useLoanContext();
   const navigate = useNavigate();
-  const location = useLocation();
-  const searchParams = new URLSearchParams(location.search);
-  const showDealSummary = searchParams.get('view') === 'deal-summary';
 
   const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
   const [isRequestDialogOpen, setIsRequestDialogOpen] = useState(false);
@@ -90,151 +85,6 @@ export default function LoanDetail() {
     setRequestNote("");
     setCurrentTag("");
   };
-  
-  // Deal Summary View
-  if (showDealSummary) {
-    return (
-      <>
-        <div className="flex items-center justify-between px-6 py-3">
-          <div className="flex items-center gap-3">
-            <SidebarTrigger />
-            <div className="flex items-center gap-3">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => navigate(`/loans/${loanId}`)}
-                className="h-8"
-              >
-                <ArrowLeft className="h-4 w-4 mr-1" />
-                Back to Loan
-              </Button>
-              <div>
-                <h1 className="text-lg font-medium leading-tight">{loan.businessName}</h1>
-                <p className="text-sm text-muted-foreground">
-                  {loan.loanType} · {loan.propertyType}
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        <div className="p-6">
-          <div className="bg-white rounded-lg p-6 shadow-sm">
-            <h2 className="text-xl font-bold mb-8">DEAL SUMMARY</h2>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-              {/* Left Column: Key Deal Information */}
-              <div className="space-y-6">
-                <div className="grid grid-cols-2 gap-2">
-                  <div className="text-gray-600">Borrower</div>
-                  <div className="font-medium">{loan.businessName}</div>
-                  
-                  <div className="text-gray-600">Loan Type</div>
-                  <div className="font-medium">{loan.loanType}</div>
-                  
-                  <div className="text-gray-600">Requested</div>
-                  <div className="font-medium">${Number(loan.loanAmount).toLocaleString()}</div>
-                  
-                  <div className="text-gray-600">Status</div>
-                  <div>
-                    <Badge className="bg-[#9b87f5] hover:bg-[#9b87f5]/80">In Progress</Badge>
-                  </div>
-                </div>
-                
-                <div>
-                  <h3 className="text-lg font-bold mb-4">DOCUMENTS OVERVIEW</h3>
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Financial Statements</TableHead>
-                        <TableHead>Status</TableHead>
-                        <TableHead>Last Updated</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      <TableRow>
-                        <TableCell>Financial Statements</TableCell>
-                        <TableCell>Uploaded</TableCell>
-                        <TableCell>Mar 15, 2025</TableCell>
-                      </TableRow>
-                      <TableRow>
-                        <TableCell>Tax Returns</TableCell>
-                        <TableCell className="text-amber-500 flex items-center gap-1">
-                          <AlertTriangle className="h-4 w-4" /> Missing
-                        </TableCell>
-                        <TableCell>—</TableCell>
-                      </TableRow>
-                      <TableRow>
-                        <TableCell>Personal Financial Statement</TableCell>
-                        <TableCell className="text-red-500">Outdated</TableCell>
-                        <TableCell>Jan 10, 2023</TableCell>
-                      </TableRow>
-                    </TableBody>
-                  </Table>
-                  
-                  <div className="mt-6">
-                    <div className="flex justify-between mb-2">
-                      <span>Completion</span>
-                      <span>60%</span>
-                    </div>
-                    <Progress value={60} className="h-3" />
-                  </div>
-                </div>
-              </div>
-              
-              {/* Right Column: Flagged Issues & Audit Trail */}
-              <div className="space-y-8">
-                <div>
-                  <h3 className="text-lg font-bold mb-4">FLAGGED ISSUES</h3>
-                  <ul className="space-y-4">
-                    <li className="flex items-start gap-2">
-                      <AlertTriangle className="h-5 w-5 text-red-500 mt-0.5 flex-shrink-0" />
-                      <div>
-                        <span>Tax return not uploaded</span>
-                        <div className="text-sm text-gray-500">Mar 15, 2025</div>
-                      </div>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <AlertTriangle className="h-5 w-5 text-red-500 mt-0.5 flex-shrink-0" />
-                      <div>
-                        <span>Personal financial statement is over 12 months old</span>
-                        <div className="text-sm text-gray-500">Jan 10, 2025</div>
-                      </div>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <AlertTriangle className="h-5 w-5 text-red-500 mt-0.5 flex-shrink-0" />
-                      <div>
-                        <span>Business plan contains mismatched revenue* values</span>
-                        <div className="text-sm text-gray-500">Mar 12, 2025</div>
-                      </div>
-                    </li>
-                  </ul>
-                </div>
-                
-                <div>
-                  <h3 className="text-lg font-bold mb-4">AUDIT TRAIL</h3>
-                  <div className="space-y-4">
-                    <div>
-                      <div className="text-sm text-gray-500">Mar 15, 2025 10:23 AM</div>
-                      <div>John Smith uploaded Financial Statements</div>
-                    </div>
-                    <div>
-                      <div className="text-sm text-gray-500">Mar 15, 2025 10:21 AM</div>
-                      <div>Jane Doe commented on Business Plan</div>
-                    </div>
-                    <div>
-                      <div className="text-sm text-gray-500">Jan 10, 2025 03:45 PM</div>
-                      <div>John Smith uploaded outdated doc</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </>
-    );
-  }
 
   // Regular Loan Detail View
   return (

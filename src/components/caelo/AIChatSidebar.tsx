@@ -5,20 +5,19 @@ import { Input } from "@/components/ui/input";
 import { 
   Clock, 
   Plus, 
-  X, 
-  SendHorizontal, 
-  PaperclipIcon, 
   ChevronLeft,
-  MessageSquare
+  ChevronRight,
+  MessageSquare,
+  SendHorizontal, 
+  PaperclipIcon
 } from "lucide-react";
-import { useCaeloChat } from "@/hooks/use-caelo-chat";
+import { cn } from "@/lib/utils";
 import { Separator } from "@/components/ui/separator";
 import {
-  Drawer,
-  DrawerContent,
-  DrawerClose,
-} from "@/components/ui/drawer";
-import { cn } from "@/lib/utils";
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 
 interface Message {
   type: 'user' | 'ai';
@@ -88,43 +87,51 @@ export function AIChatSidebar({ isOpen, onClose }: AIChatSidebarProps) {
   ];
 
   return (
-    <div 
-      className={cn(
-        "fixed top-0 right-0 h-screen w-[280px] bg-background border-l shadow-lg z-40 transition-transform duration-300 ease-in-out",
-        isOpen ? "translate-x-0" : "translate-x-[calc(100%-30px)]"
-      )}
-    >
-      <div className="flex h-full">
-        {/* Collapsed handle bar */}
-        <div 
-          className={cn(
-            "absolute left-0 top-1/2 -translate-x-[15px] h-24 w-[30px] bg-background border-l border-t border-b rounded-l-md cursor-pointer flex items-center justify-center",
-            isOpen ? "opacity-0 pointer-events-none" : "opacity-100"
-          )}
-          onClick={onClose}
-        >
-          <MessageSquare className="h-5 w-5" />
+    <div className={cn(
+      "border-r h-full bg-background transition-all duration-300 z-20",
+      isOpen ? "w-[320px] min-w-[320px]" : "w-[60px] min-w-[60px]"
+    )}>
+      <div className="flex flex-col h-full">
+        {/* Header */}
+        <div className="h-14 border-b flex items-center justify-between px-4">
+          <div className={cn(
+            "flex items-center gap-2",
+            isOpen ? "opacity-100" : "opacity-0"
+          )}>
+            <MessageSquare className="h-5 w-5" />
+            <span className="font-medium">Ask Caelo</span>
+          </div>
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            onClick={onClose} 
+            className="h-8 w-8"
+            title={isOpen ? "Collapse" : "Expand"}
+          >
+            {isOpen ? (
+              <ChevronLeft className="h-4 w-4" />
+            ) : (
+              <ChevronRight className="h-4 w-4" />
+            )}
+          </Button>
         </div>
-
-        <div className="flex flex-col h-full w-full">
-          <div className="p-4 border-b flex justify-between items-center">
-            <div className="flex items-center gap-2">
-              <MessageSquare className="h-5 w-5" />
-              <span className="font-medium text-lg">Ask Caelo</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Button variant="ghost" size="icon" className="h-8 w-8" title="History">
-                <Clock className="h-4 w-4" />
-              </Button>
-              <Button variant="ghost" size="icon" className="h-8 w-8" title="New Chat">
-                <Plus className="h-4 w-4" />
-              </Button>
-              <Button variant="ghost" size="icon" onClick={onClose} className="h-8 w-8" title="Collapse">
-                <ChevronLeft className="h-4 w-4" />
-              </Button>
-            </div>
+        
+        {/* Content area - only visible when expanded */}
+        <div className={cn(
+          "flex-1 flex flex-col",
+          isOpen ? "opacity-100" : "opacity-0 invisible"
+        )}>
+          {/* Tools bar */}
+          <div className="p-2 border-b flex justify-between">
+            <Button variant="ghost" size="icon" className="h-8 w-8" title="History">
+              <Clock className="h-4 w-4" />
+            </Button>
+            <Button variant="ghost" size="icon" className="h-8 w-8" title="New Chat">
+              <Plus className="h-4 w-4" />
+            </Button>
           </div>
           
+          {/* Messages area */}
           <div className="flex-1 overflow-y-auto p-4">
             {messages.length > 0 ? (
               <div className="space-y-4">
@@ -185,21 +192,8 @@ export function AIChatSidebar({ isOpen, onClose }: AIChatSidebarProps) {
             )}
           </div>
 
-          <div className="p-4 border-t space-y-4">
-            <div className="flex gap-2">
-              <Button className="flex-1" variant="outline" size="sm">
-                <span className="truncate">Current document</span>
-                <X className="ml-1 h-3 w-3" />
-              </Button>
-              <Button className="flex-1" variant="outline" size="sm">
-                <span className="truncate">Web</span>
-                <X className="ml-1 h-3 w-3" />
-              </Button>
-            </div>
-            <Button className="w-32" variant="outline" size="sm">
-              <span className="truncate">Library</span>
-              <X className="ml-1 h-3 w-3" />
-            </Button>
+          {/* Input area */}
+          <div className="p-4 border-t">
             <div className="flex items-center gap-2 border rounded-md px-4 py-2">
               <Input
                 value={inputValue}
@@ -219,6 +213,13 @@ export function AIChatSidebar({ isOpen, onClose }: AIChatSidebarProps) {
             </div>
           </div>
         </div>
+        
+        {/* Icon only view for collapsed state */}
+        {!isOpen && (
+          <div className="flex flex-col items-center pt-4">
+            <MessageSquare className="h-6 w-6 text-muted-foreground" />
+          </div>
+        )}
       </div>
     </div>
   );
