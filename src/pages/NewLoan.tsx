@@ -113,7 +113,7 @@ export default function NewLoan() {
   return (
     <div className="relative flex flex-col h-full">
       {/* Header with sidebar trigger, title and navigation */}
-      <div className="border-b">
+      <div>
         <div className="flex items-center justify-between px-6 py-3">
           <div className="flex items-center gap-3">
             <SidebarTrigger />
@@ -138,7 +138,6 @@ export default function NewLoan() {
                 <TabsTrigger value="borrowerInfo">Borrower Information</TabsTrigger>
                 <TabsTrigger value="loanDetails">Loan Details</TabsTrigger>
                 <TabsTrigger value="propertyInfo">Property Information</TabsTrigger>
-                <TabsTrigger value="additionalInfo">Additional Information</TabsTrigger>
               </TabsList>
               
               {/* Borrower Information Tab */}
@@ -414,33 +413,7 @@ export default function NewLoan() {
                         )}
                       />
                     </div>
-                  </CardContent>
-                  <CardFooter className="flex justify-between">
-                    <Button 
-                      type="button" 
-                      variant="outline" 
-                      onClick={() => setActiveTab("loanDetails")}
-                    >
-                      Previous
-                    </Button>
-                    <Button 
-                      type="button" 
-                      onClick={() => setActiveTab("additionalInfo")}
-                    >
-                      Next: Additional Information
-                    </Button>
-                  </CardFooter>
-                </Card>
-              </TabsContent>
-              
-              {/* Additional Information Tab */}
-              <TabsContent value="additionalInfo" className="space-y-4">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Additional Information</CardTitle>
-                    <CardDescription>Add any other relevant details</CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
+
                     <FormField
                       control={form.control}
                       name="requestedClosingDate"
@@ -534,7 +507,7 @@ export default function NewLoan() {
                     <Button 
                       type="button" 
                       variant="outline" 
-                      onClick={() => setActiveTab("propertyInfo")}
+                      onClick={() => setActiveTab("loanDetails")}
                     >
                       Previous
                     </Button>
