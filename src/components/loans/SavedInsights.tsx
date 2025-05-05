@@ -1,3 +1,4 @@
+
 import { Card, CardContent } from "@/components/ui/card";
 import { Insight, useLoanContext } from "@/context/LoanContext";
 import { toast } from "sonner";
@@ -155,7 +156,8 @@ export function SavedInsights({ loanId, savedInsights }: SavedInsightsProps) {
                                 <TooltipContent>
                                   <p>{evidence}</p>
                                 </TooltipContent>
-                              </TooltipProvider>
+                              </Tooltip>
+                            </TooltipProvider>
                           ))}
                         </div>
                       </TableCell>
