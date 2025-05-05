@@ -123,21 +123,23 @@ export default function LoanDetail() {
   return (
     <>
       <div className="space-y-6">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div>
+        <div className="flex items-center justify-between gap-4">
+          <div className="flex items-center gap-4">
             <Button
               variant="ghost"
               size="sm"
               onClick={() => navigate("/")}
-              className="mb-2 -ml-2"
+              className="-ml-2"
             >
               <ArrowLeft className="mr-1 h-4 w-4" />
               Back
             </Button>
-            <h1 className="text-2xl md:text-3xl font-bold">{loan.businessName}</h1>
-            <p className="text-muted-foreground">
-              {loan.loanType} · {loan.propertyType}
-            </p>
+            <div>
+              <h1 className="text-2xl md:text-3xl font-bold">{loan.businessName}</h1>
+              <p className="text-muted-foreground">
+                {loan.loanType} · {loan.propertyType}
+              </p>
+            </div>
           </div>
           <div className="flex flex-wrap gap-3">
             <Button

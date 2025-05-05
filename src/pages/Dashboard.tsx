@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -8,10 +8,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { LoanListItem } from "@/components/loans/LoanListItem";
-import { Loan, useLoanContext } from "@/context/LoanContext";
+import { useLoanContext } from "@/context/LoanContext";
 import { useState } from "react";
-import { Link } from "react-router-dom";
-import { PlusCircle } from "lucide-react";
 
 export default function Dashboard() {
   const { loans } = useLoanContext();
@@ -44,15 +42,7 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold">Loan Applications</h1>
-        <Button asChild>
-          <Link to="/new-loan">
-            <PlusCircle className="mr-2 h-4 w-4" />
-            New Application
-          </Link>
-        </Button>
-      </div>
+      <h1 className="text-3xl font-bold">Loan Applications</h1>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="col-span-2">
@@ -120,15 +110,10 @@ export default function Dashboard() {
         ) : (
           <div className="p-8 text-center">
             <p className="text-muted-foreground mb-4">No loan applications found</p>
-            <Button asChild variant="outline">
-              <Link to="/new-loan">
-                <PlusCircle className="mr-2 h-4 w-4" />
-                Create your first application
-              </Link>
-            </Button>
           </div>
         )}
       </div>
     </div>
   );
 }
+

@@ -1,5 +1,5 @@
 
-import { Home, FileText, PlusCircle, Settings, MessageSquare } from "lucide-react";
+import { Home, FileText, Settings, MessageSquare } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -21,11 +21,6 @@ const mainItems = [
     title: "Applications",
     url: "/",
     icon: Home,
-  },
-  {
-    title: "New Application",
-    url: "/new-loan",
-    icon: PlusCircle,
   },
 ];
 
