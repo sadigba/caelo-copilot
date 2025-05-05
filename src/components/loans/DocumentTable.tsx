@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Document, useLoanContext } from "@/context/LoanContext";
@@ -5,7 +6,7 @@ import { Check, FileText, Plus, Tag, X, Search } from "lucide-react";
 import { formatDate } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { useState, useCallback } from "react";
+import { useState } from "react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -24,6 +25,14 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { DocumentViewer } from "./DocumentViewer";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 interface DocumentTableProps {
   loanId: string;
@@ -122,7 +131,6 @@ export function DocumentTable({
       return;
     }
 
-    // In a real application, this would send a request to the backend
     toast.success(`Documentation requested: ${documentTags.join(", ")}`);
     setIsRequestDialogOpen(false);
     setDocumentTags([]);
@@ -140,7 +148,6 @@ export function DocumentTable({
   };
 
   const handleViewDocument = (doc: Document) => {
-    console.log("Viewing document:", doc);
     setSelectedDocument(doc);
     setDocumentViewerOpen(true);
     toast.info(`Opening ${doc.name}`);
@@ -157,21 +164,21 @@ export function DocumentTable({
         </div>
       )}
 
-      <div className="overflow-x-auto">
-        <table className="w-full loan-table">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Type</th>
-              <th>Date Uploaded</th>
-              <th>Status</th>
-              <th className="text-right">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
+      <div className="rounded-md border">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Name</TableHead>
+              <TableHead>Type</TableHead>
+              <TableHead>Date Uploaded</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead className="text-right">Actions</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
             {documents.map((doc) => (
-              <tr key={doc.id}>
-                <td>
+              <TableRow key={doc.id}>
+                <TableCell>
                   <a 
                     href="#"
                     onClick={(e) => {
@@ -182,8 +189,8 @@ export function DocumentTable({
                   >
                     {doc.name}
                   </a>
-                </td>
-                <td>
+                </TableCell>
+                <TableCell>
                   <div className="flex flex-wrap gap-1 items-center">
                     {doc.type ? (
                       doc.type.split(',').map(tag => (
@@ -233,14 +240,14 @@ export function DocumentTable({
                       </PopoverContent>
                     </Popover>
                   </div>
-                </td>
-                <td>{formatDate(doc.dateUploaded)}</td>
-                <td>
+                </TableCell>
+                <TableCell>{formatDate(doc.dateUploaded)}</TableCell>
+                <TableCell>
                   {doc.approved && <Badge variant="default">Approved</Badge>}
                   {doc.rejected && <Badge variant="destructive">Rejected</Badge>}
                   {!doc.approved && !doc.rejected && <Badge variant="outline">In Review</Badge>}
-                </td>
-                <td className="text-right">
+                </TableCell>
+                <TableCell className="text-right">
                   <div className="flex justify-end gap-2">
                     <Button
                       size="sm"
@@ -275,11 +282,11 @@ export function DocumentTable({
                       </Button>
                     )}
                   </div>
-                </td>
-              </tr>
+                </TableCell>
+              </TableRow>
             ))}
-          </tbody>
-        </table>
+          </TableBody>
+        </Table>
       </div>
 
       <AlertDialog open={isRequestDialogOpen} onOpenChange={setIsRequestDialogOpen}>
@@ -365,7 +372,6 @@ export function DocumentTable({
         </AlertDialogContent>
       </AlertDialog>
 
-      {/* Replace RentRollViewer with DocumentViewer */}
       <DocumentViewer 
         document={selectedDocument}
         open={documentViewerOpen}
