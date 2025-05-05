@@ -1,5 +1,5 @@
 
-import { Home, FileText, Settings, MessageSquare, Plus, FilePlus } from "lucide-react";
+import { FileText, Settings, MessageSquare, FilePlus, User, LogOut, ChevronDown } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -14,7 +14,13 @@ import {
 } from "@/components/ui/sidebar";
 import { Link } from "react-router-dom";
 import { useCaeloChat } from "@/hooks/use-caelo-chat";
-import { Button } from "@/components/ui/button";
+import { 
+  DropdownMenu, 
+  DropdownMenuContent, 
+  DropdownMenuItem, 
+  DropdownMenuTrigger 
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 // Menu items
 const mainItems = [
@@ -39,10 +45,27 @@ export function AppSidebar() {
   return (
     <Sidebar className="border-r">
       <SidebarHeader className="px-6 py-5 border-b">
-        <div className="flex items-center space-x-2">
-          <div className="bg-caelo-600 w-8 h-8 rounded-md flex items-center justify-center text-white font-bold">C</div>
-          <span className="text-xl font-bold">Caelo</span>
-        </div>
+        <DropdownMenu>
+          <DropdownMenuTrigger className="flex items-center gap-2 rounded-md p-1.5 hover:bg-accent outline-none">
+            <Avatar className="h-8 w-8 bg-muted">
+              <AvatarFallback>J</AvatarFallback>
+            </Avatar>
+            <span className="text-lg font-medium">John</span>
+            <ChevronDown className="h-4 w-4 text-muted-foreground" />
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="start" className="w-56">
+            <DropdownMenuItem asChild>
+              <Link to="/settings" className="flex items-center gap-2">
+                <User className="h-4 w-4" />
+                <span>Manage Account</span>
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <LogOut className="h-4 w-4 mr-2" />
+              <span>Logout</span>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </SidebarHeader>
       <SidebarContent className="p-4">
         <SidebarMenuItem className="mb-1">
