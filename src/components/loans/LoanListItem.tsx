@@ -26,8 +26,8 @@ export function LoanListItem({ loan }: LoanListItemProps) {
       <td>
         <StatusBadge status={loan.status} />
       </td>
-      <td>{formatDate(loan.submissionDate)}</td>
-      <td>{formatDate(loan.lastUpdated)}</td>
+      <td>{loan.submissionDate ? formatDate(loan.submissionDate) : "N/A"}</td>
+      <td>{loan.lastUpdated ? formatDate(loan.lastUpdated) : "N/A"}</td>
     </tr>
   );
 }

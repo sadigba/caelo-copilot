@@ -27,6 +27,23 @@ export default function Dashboard() {
     return matchesSearch && matchesStatus;
   });
 
+  // Add safe date comparison function
+  const safeCompareDate = (dateA: Date | string | undefined, dateB: Date | string | undefined) => {
+    // If both dates are valid, compare them
+    if (dateA && dateB) {
+      const timeA = dateA instanceof Date ? dateA.getTime() : new Date(dateA).getTime();
+      const timeB = dateB instanceof Date ? dateB.getTime() : new Date(dateB).getTime();
+      return timeB - timeA; // Descending order (newest first)
+    }
+    
+    // If one date is valid and the other isn't, prioritize the valid one
+    if (dateA && !dateB) return -1;
+    if (!dateA && dateB) return 1;
+    
+    // If neither is valid, they're "equal" for sorting purposes
+    return 0;
+  };
+
   const sortedLoans = [...filteredLoans].sort((a, b) => {
     switch (sortBy) {
       case "amount":
@@ -34,10 +51,10 @@ export default function Dashboard() {
       case "businessName":
         return a.businessName.localeCompare(b.businessName);
       case "submissionDate":
-        return b.submissionDate.getTime() - a.submissionDate.getTime();
+        return safeCompareDate(a.submissionDate, b.submissionDate);
       case "lastUpdated":
       default:
-        return b.lastUpdated.getTime() - a.lastUpdated.getTime();
+        return safeCompareDate(a.lastUpdated, b.lastUpdated);
     }
   });
 
