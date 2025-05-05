@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -64,8 +65,6 @@ const formSchema = z.object({
   propertyState: z.string().min(2, "State is required"),
   propertyZip: z.string().min(5, "ZIP code is required"),
   requestedClosingDate: z.date().optional(),
-  referralSource: z.string().optional(),
-  additionalNotes: z.string().optional(),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -90,8 +89,6 @@ export default function NewLoan() {
       propertyCity: "",
       propertyState: "",
       propertyZip: "",
-      additionalNotes: "",
-      referralSource: "",
     },
   });
 
@@ -448,53 +445,6 @@ export default function NewLoan() {
                               />
                             </PopoverContent>
                           </Popover>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    
-                    <FormField
-                      control={form.control}
-                      name="referralSource"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Referral Source</FormLabel>
-                          <Select onValueChange={field.onChange} defaultValue={field.value}>
-                            <FormControl>
-                              <SelectTrigger>
-                                <SelectValue placeholder="How did you hear about us?" />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              <SelectItem value="website">Website</SelectItem>
-                              <SelectItem value="referral">Client Referral</SelectItem>
-                              <SelectItem value="broker">Broker</SelectItem>
-                              <SelectItem value="social">Social Media</SelectItem>
-                              <SelectItem value="search">Search Engine</SelectItem>
-                              <SelectItem value="other">Other</SelectItem>
-                            </SelectContent>
-                          </Select>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    
-                    <FormField
-                      control={form.control}
-                      name="additionalNotes"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Additional Notes</FormLabel>
-                          <FormControl>
-                            <Input
-                              placeholder="Any additional information"
-                              {...field}
-                              className="h-24"
-                            />
-                          </FormControl>
-                          <FormDescription>
-                            Any other details that might be relevant to your application
-                          </FormDescription>
                           <FormMessage />
                         </FormItem>
                       )}
