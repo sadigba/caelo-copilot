@@ -1,7 +1,7 @@
 
 import { useParams } from "react-router-dom";
 import { useLoanContext } from "@/context/LoanContext";
-import { AlertTriangle } from "lucide-react";
+import { AlertTriangle, ArrowLeft } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -76,6 +76,18 @@ export default function DealSummary() {
   
   return (
     <div className="container py-8 max-w-7xl">
+      {/* Back button */}
+      <div className="mb-6">
+        <Button 
+          variant="ghost" 
+          onClick={() => navigate(`/loans/${loanId}`)} 
+          className="flex items-center gap-2"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          Back to Loan
+        </Button>
+      </div>
+      
       <h1 className="text-2xl font-bold mb-8">DEAL SUMMARY</h1>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
