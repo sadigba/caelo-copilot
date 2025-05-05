@@ -22,7 +22,7 @@ interface Message {
 }
 
 export function AIChatPopup() {
-  const { isChatOpen, closeCaeloChat, layoutMode } = useCaeloChat();
+  const { isChatOpen, closeCaeloChat } = useCaeloChat();
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -64,7 +64,7 @@ export function AIChatPopup() {
     }
   };
 
-  if (!isChatOpen || layoutMode === "sidebar") return null;
+  if (!isChatOpen) return null;
 
   // Example prompts
   const researchPrompts = [
