@@ -59,7 +59,7 @@ export function LoanInsights({ loanId, insights, onViewComments }: LoanInsightsP
                 <TableHead>Insight</TableHead>
                 <TableHead>Narrative</TableHead>
                 <TableHead>Evidence</TableHead>
-                <TableHead className="w-[100px] text-center">Comments</TableHead>
+                <TableHead className="w-[100px] text-left">Comments</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -87,7 +87,7 @@ export function LoanInsights({ loanId, insights, onViewComments }: LoanInsightsP
                   </TableCell>
                   <TableCell>
                     <div className="flex flex-wrap gap-1">
-                      {insight.evidence.map((evidence, index) => (
+                      {Array.isArray(insight.evidence) && insight.evidence.map((evidence, index) => (
                         <TooltipProvider key={index}>
                           <Tooltip>
                             <TooltipTrigger asChild>
@@ -104,7 +104,7 @@ export function LoanInsights({ loanId, insights, onViewComments }: LoanInsightsP
                     </div>
                   </TableCell>
                   <TableCell>
-                    <div className="flex justify-center">
+                    <div className="flex justify-start">
                       <Button
                         variant="outline"
                         size="sm"

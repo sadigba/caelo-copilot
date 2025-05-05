@@ -101,6 +101,9 @@ export function SavedInsights({ loanId, savedInsights, onViewComments }: SavedIn
       title: row.title || "Untitled Insight",
       narrative: row.narrative || "",
       evidence: row.evidence ? [row.evidence] : [],
+      description: row.narrative || "User added insight",
+      category: "Custom",
+      score: 50,
     });
 
     // Remove the row from the new insights list
@@ -125,7 +128,7 @@ export function SavedInsights({ loanId, savedInsights, onViewComments }: SavedIn
                 <TableHead>Insight</TableHead>
                 <TableHead>Narrative</TableHead>
                 <TableHead>Evidence</TableHead>
-                <TableHead className="w-[100px] text-center">Comments</TableHead>
+                <TableHead className="w-[100px] text-left">Comments</TableHead>
                 <TableHead className="w-[80px]"></TableHead>
               </TableRow>
             </TableHeader>
@@ -149,7 +152,7 @@ export function SavedInsights({ loanId, savedInsights, onViewComments }: SavedIn
                   </TableCell>
                   <TableCell>
                     <div className="flex flex-wrap gap-1">
-                      {insight.evidence.map((evidence, index) => (
+                      {Array.isArray(insight.evidence) && insight.evidence.map((evidence, index) => (
                         <TooltipProvider key={index}>
                           <Tooltip>
                             <TooltipTrigger asChild>
@@ -166,7 +169,7 @@ export function SavedInsights({ loanId, savedInsights, onViewComments }: SavedIn
                     </div>
                   </TableCell>
                   <TableCell>
-                    <div className="flex justify-center">
+                    <div className="flex justify-start">
                       <Button
                         variant="outline"
                         size="sm"
