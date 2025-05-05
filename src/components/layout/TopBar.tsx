@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useState } from "react";
 import { RefreshCcw, Download, FileText, Search } from "lucide-react";
+import { SidebarTrigger } from "@/components/ui/sidebar";
 
 export function TopBar() {
   const { toggleCaeloChat } = useCaeloChat();
@@ -44,7 +45,20 @@ export function TopBar() {
   return (
     <div className="h-14 bg-background flex items-center justify-between px-4">
       <div className="flex items-center">
-        {/* Left side content would go here */}
+        <SidebarTrigger />
+        {isLoanDetailPage && (
+          <div className="flex items-center ml-2">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => navigate("/")}
+              className="h-8"
+            >
+              <span className="sr-only">Back</span>
+              Back
+            </Button>
+          </div>
+        )}
       </div>
       <div className="flex items-center space-x-2">
         {isLoanDetailPage && (
