@@ -9,6 +9,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useState } from "react";
+import { RefreshCcw, Download, FileText, Search } from "lucide-react";
 
 export function TopBar() {
   const { toggleCaeloChat } = useCaeloChat();
@@ -53,8 +54,10 @@ export function TopBar() {
               variant="ghost"
               onClick={handleRefresh}
               className="h-8"
+              title="Refresh"
             >
-              {refreshing ? "Analyzing..." : "Refresh"}
+              <RefreshCcw className={refreshing ? "animate-spin" : ""} />
+              <span className="sr-only">{refreshing ? "Analyzing..." : "Refresh"}</span>
             </Button>
             
             <DropdownMenu>
@@ -63,8 +66,10 @@ export function TopBar() {
                   size="sm"
                   variant="ghost"
                   className="h-8"
+                  title="Download"
                 >
-                  Download
+                  <Download />
+                  <span className="sr-only">Download</span>
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
@@ -88,8 +93,10 @@ export function TopBar() {
               variant="ghost" 
               className="h-8"
               onClick={navigateToDealSummary}
+              title="Deal Summary"
             >
-              Deal Summary
+              <FileText />
+              <span className="sr-only">Deal Summary</span>
             </Button>
           </>
         )}
@@ -99,8 +106,10 @@ export function TopBar() {
           onClick={toggleCaeloChat} 
           size="sm"
           className="h-8"
+          title="Ask Caelo"
         >
-          Ask Caelo
+          <Search />
+          <span className="sr-only">Ask Caelo</span>
         </Button>
       </div>
     </div>
