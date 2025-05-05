@@ -11,6 +11,12 @@ import { LoanListItem } from "@/components/loans/LoanListItem";
 import { useLoanContext } from "@/context/LoanContext";
 import { useState } from "react";
 import { SidebarTrigger } from "@/components/ui/sidebar";
+import { 
+  Table,
+  TableHeader,
+  TableHead,
+  TableBody,
+} from "@/components/ui/table";
 
 export default function Dashboard() {
   const { loans } = useLoanContext();
@@ -82,11 +88,10 @@ export default function Dashboard() {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Statuses</SelectItem>
-                <SelectItem value="In Progress">In Progress</SelectItem>
-                <SelectItem value="Ready for Review">Ready for Review</SelectItem>
-                <SelectItem value="Awaiting Docs">Awaiting Docs</SelectItem>
-                <SelectItem value="Approved">Approved</SelectItem>
-                <SelectItem value="Declined">Declined</SelectItem>
+                <SelectItem value="pending">Pending</SelectItem>
+                <SelectItem value="in_review">In Review</SelectItem>
+                <SelectItem value="approved">Approved</SelectItem>
+                <SelectItem value="rejected">Declined</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -106,28 +111,25 @@ export default function Dashboard() {
         </div>
       </div>
 
-      <div className="bg-white rounded-lg shadow overflow-hidden">
+      <div className="rounded-lg shadow overflow-hidden">
         {sortedLoans.length > 0 ? (
-          <div className="overflow-x-auto">
-            <table className="w-full loan-table">
-              <thead>
-                <tr>
-                  <th>Loan ID</th>
-                  <th>Business</th>
-                  <th>Loan Type</th>
-                  <th>Amount</th>
-                  <th>Status</th>
-                  <th>Submission Date</th>
-                  <th>Last Updated</th>
-                </tr>
-              </thead>
-              <tbody>
-                {sortedLoans.map((loan) => (
-                  <LoanListItem key={loan.id} loan={loan} />
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <Table className="loan-table">
+            <TableHeader>
+              <TableHead>Loan ID</TableHead>
+              <TableHead>Business</TableHead>
+              <TableHead>Loan Type</TableHead>
+              <TableHead>Amount</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead>Submission Date</TableHead>
+              <TableHead>Last Updated</TableHead>
+              <TableHead>Documents</TableHead>
+            </TableHeader>
+            <TableBody>
+              {sortedLoans.map((loan) => (
+                <LoanListItem key={loan.id} loan={loan} />
+              ))}
+            </TableBody>
+          </Table>
         ) : (
           <div className="p-8 text-center">
             <p className="text-muted-foreground mb-4">No loan applications found</p>

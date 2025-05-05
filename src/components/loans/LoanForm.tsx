@@ -1,3 +1,3 @@
 
-// Update the CommentsSidebar export to use named export syntax
+// Export the CommentsSidebar component using named export syntax
 export { CommentsSidebar } from './CommentsSidebar';
