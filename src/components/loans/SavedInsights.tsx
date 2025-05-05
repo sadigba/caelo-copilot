@@ -1,4 +1,3 @@
-
 import { Card, CardContent } from "@/components/ui/card";
 import { Insight, useLoanContext } from "@/context/LoanContext";
 import { toast } from "sonner";
@@ -18,17 +17,9 @@ import {
 } from "@/components/ui/tooltip";
 import { MinusCircle, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { useRef, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { useState } from "react";
 import {
   Select,
   SelectContent,
@@ -42,217 +33,237 @@ interface SavedInsightsProps {
   savedInsights: Insight[];
 }
 
+interface NewInsightRow {
+  id: string;
+  title: string;
+  narrative: string;
+  evidence: string;
+  comments: string;
+}
+
 export function SavedInsights({ loanId, savedInsights }: SavedInsightsProps) {
   const { unsaveInsight, addInsight } = useLoanContext();
-  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
-  const [newInsight, setNewInsight] = useState<{
-    title: string;
-    narrative: string;
-    documentType: string;
-    evidence: string;
-  }>({
-    title: "",
-    narrative: "",
-    documentType: "",
-    evidence: "",
-  });
-
+  const [newInsightRows, setNewInsightRows] = useState<NewInsightRow[]>([
+    { 
+      id: `new-${Date.now()}`, 
+      title: "", 
+      narrative: "", 
+      evidence: "",
+      comments: ""
+    }
+  ]);
+  
+  // Reference for auto-focusing on new rows
+  const lastRowRef = useRef<HTMLTableRowElement>(null);
+  
   const handleRemoveInsight = (insightId: string) => {
     unsaveInsight(loanId, insightId);
     toast.success("Insight removed");
   };
 
-  const handleCreateInsight = () => {
-    if (!newInsight.title || !newInsight.narrative) {
-      toast.error("Title and narrative are required");
+  const handleAddNewRow = () => {
+    const newRow = {
+      id: `new-${Date.now()}`,
+      title: "",
+      narrative: "",
+      evidence: "",
+      comments: ""
+    };
+    setNewInsightRows([...newInsightRows, newRow]);
+    
+    // Focus on new row after it's rendered
+    setTimeout(() => {
+      if (lastRowRef.current) {
+        const firstInput = lastRowRef.current.querySelector('input');
+        if (firstInput) {
+          firstInput.focus();
+        }
+      }
+    }, 100);
+  };
+
+  const handleRemoveNewRow = (id: string) => {
+    const updatedRows = newInsightRows.filter(row => row.id !== id);
+    setNewInsightRows(updatedRows);
+  };
+
+  const updateNewInsightRow = (id: string, field: keyof NewInsightRow, value: string) => {
+    const updatedRows = newInsightRows.map(row => {
+      if (row.id === id) {
+        return { ...row, [field]: value };
+      }
+      return row;
+    });
+    setNewInsightRows(updatedRows);
+  };
+
+  const handleSaveNewInsight = (row: NewInsightRow) => {
+    // At least title or narrative should be provided
+    if (!row.title && !row.narrative) {
+      toast.error("Please provide at least a title or narrative");
       return;
     }
 
-    // Create evidence array from the optional evidence field
-    const evidenceArray = newInsight.evidence ? [newInsight.evidence] : [];
-
     // Create and save the new insight
     addInsight(loanId, {
-      title: newInsight.title,
-      narrative: newInsight.narrative,
-      evidence: evidenceArray,
+      title: row.title || "Untitled Insight",
+      narrative: row.narrative || "",
+      evidence: row.evidence ? [row.evidence] : [],
+      comments: row.comments ? [row.comments] : [],
     });
 
-    // Reset form and close dialog
-    setNewInsight({
-      title: "",
-      narrative: "",
-      documentType: "",
-      evidence: "",
-    });
-    setIsCreateDialogOpen(false);
+    // Remove the row from the new insights list
+    handleRemoveNewRow(row.id);
+    
+    // Add a new empty row if there are no more new rows
+    if (newInsightRows.length <= 1) {
+      handleAddNewRow();
+    }
+
     toast.success("Insight created and saved");
   };
 
   return (
-    <>
-      <div className="flex justify-between items-center mb-4">
-        <Button 
-          onClick={() => setIsCreateDialogOpen(true)}
-          className="flex items-center gap-1"
-        >
-          <Plus className="h-4 w-4" /> Create Insight
-        </Button>
-        <div></div> {/* Empty div to maintain flex spacing */}
-      </div>
-
-      {savedInsights.length === 0 ? (
-        <Card>
-          <CardContent className="p-6">
-            <div className="text-center py-8">
-              <p className="text-muted-foreground mb-2">No saved insights yet</p>
-              <p className="text-sm text-muted-foreground">
-                Save insights from the Insights Tracker or create new insights to build your credit memo
-              </p>
-            </div>
-          </CardContent>
-        </Card>
-      ) : (
-        <Card className="bg-caelo-50">
-          <CardContent className="p-6">
-            <div className="overflow-x-auto">
-              <Table className="loan-table">
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="action-column"></TableHead>
-                    <TableHead>Insight</TableHead>
-                    <TableHead className="narrative-column">Narrative</TableHead>
-                    <TableHead className="evidence-column">Evidence</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {savedInsights.map((insight) => (
-                    <TableRow key={insight.id}>
-                      <TableCell className="action-column">
-                        <button
-                          onClick={() => handleRemoveInsight(insight.id)}
-                          className="flex items-center justify-center"
-                        >
-                          <MinusCircle className="h-5 w-5 text-destructive" />
-                          <span className="sr-only">Remove insight</span>
-                        </button>
-                      </TableCell>
-                      <TableCell>
-                        {insight.title}
-                      </TableCell>
-                      <TableCell className="narrative-column">
-                        {insight.narrative}
-                      </TableCell>
-                      <TableCell className="evidence-column">
-                        <div className="flex flex-wrap gap-1">
-                          {insight.evidence.map((evidence, index) => (
-                            <TooltipProvider key={index}>
-                              <Tooltip>
-                                <TooltipTrigger asChild>
-                                  <span className="cursor-help underline-offset-4 underline decoration-dotted">
-                                    ({index + 1})
-                                  </span>
-                                </TooltipTrigger>
-                                <TooltipContent>
-                                  <p>{evidence}</p>
-                                </TooltipContent>
-                              </Tooltip>
-                            </TooltipProvider>
-                          ))}
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
-      {/* Create Insight Dialog */}
-      <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
-        <DialogContent className="sm:max-w-[525px]">
-          <DialogHeader>
-            <DialogTitle>Create New Insight</DialogTitle>
-            <DialogDescription>
-              Create a custom insight to add to your analysis.
-            </DialogDescription>
-          </DialogHeader>
-
-          <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-4 items-center gap-4">
-              <label htmlFor="insight-title" className="text-right col-span-1">
-                Title
-              </label>
-              <Input
-                id="insight-title"
-                placeholder="e.g., Strong Cash Flow Position"
-                value={newInsight.title}
-                onChange={(e) => setNewInsight({...newInsight, title: e.target.value})}
-                className="col-span-3"
-              />
-            </div>
-            
-            <div className="grid grid-cols-4 items-start gap-4">
-              <label htmlFor="insight-narrative" className="text-right col-span-1">
-                Narrative
-              </label>
-              <Textarea
-                id="insight-narrative"
-                placeholder="Describe the insight and its implications"
-                value={newInsight.narrative}
-                onChange={(e) => setNewInsight({...newInsight, narrative: e.target.value})}
-                className="col-span-3"
-                rows={4}
-              />
-            </div>
-            
-            <div className="grid grid-cols-4 items-center gap-4">
-              <label htmlFor="document-type" className="text-right col-span-1">
-                Document (Optional)
-              </label>
-              <Select
-                value={newInsight.documentType}
-                onValueChange={(value) => setNewInsight({...newInsight, documentType: value})}
-              >
-                <SelectTrigger className="col-span-3">
-                  <SelectValue placeholder="Select document type (optional)" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Financial Statements">Financial Statements</SelectItem>
-                  <SelectItem value="Rent Roll">Rent Roll</SelectItem>
-                  <SelectItem value="Tax Returns">Tax Returns</SelectItem>
-                  <SelectItem value="Business Plan">Business Plan</SelectItem>
-                  <SelectItem value="Property Appraisal">Property Appraisal</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            
-            <div className="grid grid-cols-4 items-center gap-4">
-              <label htmlFor="insight-evidence" className="text-right col-span-1">
-                Evidence (Optional)
-              </label>
-              <Input
-                id="insight-evidence"
-                placeholder="e.g., Page 3 shows consistent revenue growth of 15%"
-                value={newInsight.evidence}
-                onChange={(e) => setNewInsight({...newInsight, evidence: e.target.value})}
-                className="col-span-3"
-              />
-            </div>
+    <Card className="bg-caelo-50">
+      <CardContent className="p-6">
+        <div className="overflow-x-auto">
+          <Table className="loan-table">
+            <TableHeader>
+              <TableRow>
+                <TableHead className="w-[50px]"></TableHead>
+                <TableHead>Insight</TableHead>
+                <TableHead>Narrative</TableHead>
+                <TableHead>Evidence</TableHead>
+                <TableHead>Comments</TableHead>
+                <TableHead className="w-[80px]"></TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {savedInsights.map((insight) => (
+                <TableRow key={insight.id}>
+                  <TableCell>
+                    <button
+                      onClick={() => handleRemoveInsight(insight.id)}
+                      className="flex items-center justify-center"
+                    >
+                      <MinusCircle className="h-5 w-5 text-destructive" />
+                      <span className="sr-only">Remove insight</span>
+                    </button>
+                  </TableCell>
+                  <TableCell>
+                    {insight.title}
+                  </TableCell>
+                  <TableCell>
+                    {insight.narrative}
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex flex-wrap gap-1">
+                      {insight.evidence.map((evidence, index) => (
+                        <TooltipProvider key={index}>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <span className="cursor-help underline-offset-4 underline decoration-dotted">
+                                ({index + 1})
+                              </span>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>{evidence}</p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      ))}
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    {insight.comments?.map((comment, index) => (
+                      <div key={index} className="text-sm text-muted-foreground">
+                        {comment}
+                      </div>
+                    ))}
+                  </TableCell>
+                  <TableCell className="text-right">
+                    {/* No action needed here */}
+                  </TableCell>
+                </TableRow>
+              ))}
+              
+              {newInsightRows.map((row, index) => (
+                <TableRow 
+                  key={row.id}
+                  ref={index === newInsightRows.length - 1 ? lastRowRef : null}
+                  className="border-t-2 border-secondary/20"
+                >
+                  <TableCell>
+                    {newInsightRows.length > 1 && (
+                      <button
+                        onClick={() => handleRemoveNewRow(row.id)}
+                        className="flex items-center justify-center"
+                      >
+                        <MinusCircle className="h-5 w-5 text-destructive" />
+                        <span className="sr-only">Remove row</span>
+                      </button>
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    <Input
+                      placeholder="Enter insight title"
+                      value={row.title}
+                      onChange={(e) => updateNewInsightRow(row.id, 'title', e.target.value)}
+                      className="w-full border-0 bg-transparent focus-visible:ring-1"
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <Textarea
+                      placeholder="Enter narrative"
+                      value={row.narrative}
+                      onChange={(e) => updateNewInsightRow(row.id, 'narrative', e.target.value)}
+                      className="w-full min-h-[60px] border-0 bg-transparent focus-visible:ring-1"
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <Input
+                      placeholder="Add supporting evidence"
+                      value={row.evidence}
+                      onChange={(e) => updateNewInsightRow(row.id, 'evidence', e.target.value)}
+                      className="w-full border-0 bg-transparent focus-visible:ring-1"
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <Input
+                      placeholder="Add comments"
+                      value={row.comments}
+                      onChange={(e) => updateNewInsightRow(row.id, 'comments', e.target.value)}
+                      className="w-full border-0 bg-transparent focus-visible:ring-1"
+                    />
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <div className="flex justify-end space-x-2">
+                      <Button 
+                        onClick={() => handleSaveNewInsight(row)} 
+                        size="sm" 
+                        className="h-8 px-2"
+                      >
+                        Save
+                      </Button>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+          
+          <div className="mt-4 flex justify-center">
+            <Button 
+              onClick={handleAddNewRow}
+              variant="outline" 
+              size="sm"
+              className="flex items-center gap-1"
+            >
+              <Plus className="h-4 w-4" /> Add Row
+            </Button>
           </div>
-
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsCreateDialogOpen(false)}>
-              Cancel
-            </Button>
-            <Button onClick={handleCreateInsight}>
-              Create Insight
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-    </>
+        </div>
+      </CardContent>
+    </Card>
   );
 }

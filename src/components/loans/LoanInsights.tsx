@@ -1,3 +1,4 @@
+
 import { Card, CardContent } from "@/components/ui/card";
 import { Insight, useLoanContext } from "@/context/LoanContext";
 import { toast } from "sonner";
@@ -52,10 +53,11 @@ export function LoanInsights({ loanId, insights }: LoanInsightsProps) {
           <Table className="loan-table">
             <TableHeader>
               <TableRow>
-                <TableHead className="action-column"></TableHead>
+                <TableHead className="w-[50px]"></TableHead>
                 <TableHead>Insight</TableHead>
-                <TableHead className="narrative-column">Narrative</TableHead>
-                <TableHead className="evidence-column">Evidence</TableHead>
+                <TableHead>Narrative</TableHead>
+                <TableHead>Evidence</TableHead>
+                <TableHead>Comments</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -64,7 +66,7 @@ export function LoanInsights({ loanId, insights }: LoanInsightsProps) {
                   key={insight.id} 
                   className={insight.saved ? "bg-caelo-50" : ""}
                 >
-                  <TableCell className="action-column">
+                  <TableCell>
                     {!insight.saved && (
                       <button
                         onClick={() => handleSaveInsight(insight.id)}
@@ -78,10 +80,10 @@ export function LoanInsights({ loanId, insights }: LoanInsightsProps) {
                   <TableCell>
                     {insight.title}
                   </TableCell>
-                  <TableCell className="narrative-column">
+                  <TableCell>
                     {insight.narrative}
                   </TableCell>
-                  <TableCell className="evidence-column">
+                  <TableCell>
                     <div className="flex flex-wrap gap-1">
                       {insight.evidence.map((evidence, index) => (
                         <TooltipProvider key={index}>
@@ -98,6 +100,13 @@ export function LoanInsights({ loanId, insights }: LoanInsightsProps) {
                         </TooltipProvider>
                       ))}
                     </div>
+                  </TableCell>
+                  <TableCell>
+                    {insight.comments?.map((comment, index) => (
+                      <div key={index} className="text-sm text-muted-foreground">
+                        {comment}
+                      </div>
+                    ))}
                   </TableCell>
                 </TableRow>
               ))}
