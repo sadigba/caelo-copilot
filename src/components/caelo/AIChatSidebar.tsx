@@ -100,7 +100,7 @@ export function AIChatSidebar({ isOpen, onClose }: AIChatSidebarProps) {
             <MessageSquare className="w-12 h-12 text-muted-foreground mb-4" />
             <h3 className="font-medium text-lg">Ask Caelo</h3>
             <p className="text-muted-foreground mt-2">
-              Ask any questions about the loan, property documents, or what information you might need.
+              Ask any questions about the loan in front of you, property documents, or whatever information you might need.
             </p>
           </div>
         )}
