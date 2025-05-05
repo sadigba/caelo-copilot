@@ -6,14 +6,14 @@ export interface Document {
   name: string;
   type?: string;
   dateUploaded: string;
-  size: number;
+  size?: number;
   approved?: boolean;
   rejected?: boolean;
   url?: string;
 }
 
 export interface Comment {
-  id: string;
+  id?: string;
   text: string;
   author: string;
   timestamp: string;
@@ -22,13 +22,15 @@ export interface Comment {
 export interface Insight {
   id: string;
   title: string;
-  description: string;
-  source: string;
-  type: "risk" | "opportunity" | "information";
+  description?: string;
+  narrative: string;
+  source?: string;
+  type?: "risk" | "opportunity" | "information";
   severity?: "low" | "medium" | "high";
   impact?: "low" | "medium" | "high";
   comments: Comment[];
   saved: boolean;
+  evidence: string[];
 }
 
 export interface Loan {
@@ -48,9 +50,12 @@ export interface Loan {
   submissionDate: string;
   lastUpdated: string;
   status: string;
-  documents?: Document[];
-  insights?: Insight[];
-  savedInsights?: Insight[];
+  interestRate?: number;
+  loanTerm?: number;
+  originationDate?: string;
+  documents: Document[];
+  insights: Insight[];
+  savedInsights: Insight[];
 }
 
 interface LoanContextType {
@@ -61,6 +66,11 @@ interface LoanContextType {
   deleteLoan: (id: string) => void;
   getLoanById?: (id: string) => Loan | undefined;
   updateDocument?: (loanId: string, documentId: string, updates: Partial<Document>) => void;
+  addDocument: (loanId: string, document: Omit<Document, "id" | "size">) => void;
+  saveInsight: (loanId: string, insightId: string) => void;
+  unsaveInsight: (loanId: string, insightId: string) => void;
+  addInsight: (loanId: string, insightData: { title: string, narrative: string, evidence: string[] }) => void;
+  addComment: (loanId: string, insightId: string, comment: Comment) => void;
 }
 
 const LoanContext = createContext<LoanContextType | undefined>(undefined);
@@ -104,8 +114,23 @@ export function LoanProvider({ children }: LoanProviderProps) {
       submissionDate: "2023-06-15T10:30:00Z",
       lastUpdated: "2023-06-15T10:30:00Z",
       status: "In Review",
+      interestRate: 4.75,
+      loanTerm: 300,
+      originationDate: "2023-06-10T09:00:00Z",
       documents: [],
-      insights: [],
+      insights: [
+        {
+          id: "insight-1",
+          title: "Strong Debt Service Coverage Ratio",
+          narrative: "The property has a DSCR of 1.35, which is above industry standard minimums.",
+          source: "Financial Analysis",
+          type: "opportunity",
+          impact: "medium",
+          comments: [],
+          saved: false,
+          evidence: ["Annual financial statements", "Rent roll analysis"]
+        }
+      ],
       savedInsights: []
     },
     {
@@ -125,6 +150,9 @@ export function LoanProvider({ children }: LoanProviderProps) {
       submissionDate: "2023-06-10T14:45:00Z",
       lastUpdated: "2023-06-12T09:15:00Z",
       status: "Approved",
+      interestRate: 5.25,
+      loanTerm: 240,
+      originationDate: "2023-06-01T08:30:00Z",
       documents: [],
       insights: [],
       savedInsights: []
@@ -146,6 +174,9 @@ export function LoanProvider({ children }: LoanProviderProps) {
       submissionDate: "2023-06-05T11:20:00Z",
       lastUpdated: "2023-06-14T16:30:00Z",
       status: "Under Review",
+      interestRate: 6.0,
+      loanTerm: 360,
+      originationDate: "2023-05-28T10:15:00Z",
       documents: [],
       insights: [],
       savedInsights: []
@@ -167,6 +198,9 @@ export function LoanProvider({ children }: LoanProviderProps) {
       submissionDate: "2023-05-25T09:15:00Z",
       lastUpdated: "2023-06-01T14:20:00Z",
       status: "In Progress",
+      interestRate: 4.85,
+      loanTerm: 300,
+      originationDate: "2023-05-20T11:30:00Z",
       documents: [],
       insights: [],
       savedInsights: []
@@ -188,6 +222,9 @@ export function LoanProvider({ children }: LoanProviderProps) {
       submissionDate: "2023-06-18T13:40:00Z",
       lastUpdated: "2023-06-19T10:05:00Z",
       status: "New Application",
+      interestRate: 6.5,
+      loanTerm: 120,
+      originationDate: "2023-06-15T14:00:00Z",
       documents: [],
       insights: [],
       savedInsights: []
@@ -256,6 +293,125 @@ export function LoanProvider({ children }: LoanProviderProps) {
     }));
   };
 
+  const addDocument = (loanId: string, document: Omit<Document, "id" | "size">) => {
+    setLoans(loans.map(loan => {
+      if (loan.id !== loanId) return loan;
+      
+      const newDocument: Document = {
+        ...document,
+        id: Math.random().toString(36).substring(2, 9),
+        size: 1024 * 1024, // Default file size of 1MB
+      };
+      
+      return {
+        ...loan,
+        documents: [...(loan.documents || []), newDocument],
+        lastUpdated: new Date().toISOString()
+      };
+    }));
+  };
+
+  const saveInsight = (loanId: string, insightId: string) => {
+    setLoans(loans.map(loan => {
+      if (loan.id !== loanId) return loan;
+      
+      const insight = loan.insights.find(ins => ins.id === insightId);
+      if (!insight) return loan;
+      
+      // Mark the insight as saved
+      const updatedInsights = loan.insights.map(ins => 
+        ins.id === insightId ? { ...ins, saved: true } : ins
+      );
+      
+      // Add to savedInsights if not already there
+      const alreadySaved = loan.savedInsights.some(ins => ins.id === insightId);
+      const updatedSavedInsights = alreadySaved 
+        ? loan.savedInsights 
+        : [...loan.savedInsights, { ...insight, saved: true }];
+      
+      return {
+        ...loan,
+        insights: updatedInsights,
+        savedInsights: updatedSavedInsights,
+        lastUpdated: new Date().toISOString()
+      };
+    }));
+  };
+
+  const unsaveInsight = (loanId: string, insightId: string) => {
+    setLoans(loans.map(loan => {
+      if (loan.id !== loanId) return loan;
+      
+      // Remove from savedInsights
+      const updatedSavedInsights = loan.savedInsights.filter(ins => ins.id !== insightId);
+      
+      return {
+        ...loan,
+        savedInsights: updatedSavedInsights,
+        lastUpdated: new Date().toISOString()
+      };
+    }));
+  };
+
+  const addInsight = (loanId: string, insightData: { title: string, narrative: string, evidence: string[] }) => {
+    setLoans(loans.map(loan => {
+      if (loan.id !== loanId) return loan;
+      
+      const newInsight: Insight = {
+        id: Math.random().toString(36).substring(2, 9),
+        title: insightData.title,
+        narrative: insightData.narrative,
+        evidence: insightData.evidence,
+        source: "Manual Entry",
+        type: "information",
+        comments: [],
+        saved: true
+      };
+      
+      return {
+        ...loan,
+        savedInsights: [...loan.savedInsights, newInsight],
+        lastUpdated: new Date().toISOString()
+      };
+    }));
+  };
+
+  const addComment = (loanId: string, insightId: string, comment: Comment) => {
+    const commentWithId = {
+      ...comment,
+      id: Math.random().toString(36).substring(2, 9)
+    };
+
+    setLoans(loans.map(loan => {
+      if (loan.id !== loanId) return loan;
+      
+      // Add comment to insight in insights array
+      const updatedInsights = loan.insights.map(insight => {
+        if (insight.id !== insightId) return insight;
+        return {
+          ...insight,
+          comments: [...(insight.comments || []), commentWithId]
+        };
+      });
+      
+      // Add comment to insight in savedInsights array
+      const updatedSavedInsights = loan.savedInsights.map(insight => {
+        if (insight.id !== insightId) return insight;
+        return {
+          ...insight,
+          comments: [...(insight.comments || []), commentWithId]
+        };
+      });
+      
+      return {
+        ...loan,
+        insights: updatedInsights,
+        savedInsights: updatedSavedInsights,
+        lastUpdated: new Date().toISOString()
+      };
+    }));
+  };
+
   return (
     <LoanContext.Provider value={{ 
       loans, 
@@ -264,7 +420,12 @@ export function LoanProvider({ children }: LoanProviderProps) {
       updateLoan, 
       deleteLoan,
       getLoanById,
-      updateDocument
+      updateDocument,
+      addDocument,
+      saveInsight,
+      unsaveInsight,
+      addInsight,
+      addComment
     }}>
       {children}
     </LoanContext.Provider>
