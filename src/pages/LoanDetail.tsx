@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import {
@@ -60,6 +61,19 @@ export default function LoanDetail() {
       }
     }
   }, [loan?.id]);
+  
+  // Listen for toggle deal summary event from TopBar
+  useEffect(() => {
+    const handleToggleDealSummary = () => {
+      setShowDealSummary(prevState => !prevState);
+    };
+    
+    window.addEventListener('toggle-deal-summary', handleToggleDealSummary);
+    
+    return () => {
+      window.removeEventListener('toggle-deal-summary', handleToggleDealSummary);
+    };
+  }, []);
 
   if (!loan) {
     return (
@@ -87,18 +101,13 @@ export default function LoanDetail() {
     setRequestNote("");
     setCurrentTag("");
   };
-  
-  const toggleDealSummary = () => {
-    setShowDealSummary(!showDealSummary);
-  };
-  
+
   // Deal Summary View
   if (showDealSummary) {
     return (
       <>
         <div className="flex items-center justify-between px-6 py-3">
           <div className="flex items-center gap-3">
-            <SidebarTrigger />
             <div className="flex items-center gap-3">
               <Button
                 variant="ghost"

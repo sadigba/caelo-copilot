@@ -38,6 +38,12 @@ export function TopBar() {
   const handleDownload = (type: string) => {
     console.log(`Downloading ${type}`);
   };
+  
+  const toggleDealSummary = () => {
+    // We'll use this to communicate with the LoanDetail page
+    const event = new CustomEvent('toggle-deal-summary');
+    window.dispatchEvent(event);
+  };
 
   // Get the current page title
   const getPageTitle = () => {
@@ -109,10 +115,7 @@ export function TopBar() {
               size="sm"
               variant="outline"
               className="h-8"
-              onClick={() => {
-                // This would toggle the deal summary view in the actual app
-                console.log("Toggle deal summary");
-              }}
+              onClick={toggleDealSummary}
             >
               Deal Summary
             </Button>
