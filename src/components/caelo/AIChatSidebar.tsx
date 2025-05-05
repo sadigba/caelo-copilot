@@ -2,7 +2,6 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Separator } from "@/components/ui/separator";
 import { 
   Clock, 
   Plus, 
@@ -81,7 +80,7 @@ export function AIChatSidebar({ isOpen, onClose }: AIChatSidebarProps) {
       <div className="flex justify-between items-center p-4 border-b">
         <div className="flex items-center gap-2">
           <MessageSquare className="w-5 h-5" />
-          <span className="font-medium">AI Chat</span>
+          <span className="font-medium">Ask Caelo</span>
         </div>
         <div className="flex items-center gap-2">
           <Button variant="ghost" size="icon">
@@ -157,27 +156,6 @@ export function AIChatSidebar({ isOpen, onClose }: AIChatSidebarProps) {
         )}
       </div>
 
-      {/* Source selection */}
-      <div className="p-4 border-t">
-        <div className="flex gap-2 mb-2">
-          <Button variant="outline" size="sm" className="text-xs gap-1">
-            <MessageSquare className="w-3 h-3" />
-            Current document
-            <X className="w-3 h-3" />
-          </Button>
-          <Button variant="outline" size="sm" className="text-xs gap-1">
-            <MessageSquare className="w-3 h-3" />
-            Web
-            <X className="w-3 h-3" />
-          </Button>
-        </div>
-        <Button variant="outline" size="sm" className="text-xs gap-1">
-          <MessageSquare className="w-3 h-3" />
-          Library
-          <X className="w-3 h-3" />
-        </Button>
-      </div>
-
       {/* Input area */}
       <div className="p-4 border-t">
         <div className="flex items-center gap-2 border rounded-md pl-4 pr-2 py-2">
@@ -185,7 +163,7 @@ export function AIChatSidebar({ isOpen, onClose }: AIChatSidebarProps) {
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             onKeyPress={handleKeyPress}
-            placeholder="Ask assistant, use @ to mention specific PDFs..."
+            placeholder="Ask Caelo a question..."
             className="border-0 flex-1 focus-visible:ring-0 focus-visible:ring-offset-0"
           />
           <div className="flex items-center gap-2">
