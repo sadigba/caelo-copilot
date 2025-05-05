@@ -16,6 +16,7 @@ import { DocumentUpload } from "@/components/loans/DocumentUpload";
 import { LoanSummary } from "@/components/loans/LoanSummary";
 import { LoanInsights } from "@/components/loans/LoanInsights";
 import { SavedInsights } from "@/components/loans/SavedInsights";
+import { CommentsSidebar } from "@/components/loans/CommentsSidebar";
 import { toast } from "sonner";
 import {
   Dialog,
@@ -30,6 +31,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { X } from "lucide-react";
 import { SidebarTrigger } from "@/components/ui/sidebar";
+import { Insight } from "@/context/LoanContext";
 
 export default function LoanDetail() {
   const { loanId } = useParams<{ loanId: string }>();
@@ -44,6 +46,10 @@ export default function LoanDetail() {
   const [documentTags, setDocumentTags] = useState<string[]>([]);
   const [currentTag, setCurrentTag] = useState("");
   const [requestNote, setRequestNote] = useState("");
+  
+  // States for the comments sidebar
+  const [commentsSidebarOpen, setCommentsSidebarOpen] = useState(false);
+  const [selectedInsight, setSelectedInsight] = useState<Insight | null>(null);
   
   // Get the default tab from URL query parameters
   const queryParams = new URLSearchParams(location.search);
@@ -92,6 +98,11 @@ export default function LoanDetail() {
   const hasApprovedDocuments = loan.documents.some((doc) => doc.approved);
   const allDocumentsReviewed = loan.documents.length > 0 && 
     loan.documents.every((doc) => doc.approved || doc.rejected);
+    
+  const handleViewComments = (insight: Insight) => {
+    setSelectedInsight(insight);
+    setCommentsSidebarOpen(true);
+  };
 
   const handleRequestSubmit = () => {
     if (documentTags.length === 0) {
@@ -136,96 +147,116 @@ export default function LoanDetail() {
         </div>
       </div>
 
-      <div className="p-6">
-        <Tabs defaultValue={defaultTab} className="space-y-6">
-          <TabsList className="grid grid-cols-2 md:grid-cols-4 w-full">
-            <TabsTrigger value="summary">Application Summary</TabsTrigger>
-            <TabsTrigger value="data-room">Data Room</TabsTrigger>
-            <TabsTrigger 
-              value="insights" 
-              disabled={!allDocumentsReviewed}
-              title={allDocumentsReviewed ? "View insights" : "All documents must be approved or rejected to view insights"}
-            >
-              Insights Tracker
-            </TabsTrigger>
-            <TabsTrigger 
-              value="saved-insights"
-              disabled={!allDocumentsReviewed}
-              title={allDocumentsReviewed ? "View saved insights" : "All documents must be approved or rejected to view saved insights"}
-            >
-              Saved Insights
-            </TabsTrigger>
-          </TabsList>
-          
-          <TabsContent value="summary">
-            <LoanSummary loan={loan} />
-          </TabsContent>
-          
-          <TabsContent value="data-room" className="space-y-6">
-            <div className="flex justify-between items-center mb-4">
-              <div className="flex gap-3">
-                <Button onClick={() => setUploadDialogOpen(true)}>
-                  <Upload className="mr-2 h-4 w-4" />
-                  Upload Documents
-                </Button>
-                <Button variant="outline" onClick={() => setIsRequestDialogOpen(true)}>
-                  <FileText className="mr-2 h-4 w-4" />
-                  Request Documentation
-                </Button>
+      <div className="flex flex-1">
+        <div className={`p-6 flex-1 ${commentsSidebarOpen ? 'pr-0' : ''}`}>
+          <Tabs defaultValue={defaultTab} className="space-y-6">
+            <TabsList className="grid grid-cols-2 md:grid-cols-4 w-full">
+              <TabsTrigger value="summary">Application Summary</TabsTrigger>
+              <TabsTrigger value="data-room">Data Room</TabsTrigger>
+              <TabsTrigger 
+                value="insights" 
+                disabled={!allDocumentsReviewed}
+                title={allDocumentsReviewed ? "View insights" : "All documents must be approved or rejected to view insights"}
+              >
+                Insights Tracker
+              </TabsTrigger>
+              <TabsTrigger 
+                value="saved-insights"
+                disabled={!allDocumentsReviewed}
+                title={allDocumentsReviewed ? "View saved insights" : "All documents must be approved or rejected to view saved insights"}
+              >
+                Saved Insights
+              </TabsTrigger>
+            </TabsList>
+            
+            <TabsContent value="summary">
+              <LoanSummary loan={loan} />
+            </TabsContent>
+            
+            <TabsContent value="data-room" className="space-y-6">
+              <div className="flex justify-between items-center mb-4">
+                <div className="flex gap-3">
+                  <Button onClick={() => setUploadDialogOpen(true)}>
+                    <Upload className="mr-2 h-4 w-4" />
+                    Upload Documents
+                  </Button>
+                  <Button variant="outline" onClick={() => setIsRequestDialogOpen(true)}>
+                    <FileText className="mr-2 h-4 w-4" />
+                    Request Documentation
+                  </Button>
+                </div>
               </div>
-            </div>
-            <DocumentTable 
-              loanId={loan.id} 
-              documents={loan.documents} 
-              onRequestDocs={() => setIsRequestDialogOpen(true)}
-              showRequestButton={false}
-            />
-          </TabsContent>
-          
-          <TabsContent value="insights" className="space-y-6">
-            {allDocumentsReviewed ? (
-              hasApprovedDocuments ? (
-                <LoanInsights loanId={loan.id} insights={loan.insights} />
+              <DocumentTable 
+                loanId={loan.id} 
+                documents={loan.documents} 
+                onRequestDocs={() => setIsRequestDialogOpen(true)}
+                showRequestButton={false}
+              />
+            </TabsContent>
+            
+            <TabsContent value="insights" className="space-y-6">
+              {allDocumentsReviewed ? (
+                hasApprovedDocuments ? (
+                  <LoanInsights 
+                    loanId={loan.id} 
+                    insights={loan.insights} 
+                    onViewComments={handleViewComments}
+                  />
+                ) : (
+                  <Card className="p-6">
+                    <div className="text-center py-8">
+                      <p className="text-muted-foreground mb-2">No approved documents</p>
+                      <p className="text-sm text-muted-foreground">
+                        You've reviewed all documents, but none were approved. At least one document needs to be approved to view insights.
+                      </p>
+                    </div>
+                  </Card>
+                )
               ) : (
                 <Card className="p-6">
                   <div className="text-center py-8">
-                    <p className="text-muted-foreground mb-2">No approved documents</p>
+                    <p className="text-muted-foreground mb-2">Document review required</p>
                     <p className="text-sm text-muted-foreground">
-                      You've reviewed all documents, but none were approved. At least one document needs to be approved to view insights.
+                      All documents must be approved or rejected before insights can be viewed
                     </p>
                   </div>
                 </Card>
-              )
-            ) : (
-              <Card className="p-6">
-                <div className="text-center py-8">
-                  <p className="text-muted-foreground mb-2">Document review required</p>
-                  <p className="text-sm text-muted-foreground">
-                    All documents must be approved or rejected before insights can be viewed
-                  </p>
-                </div>
-              </Card>
-            )}
-          </TabsContent>
-          
-          <TabsContent value="saved-insights">
-            {allDocumentsReviewed && hasApprovedDocuments ? (
-              <SavedInsights loanId={loan.id} savedInsights={loan.savedInsights} />
-            ) : (
-              <Card className="p-6">
-                <div className="text-center py-8">
-                  <p className="text-muted-foreground mb-2">Document review required</p>
-                  <p className="text-sm text-muted-foreground">
-                    {!allDocumentsReviewed 
-                      ? "All documents must be approved or rejected before saved insights can be viewed"
-                      : "You've reviewed all documents, but none were approved. At least one document needs to be approved to view saved insights."
-                    }
-                  </p>
-                </div>
-              </Card>
-            )}
-          </TabsContent>
-        </Tabs>
+              )}
+            </TabsContent>
+            
+            <TabsContent value="saved-insights">
+              {allDocumentsReviewed && hasApprovedDocuments ? (
+                <SavedInsights 
+                  loanId={loan.id} 
+                  savedInsights={loan.savedInsights} 
+                  onViewComments={handleViewComments}
+                />
+              ) : (
+                <Card className="p-6">
+                  <div className="text-center py-8">
+                    <p className="text-muted-foreground mb-2">Document review required</p>
+                    <p className="text-sm text-muted-foreground">
+                      {!allDocumentsReviewed 
+                        ? "All documents must be approved or rejected before saved insights can be viewed"
+                        : "You've reviewed all documents, but none were approved. At least one document needs to be approved to view saved insights."
+                      }
+                    </p>
+                  </div>
+                </Card>
+              )}
+            </TabsContent>
+          </Tabs>
+        </div>
+        
+        {/* Comments sidebar */}
+        {commentsSidebarOpen && (
+          <CommentsSidebar
+            isOpen={commentsSidebarOpen}
+            onClose={() => setCommentsSidebarOpen(false)}
+            insight={selectedInsight}
+            loanId={loan.id}
+          />
+        )}
       </div>
       
       <DocumentUpload 
