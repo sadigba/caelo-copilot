@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -32,7 +31,6 @@ interface AIChatSidebarProps {
 export function AIChatSidebar({ isOpen, onClose }: AIChatSidebarProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
-  const { toggleLayoutMode } = useCaeloChat();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   
   // Scroll to bottom whenever messages change

@@ -22,7 +22,7 @@ interface Message {
 }
 
 export function AIChatPopup() {
-  const { isChatOpen, closeCaeloChat, layoutMode, toggleLayoutMode } = useCaeloChat();
+  const { isChatOpen, closeCaeloChat, layoutMode } = useCaeloChat();
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);

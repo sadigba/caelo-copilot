@@ -11,7 +11,7 @@ interface AppLayoutProps {
 }
 
 export default function AppLayout({ children }: AppLayoutProps) {
-  const { isChatOpen, closeCaeloChat, layoutMode } = useCaeloChat();
+  const { isChatOpen, closeCaeloChat } = useCaeloChat();
 
   return (
     <SidebarProvider>
@@ -23,7 +23,6 @@ export default function AppLayout({ children }: AppLayoutProps) {
             {children}
           </main>
           
-          {/* Always use sidebar mode for the chat */}
           <AIChatSidebar isOpen={isChatOpen} onClose={closeCaeloChat} />
         </div>
       </div>
