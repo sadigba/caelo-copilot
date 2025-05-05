@@ -45,14 +45,14 @@ export function AppSidebar() {
         </div>
       </SidebarHeader>
       <SidebarContent className="p-4">
-        <div className="mb-4">
-          <Button asChild className="w-full" size="sm">
-            <Link to="/new-loan" className="flex items-center justify-center">
+        <SidebarMenuItem className="mb-1">
+          <SidebarMenuButton asChild>
+            <Link to="/new-loan" className="flex items-center text-sm">
               <Plus className="mr-2 h-4 w-4" />
-              New Application
+              <span>New Application</span>
             </Link>
-          </Button>
-        </div>
+          </SidebarMenuButton>
+        </SidebarMenuItem>
         
         <SidebarGroup>
           <SidebarGroupLabel>Main</SidebarGroupLabel>
