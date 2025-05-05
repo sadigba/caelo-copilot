@@ -170,7 +170,7 @@ export default function LoanDetail() {
                   <div className="font-medium">{loan.loanType}</div>
                   
                   <div className="text-gray-600">Requested</div>
-                  <div className="font-medium">${Number(loan.amount).toLocaleString()}</div>
+                  <div className="font-medium">${Number(loan.requestedAmount).toLocaleString()}</div>
                   
                   <div className="text-gray-600">Status</div>
                   <div>
@@ -301,16 +301,6 @@ export default function LoanDetail() {
               {refreshing ? "Analyzing..." : "Refresh"}
             </Button>
             
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={toggleDealSummary}
-              className="h-8"
-            >
-              <BarChart2 className="mr-2 h-4 w-4" />
-              Deal Summary
-            </Button>
-            
             {/* Dropdown menu button replacing individual buttons */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -342,6 +332,16 @@ export default function LoanDetail() {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
+            
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={toggleDealSummary}
+              className="h-8"
+            >
+              <BarChart2 className="mr-2 h-4 w-4" />
+              Deal Summary
+            </Button>
           </div>
         </div>
       </div>
@@ -532,3 +532,4 @@ export default function LoanDetail() {
     </>
   );
 }
+
