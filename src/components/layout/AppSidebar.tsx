@@ -1,5 +1,5 @@
 
-import { Home, FileText, Settings, MessageSquare } from "lucide-react";
+import { Home, FileText, Settings, MessageSquare, Plus } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/sidebar";
 import { Link } from "react-router-dom";
 import { useCaeloChat } from "@/hooks/use-caelo-chat";
+import { Button } from "@/components/ui/button";
 
 // Menu items
 const mainItems = [
@@ -44,6 +45,15 @@ export function AppSidebar() {
         </div>
       </SidebarHeader>
       <SidebarContent className="p-4">
+        <div className="mb-4">
+          <Button asChild className="w-full" size="sm">
+            <Link to="/new-loan" className="flex items-center justify-center">
+              <Plus className="mr-2 h-4 w-4" />
+              New Application
+            </Link>
+          </Button>
+        </div>
+        
         <SidebarGroup>
           <SidebarGroupLabel>Main</SidebarGroupLabel>
           <SidebarGroupContent>
