@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { useCaeloChat } from "@/hooks/use-caelo-chat";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
+import { useLocation } from "react-router-dom";
 
 interface Message {
   type: 'user' | 'ai';
@@ -29,20 +30,57 @@ interface Message {
 
 export function AIChatPopup() {
   const { isChatOpen, closeCaeloChat, layoutMode, toggleLayoutMode } = useCaeloChat();
-  const [messages, setMessages] = useState<Message[]>([]);
+  const location = useLocation();
+  
+  // Get stored messages from localStorage or initialize empty array
+  const storedMessages = localStorage.getItem('caelo-chat-messages');
+  const initialMessages: Message[] = storedMessages ? JSON.parse(storedMessages) : [];
+  
+  const [messages, setMessages] = useState<Message[]>(initialMessages);
   const [inputValue, setInputValue] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
   
   // Drag functionality
-  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const storedPosition = localStorage.getItem('caelo-chat-position');
+  const initialPosition = storedPosition ? JSON.parse(storedPosition) : { x: 0, y: 0 };
+  
+  const [position, setPosition] = useState(initialPosition);
   const [isDragging, setIsDragging] = useState(false);
   const popupRef = useRef<HTMLDivElement>(null);
   const dragStartRef = useRef({ x: 0, y: 0 });
+  
+  // Save messages to localStorage when they change
+  useEffect(() => {
+    localStorage.setItem('caelo-chat-messages', JSON.stringify(messages));
+  }, [messages]);
+  
+  // Save position to localStorage when it changes
+  useEffect(() => {
+    localStorage.setItem('caelo-chat-position', JSON.stringify(position));
+  }, [position]);
   
   // Scroll to bottom whenever messages change
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
+
+  // Reset position when route changes
+  useEffect(() => {
+    // Don't reset position on initial render, only on route changes
+    if (location.pathname !== localStorage.getItem('caelo-chat-lastpath') && localStorage.getItem('caelo-chat-lastpath')) {
+      // Only reset if the position is out of bounds
+      const windowWidth = window.innerWidth;
+      const windowHeight = window.innerHeight;
+      const popupWidth = 550; // Approximate width of popup
+      const popupHeight = 600; // Approximate height of popup
+      
+      if (position.x < 0 || position.x > windowWidth - popupWidth || 
+          position.y < 0 || position.y > windowHeight - popupHeight) {
+        setPosition({ x: 0, y: 0 });
+      }
+    }
+    localStorage.setItem('caelo-chat-lastpath', location.pathname);
+  }, [location.pathname, position]);
   
   const handleSend = () => {
     if (!inputValue.trim()) return;

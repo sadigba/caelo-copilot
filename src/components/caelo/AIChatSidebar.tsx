@@ -25,10 +25,19 @@ interface AIChatSidebarProps {
 }
 
 export function AIChatSidebar({ isOpen, onClose }: AIChatSidebarProps) {
-  const [messages, setMessages] = useState<Message[]>([]);
+  // Get stored messages from localStorage or initialize empty array
+  const storedMessages = localStorage.getItem('caelo-chat-messages');
+  const initialMessages: Message[] = storedMessages ? JSON.parse(storedMessages) : [];
+  
+  const [messages, setMessages] = useState<Message[]>(initialMessages);
   const [inputValue, setInputValue] = useState('');
   const { toggleLayoutMode } = useCaeloChat();
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  
+  // Save messages to localStorage when they change
+  useEffect(() => {
+    localStorage.setItem('caelo-chat-messages', JSON.stringify(messages));
+  }, [messages]);
   
   // Scroll to bottom whenever messages change
   useEffect(() => {
