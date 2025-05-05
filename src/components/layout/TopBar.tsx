@@ -41,7 +41,7 @@ export function TopBar() {
   };
 
   return (
-    <div className="h-14 bg-background border-b flex items-center justify-between px-4">
+    <div className="h-14 bg-background flex items-center justify-between px-4">
       <div className="flex items-center">
         {/* Left side content would go here */}
       </div>
@@ -50,7 +50,7 @@ export function TopBar() {
           <>
             <Button
               size="sm"
-              variant="outline"
+              variant="ghost"
               onClick={handleRefresh}
               className="h-8"
             >
@@ -61,7 +61,7 @@ export function TopBar() {
               <DropdownMenuTrigger asChild>
                 <Button
                   size="sm"
-                  variant="outline"
+                  variant="ghost"
                   className="h-8"
                 >
                   Download
@@ -85,7 +85,7 @@ export function TopBar() {
 
             <Button 
               size="sm" 
-              variant="outline" 
+              variant="ghost" 
               className="h-8"
               onClick={navigateToDealSummary}
             >
