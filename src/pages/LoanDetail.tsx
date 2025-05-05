@@ -48,6 +48,22 @@ export default function LoanDetail() {
   // Get the default tab from URL query parameters
   const queryParams = new URLSearchParams(location.search);
   const defaultTab = queryParams.get('tab') === 'summary' ? 'summary' : 'data-room';
+  
+  // Effect to update tabs when URL changes
+  useEffect(() => {
+    // This will force the tabs to re-render when the URL query params change
+    const newQueryParams = new URLSearchParams(location.search);
+    const newTab = newQueryParams.get('tab') === 'summary' ? 'summary' : 'data-room';
+    
+    const tabsElement = document.querySelector(`[data-state="active"][role="tab"][data-value="${newTab}"]`);
+    if (!tabsElement) {
+      // If tab doesn't exist yet or isn't active, trigger a click on it
+      const tabTrigger = document.querySelector(`[role="tab"][data-value="${newTab}"]`) as HTMLElement;
+      if (tabTrigger) {
+        tabTrigger.click();
+      }
+    }
+  }, [location.search]);
 
   const loan = getLoanById(loanId || "");
 

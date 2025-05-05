@@ -35,7 +35,8 @@ export function TopBar() {
     // Extract the loanId from the current path if we're on a loan detail page
     if (isLoanDetailPage) {
       const loanId = location.pathname.split('/').pop();
-      navigate(`/loans/${loanId}?tab=summary`);
+      // Force the navigation even if we're already on the page to ensure the tab changes
+      navigate(`/loans/${loanId}?tab=summary`, { replace: true });
     }
   };
 
@@ -82,7 +83,6 @@ export function TopBar() {
               </DropdownMenuContent>
             </DropdownMenu>
 
-            {/* Deal Summary Button without icon */}
             <Button 
               size="sm" 
               variant="outline" 
