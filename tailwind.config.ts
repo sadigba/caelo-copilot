@@ -66,18 +66,16 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
-				caelo: {
-					50: '#F9FAFB',
-					100: '#F3F4F6',
-					200: '#E5E7EB',
-					300: '#D1D5DB',
-					400: '#9CA3AF',
-					500: '#6B7280',
-					600: '#4B5563',
-					700: '#374151',
-					800: '#1F2937',
-					900: '#111827',
-				}
+				// Modern UI colors matching the image
+				modern: {
+					purple: '#5457ec', // Primary purple/blue color from the image
+					'light-purple': '#6366f1',
+					'dark-purple': '#4338ca',
+					'light-gray': '#f1f5f9',
+					'mid-gray': '#e2e8f0',
+					'dark-gray': '#475569',
+					'border-gray': '#e2e8f0',
+				},
 			},
 			borderRadius: {
 				lg: 'var(--radius)',

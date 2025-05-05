@@ -1,42 +1,85 @@
+
 #root {
-  max-width: 1280px;
+  width: 100%;
+  min-height: 100vh;
+}
+
+.modern-container {
+  max-width: 1200px;
   margin: 0 auto;
   padding: 2rem;
-  text-align: center;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+.modern-card {
+  background-color: white;
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  border: 1px solid #f1f5f9;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.modern-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+.modern-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1e293b;
 }
 
-.card {
-  padding: 2em;
+/* Modern form styles */
+.modern-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.5rem;
+  outline: none;
+  transition: border-color 0.15s ease;
 }
 
-.read-the-docs {
-  color: #888;
+.modern-input:focus {
+  border-color: #5457ec;
+  box-shadow: 0 0 0 2px rgba(84, 87, 236, 0.2);
+}
+
+.modern-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #475569;
+}
+
+.modern-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border-radius: 0.5rem;
+  transition: all 0.15s ease;
+}
+
+.modern-button-primary {
+  background-color: #5457ec;
+  color: white;
+}
+
+.modern-button-primary:hover {
+  background-color: #4338ca;
+}
+
+.modern-button-outline {
+  background-color: transparent;
+  border: 1px solid #e2e8f0;
+  color: #475569;
+}
+
+.modern-button-outline:hover {
+  background-color: #f1f5f9;
 }
