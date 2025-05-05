@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 // Types for our loan data
@@ -374,6 +373,7 @@ interface LoanContextType {
   saveInsight: (loanId: string, insightId: string) => void;
   unsaveInsight: (loanId: string, insightId: string) => void;
   addComment: (loanId: string, insightId: string, commentText: string) => void;
+  addInsight: (loanId: string, insightData: { title: string; narrative: string; evidence: string[] }) => void;
 }
 
 const LoanContext = createContext<LoanContextType | undefined>(undefined);
@@ -517,6 +517,32 @@ export const LoanProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     );
   };
 
+  const addInsight = (loanId: string, insightData: { title: string; narrative: string; evidence: string[] }) => {
+    const newInsight: Insight = {
+      id: `insight-${Date.now()}`,
+      title: insightData.title,
+      narrative: insightData.narrative,
+      evidence: insightData.evidence,
+      saved: true,
+      comments: []
+    };
+
+    setLoans(prev => 
+      prev.map(loan => {
+        if (loan.id !== loanId) return loan;
+        
+        return {
+          ...loan,
+          insights: [...loan.insights, { ...newInsight, saved: true }],
+          savedInsights: [...loan.savedInsights, newInsight],
+          lastUpdated: new Date()
+        };
+      })
+    );
+
+    return newInsight.id;
+  };
+
   return (
     <LoanContext.Provider value={{ 
       loans, 
@@ -527,7 +553,8 @@ export const LoanProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       updateDocument,
       saveInsight,
       unsaveInsight,
-      addComment
+      addComment,
+      addInsight
     }}>
       {children}
     </LoanContext.Provider>

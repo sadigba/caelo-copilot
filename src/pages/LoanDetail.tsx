@@ -225,15 +225,24 @@ export default function LoanDetail() {
                   <ul className="space-y-4">
                     <li className="flex items-start gap-2">
                       <AlertTriangle className="h-5 w-5 text-red-500 mt-0.5 flex-shrink-0" />
-                      <span>Tax return not uploaded</span>
+                      <div>
+                        <span>Tax return not uploaded</span>
+                        <div className="text-sm text-gray-500">Mar 15, 2025</div>
+                      </div>
                     </li>
                     <li className="flex items-start gap-2">
                       <AlertTriangle className="h-5 w-5 text-red-500 mt-0.5 flex-shrink-0" />
-                      <span>Personal financial statement is over 12 months old</span>
+                      <div>
+                        <span>Personal financial statement is over 12 months old</span>
+                        <div className="text-sm text-gray-500">Jan 10, 2025</div>
+                      </div>
                     </li>
                     <li className="flex items-start gap-2">
                       <AlertTriangle className="h-5 w-5 text-red-500 mt-0.5 flex-shrink-0" />
-                      <span>Business plan contains mismatched revenue* values</span>
+                      <div>
+                        <span>Business plan contains mismatched revenue* values</span>
+                        <div className="text-sm text-gray-500">Mar 12, 2025</div>
+                      </div>
                     </li>
                   </ul>
                 </div>
