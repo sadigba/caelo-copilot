@@ -50,7 +50,8 @@ export function TopBar() {
               size="icon"
               variant="ghost"
               onClick={handleRefresh}
-              className="h-8 w-8"
+              className={`h-8 w-8 ${refreshing ? 'animate-spin' : ''}`}
+              disabled={refreshing}
               title="Refresh"
             >
               <RefreshCw className="h-4 w-4" />
