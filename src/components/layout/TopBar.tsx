@@ -35,8 +35,8 @@ export function TopBar() {
     // Extract the loanId from the current path if we're on a loan detail page
     if (isLoanDetailPage) {
       const loanId = location.pathname.split('/').pop();
-      // Force the navigation even if we're already on the page to ensure the tab changes
-      navigate(`/loans/${loanId}?tab=summary`, { replace: true });
+      // Navigate to the dedicated Deal Summary page
+      navigate(`/loans/${loanId}/deal-summary`);
     }
   };
 

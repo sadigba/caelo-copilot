@@ -12,6 +12,7 @@ import { CaeloChatProvider } from "./hooks/use-caelo-chat";
 import Dashboard from "./pages/Dashboard";
 import NewLoan from "./pages/NewLoan";
 import LoanDetail from "./pages/LoanDetail";
+import DealSummary from "./pages/DealSummary";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 
@@ -29,6 +30,7 @@ const App = () => (
               <Route path="/" element={<AppLayout><Dashboard /></AppLayout>} />
               <Route path="/new-loan" element={<AppLayout><NewLoan /></AppLayout>} />
               <Route path="/loans/:loanId" element={<AppLayout><LoanDetail /></AppLayout>} />
+              <Route path="/loans/:loanId/deal-summary" element={<AppLayout><DealSummary /></AppLayout>} />
               <Route path="/settings" element={<AppLayout><Settings /></AppLayout>} />
               <Route path="*" element={<NotFound />} />
             </Routes>
