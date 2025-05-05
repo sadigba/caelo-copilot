@@ -32,10 +32,11 @@ import { Badge } from "@/components/ui/badge";
 import { X } from "lucide-react";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Insight } from "@/context/LoanContext";
+import { v4 as uuidv4 } from "uuid";
 
 export default function LoanDetail() {
   const { loanId } = useParams<{ loanId: string }>();
-  const { getLoanById, updateDocument } = useLoanContext();
+  const { getLoanById, updateDocument, updateLoan } = useLoanContext();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -85,6 +86,200 @@ export default function LoanDetail() {
       }
     }
   }, [loan?.id]);
+
+  // Add an effect to auto-generate insights when all documents have been reviewed
+  useEffect(() => {
+    if (!loan) return;
+    
+    // Check if all documents have been reviewed and at least one is approved
+    const allDocumentsReviewed = loan.documents.length > 0 && 
+      loan.documents.every((doc) => doc.approved || doc.rejected);
+    const hasApprovedDocuments = loan.documents.some((doc) => doc.approved);
+    
+    // If insights are empty and all documents are reviewed with at least one approval, generate insights
+    if (allDocumentsReviewed && hasApprovedDocuments && loan.insights.length === 0) {
+      generateInsightsForLoan(loan.id);
+    }
+  }, [loan?.documents]);
+
+  // Function to generate insights based on document types
+  const generateInsightsForLoan = (loanId: string) => {
+    const loan = getLoanById(loanId);
+    if (!loan) return;
+    
+    // Map to group documents by their types
+    const documentTypes = new Map<string, number>();
+    
+    // Count documents by type
+    loan.documents.forEach(doc => {
+      if (doc.approved && doc.type) {
+        doc.type.split(',').forEach(type => {
+          const trimmedType = type.trim();
+          documentTypes.set(trimmedType, (documentTypes.get(trimmedType) || 0) + 1);
+        });
+      }
+    });
+    
+    const insights: Insight[] = [];
+    const currentDate = new Date().toISOString();
+
+    // Generate insights based on document types
+    if (documentTypes.has("Rent Roll")) {
+      insights.push({
+        id: uuidv4(),
+        title: "Positive Cash Flow",
+        description: "The property shows strong positive cash flow based on rent roll",
+        category: "Financial",
+        score: 92,
+        dateCreated: currentDate,
+        narrative: "The rent roll shows a stable tenant base with low vacancy rates, resulting in consistent monthly income that exceeds operating expenses by approximately 25%.",
+        evidence: ["Average monthly rental income: $45,000", "Monthly operating expenses: $35,000", "Positive cash flow: $10,000/month"],
+        comments: []
+      });
+      
+      insights.push({
+        id: uuidv4(),
+        title: "Below Market Rents",
+        description: "Current rents are 15% below market rate",
+        category: "Financial",
+        score: 85,
+        dateCreated: currentDate,
+        narrative: "Analysis of the rent roll compared to market rates indicates potential for rental income growth through strategic increases.",
+        evidence: ["Current average rent: $1,250/unit", "Market average rent: $1,450/unit", "Potential increase: 15%"],
+        comments: []
+      });
+      
+      insights.push({
+        id: uuidv4(),
+        title: "High Occupancy Rate",
+        description: "Property maintains 95% occupancy rate",
+        category: "Property",
+        score: 90,
+        dateCreated: currentDate,
+        narrative: "The property has maintained consistently high occupancy rates over the past 24 months, indicating strong demand and effective property management.",
+        evidence: ["Current occupancy: 95%", "Market average: 89%", "Tenant retention rate: 78%"],
+        comments: []
+      });
+    }
+    
+    if (documentTypes.has("Financial")) {
+      insights.push({
+        id: uuidv4(),
+        title: "Strong Financial Performance",
+        description: "The business shows consistent financial growth",
+        category: "Financial",
+        score: 88,
+        dateCreated: currentDate,
+        narrative: "The financial statements demonstrate year-over-year revenue growth of 8%, with improving profit margins and controlled operating expenses.",
+        evidence: ["Annual revenue growth: 8%", "Profit margin increase: 3.5%", "Expense ratio reduction: 2.1%"],
+        comments: []
+      });
+      
+      if (loan.loanType === "Bridge") {
+        insights.push({
+          id: uuidv4(),
+          title: "Favorable Loan Terms",
+          description: "Bridge loan terms are competitive for market segment",
+          category: "Financial",
+          score: 78,
+          dateCreated: currentDate,
+          narrative: "The proposed bridge loan terms align well with current market conditions for properties undergoing renovation.",
+          evidence: ["Interest rate 50bps below average for similar loans", "Flexible draw schedule accommodates renovation timeline", "No prepayment penalty after 12 months"],
+          comments: []
+        });
+      }
+    }
+    
+    if (documentTypes.has("Property")) {
+      insights.push({
+        id: uuidv4(),
+        title: "Prime Location Assessment",
+        description: `Property situated in high-traffic ${loan.propertyType.toLowerCase()} corridor`,
+        category: "Property",
+        score: 95,
+        dateCreated: currentDate,
+        narrative: `Analysis of the property data confirms the ${loan.propertyType.toLowerCase()} is situated in a prime corridor with strong traffic and excellent visibility.`,
+        evidence: ["Daily foot/vehicle traffic: 20,000+", "Walking distance to public transit", "Corner lot with street frontage on two major roads"],
+        comments: []
+      });
+    }
+    
+    if (documentTypes.has("Appraisal")) {
+      insights.push({
+        id: uuidv4(),
+        title: "Strong Appraisal Value",
+        description: "Property appraised 8% above purchase price",
+        category: "Property",
+        score: 92,
+        dateCreated: currentDate,
+        narrative: "The appraisal report indicates a value higher than the acquisition cost, providing a favorable loan-to-value ratio.",
+        evidence: ["Appraisal: $2,700,000", "Purchase price: $2,500,000", "8% built-in equity"],
+        comments: []
+      });
+    }
+    
+    if (documentTypes.has("Legal")) {
+      insights.push({
+        id: uuidv4(),
+        title: "Clean Title Report",
+        description: "No title issues or encumbrances identified",
+        category: "Legal",
+        score: 95,
+        dateCreated: currentDate,
+        narrative: "Title examination reveals clean ownership history with no liens, encumbrances, or legal disputes that would affect property transfer.",
+        evidence: ["Clear title dating back 40+ years", "No outstanding liens", "Proper easements documented"],
+        comments: []
+      });
+    }
+    
+    if (documentTypes.has("Construction")) {
+      insights.push({
+        id: uuidv4(),
+        title: "Construction Budget Analysis",
+        description: "Construction budget appears comprehensive and realistic",
+        category: "Construction",
+        score: 85,
+        dateCreated: currentDate,
+        narrative: "The construction budget includes appropriate contingencies and is in line with industry standards for similar projects.",
+        evidence: ["15% contingency allocation", "Material costs within 5% of current market rates", "Timeline accounts for potential supply chain delays"],
+        comments: []
+      });
+    }
+    
+    if (documentTypes.has("Environmental")) {
+      insights.push({
+        id: uuidv4(),
+        title: "Environmental Risk Assessment",
+        description: "No significant environmental concerns identified",
+        category: "Environmental",
+        score: 90,
+        dateCreated: currentDate,
+        narrative: "The environmental report indicates no significant contamination issues or environmental liabilities associated with the property.",
+        evidence: ["Phase I assessment complete", "No recognized environmental conditions", "Site meets current environmental standards"],
+        comments: []
+      });
+    }
+
+    if (documentTypes.has("Inspection")) {
+      insights.push({
+        id: uuidv4(),
+        title: "Property Condition Assessment",
+        description: "Inspection reveals good overall condition with minor repairs needed",
+        category: "Property",
+        score: 82,
+        dateCreated: currentDate,
+        narrative: "The property inspection report indicates the building is in good condition overall, with some minor maintenance items that should be addressed.",
+        evidence: ["HVAC system 8 years old (15-year lifespan)", "Roof in good condition (5 years old)", "Electrical systems up to code"],
+        comments: []
+      });
+    }
+    
+    // If we have insights to add, update the loan
+    if (insights.length > 0) {
+      updateLoan(loanId, { insights });
+      toast.success("Insights generated based on document analysis");
+    }
+  };
 
   if (!loan) {
     return (

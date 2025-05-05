@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useReducer, useCallback } from "react";
 import { v4 as uuidv4 } from "uuid";
 
@@ -76,7 +75,7 @@ type LoanAction =
   | { type: "ADD_DOCUMENT"; payload: { loanId: string; document: Omit<Document, "id"> } }
   | { type: "UPDATE_DOCUMENT"; payload: { loanId: string; docId: string; updates: Partial<Document> } }
   | { type: "DELETE_DOCUMENT"; payload: { loanId: string; docId: string } }
-  | { type: "ADD_INSIGHT"; payload: { loanId: string; insight: Insight } }
+  | { type: "ADD_INSIGHT"; payload: { loanId: string; insight: Omit<Insight, "id" | "dateCreated"> } }
   | { type: "SAVE_INSIGHT"; payload: { loanId: string; insightId: string } }
   | { type: "UNSAVE_INSIGHT"; payload: { loanId: string; insightId: string } }
   | { type: "ADD_COMMENT"; payload: { loanId: string; insightId: string; comment: Omit<Comment, "id" | "timestamp"> } };
@@ -91,7 +90,7 @@ export interface LoanContextType {
   addDocument: (loanId: string, document: Omit<Document, "id">) => void;
   updateDocument: (loanId: string, docId: string, updates: Partial<Document>) => void;
   deleteDocument: (loanId: string, docId: string) => void;
-  addInsight: (loanId: string, insight: Insight) => void;
+  addInsight: (loanId: string, insight: Omit<Insight, "id" | "dateCreated">) => void;
   saveInsight: (loanId: string, insightId: string) => void;
   unsaveInsight: (loanId: string, insightId: string) => void;
   addComment: (loanId: string, insightId: string, comment: Omit<Comment, "id" | "timestamp">) => void;
@@ -401,7 +400,11 @@ const loanReducer = (state: LoanState, action: LoanAction): LoanState => {
           loan.id === action.payload.loanId
             ? {
                 ...loan,
-                insights: [...loan.insights, action.payload.insight],
+                insights: [...loan.insights, {
+                  ...action.payload.insight,
+                  id: uuidv4(),
+                  dateCreated: new Date().toISOString()
+                }],
                 lastUpdated: new Date().toISOString(),
               }
             : loan
@@ -531,7 +534,7 @@ export const LoanProvider: React.FC<{ children: React.ReactNode }> = ({ children
     dispatch({ type: "DELETE_DOCUMENT", payload: { loanId, docId } });
   }, []);
 
-  const addInsight = useCallback((loanId: string, insight: Insight) => {
+  const addInsight = useCallback((loanId: string, insight: Omit<Insight, "id" | "dateCreated">) => {
     dispatch({ type: "ADD_INSIGHT", payload: { loanId, insight } });
   }, []);
 
