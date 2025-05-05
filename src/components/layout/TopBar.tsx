@@ -9,6 +9,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useState } from "react";
+import { FileText } from "lucide-react";
 
 export function TopBar() {
   const { toggleCaeloChat } = useCaeloChat();
@@ -72,6 +73,16 @@ export function TopBar() {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
+
+            {/* Deal Summary Button */}
+            <Button 
+              size="sm" 
+              variant="outline" 
+              className="h-8"
+            >
+              <FileText className="mr-2 h-4 w-4" />
+              Deal Summary
+            </Button>
           </>
         )}
         
