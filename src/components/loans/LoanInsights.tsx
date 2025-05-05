@@ -104,7 +104,7 @@ export function LoanInsights({ loanId, insights }: LoanInsightsProps) {
                   <TableCell>
                     {insight.comments?.map((comment, index) => (
                       <div key={index} className="text-sm text-muted-foreground">
-                        {comment}
+                        {comment.text}
                       </div>
                     ))}
                   </TableCell>

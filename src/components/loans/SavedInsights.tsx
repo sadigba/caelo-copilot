@@ -1,3 +1,4 @@
+
 import { Card, CardContent } from "@/components/ui/card";
 import { Insight, useLoanContext } from "@/context/LoanContext";
 import { toast } from "sonner";
@@ -177,7 +178,7 @@ export function SavedInsights({ loanId, savedInsights }: SavedInsightsProps) {
                   <TableCell>
                     {insight.comments?.map((comment, index) => (
                       <div key={index} className="text-sm text-muted-foreground">
-                        {comment}
+                        {comment.text}
                       </div>
                     ))}
                   </TableCell>
