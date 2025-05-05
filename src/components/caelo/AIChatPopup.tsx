@@ -92,8 +92,8 @@ export function AIChatPopup() {
           {/* Header */}
           <div className="p-4 flex items-center justify-between border-b">
             <div className="flex items-center gap-2">
-              <ChevronRight className="h-5 w-5" />
-              <h2 className="font-medium text-lg">AI Chat</h2>
+              <MessageSquare className="h-5 w-5" />
+              <h2 className="font-medium text-lg">Ask Caelo</h2>
             </div>
             <div className="flex items-center gap-2">
               <Button variant="ghost" size="icon" className="h-8 w-8">
@@ -103,7 +103,7 @@ export function AIChatPopup() {
                 <Plus className="h-4 w-4" />
               </Button>
               <Button variant="ghost" size="icon" className="h-8 w-8" onClick={closeCaeloChat}>
-                <ChevronLeft className="h-4 w-4" />
+                <ChevronRight className="h-4 w-4" />
               </Button>
             </div>
           </div>
@@ -127,6 +127,14 @@ export function AIChatPopup() {
               </div>
             ) : (
               <div className="space-y-8 py-8">
+                <div className="text-center mb-10">
+                  <MessageSquare className="h-16 w-16 mx-auto mb-4 text-muted-foreground/60" />
+                  <h2 className="text-xl font-semibold mb-2">Ask Caelo</h2>
+                  <p className="text-muted-foreground">
+                    Ask any questions about the loan in front of you, property documents, or whatever information you might need.
+                  </p>
+                </div>
+
                 <div className="space-y-4">
                   <h3 className="text-sm font-medium text-muted-foreground">Research questions</h3>
                   {researchPrompts.map((prompt, index) => (
@@ -182,14 +190,14 @@ export function AIChatPopup() {
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
                 onKeyPress={handleKeyPress}
-                placeholder="Ask assistant, use @ to mention specific PDFs..."
+                placeholder="Ask Caelo a question..."
                 className="border-0 flex-1 p-0 focus-visible:ring-0 focus-visible:ring-offset-0 text-sm"
               />
               <div className="flex items-center gap-2">
                 <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0">
                   <PaperclipIcon className="h-4 w-4" />
                 </Button>
-                <Button onClick={handleSend} size="icon" className="h-8 w-8 shrink-0" variant="ghost">
+                <Button onClick={handleSend} size="icon" className="h-8 w-8 shrink-0" variant="default">
                   <SendHorizontal className="h-4 w-4" />
                 </Button>
               </div>

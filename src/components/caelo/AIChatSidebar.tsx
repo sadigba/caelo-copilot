@@ -9,7 +9,8 @@ import {
   SendHorizontal, 
   PaperclipIcon, 
   ChevronRight,
-  ChevronLeft
+  ChevronLeft,
+  MessageSquare
 } from "lucide-react";
 import {
   Sidebar,
@@ -73,6 +74,7 @@ export function AIChatSidebar({ isOpen, onClose }: AIChatSidebarProps) {
     }
   };
 
+  // If not open, return null to not render anything
   if (!isOpen) return null;
   
   // Example prompts
@@ -90,12 +92,16 @@ export function AIChatSidebar({ isOpen, onClose }: AIChatSidebarProps) {
   ];
 
   return (
-    <Sidebar side="right" variant="floating" className="border-l z-20 w-[380px]">
+    <Sidebar 
+      side="right" 
+      variant="floating" 
+      className="border-l shadow-lg z-20 w-[380px] transition-all duration-300 animate-slide-in-right"
+    >
       <SidebarHeader className="p-4 border-b">
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-2">
-            <ChevronRight className="h-5 w-5" />
-            <span className="font-medium text-lg">AI Chat</span>
+            <MessageSquare className="h-5 w-5" />
+            <span className="font-medium text-lg">Ask Caelo</span>
           </div>
           <div className="flex items-center gap-2">
             <Button variant="ghost" size="icon" className="h-8 w-8" title="History">
@@ -105,7 +111,7 @@ export function AIChatSidebar({ isOpen, onClose }: AIChatSidebarProps) {
               <Plus className="h-4 w-4" />
             </Button>
             <Button variant="ghost" size="icon" onClick={onClose} className="h-8 w-8" title="Close">
-              <ChevronLeft className="h-4 w-4" />
+              <ChevronRight className="h-4 w-4" />
             </Button>
           </div>
         </div>
@@ -129,6 +135,14 @@ export function AIChatSidebar({ isOpen, onClose }: AIChatSidebarProps) {
           </div>
         ) : (
           <div className="space-y-8 py-8">
+            <div className="text-center mb-10">
+              <MessageSquare className="h-16 w-16 mx-auto mb-4 text-muted-foreground/60" />
+              <h2 className="text-xl font-semibold mb-2">Ask Caelo</h2>
+              <p className="text-muted-foreground">
+                Ask any questions about the loan in front of you, property documents, or whatever information you might need.
+              </p>
+            </div>
+
             <div className="space-y-4">
               <h3 className="text-sm font-medium text-muted-foreground">Research questions</h3>
               {researchPrompts.map((prompt, index) => (
@@ -183,14 +197,14 @@ export function AIChatSidebar({ isOpen, onClose }: AIChatSidebarProps) {
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             onKeyPress={handleKeyPress}
-            placeholder="Ask assistant, use @ to mention specific PDFs..."
+            placeholder="Ask Caelo a question..."
             className="border-0 flex-1 focus-visible:ring-0 focus-visible:ring-offset-0"
           />
           <div className="flex items-center gap-2">
             <Button variant="ghost" size="icon" className="h-8 w-8">
               <PaperclipIcon className="h-4 w-4" />
             </Button>
-            <Button onClick={handleSend} size="icon" className="h-8 w-8">
+            <Button onClick={handleSend} size="icon" className="h-8 w-8" variant="default">
               <SendHorizontal className="h-4 w-4" />
             </Button>
           </div>
