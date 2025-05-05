@@ -1,5 +1,5 @@
 
-import { FileText, Settings, MessageSquare, FilePlus, User, LogOut, ChevronDown } from "lucide-react";
+import { FileText, Settings, FilePlus, User, LogOut, ChevronDown } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -13,7 +13,6 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { Link } from "react-router-dom";
-import { useCaeloChat } from "@/hooks/use-caelo-chat";
 import { 
   DropdownMenu, 
   DropdownMenuContent, 
@@ -40,8 +39,6 @@ const managementItems = [
 ];
 
 export function AppSidebar() {
-  const { toggleCaeloChat } = useCaeloChat();
-  
   return (
     <Sidebar className="border-r">
       <SidebarHeader className="px-6 py-5 border-b">
@@ -91,12 +88,6 @@ export function AppSidebar() {
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
-              <SidebarMenuItem>
-                <SidebarMenuButton onClick={toggleCaeloChat} className="cursor-pointer">
-                  <MessageSquare className="mr-2 h-5 w-5" />
-                  <span>Ask Caelo</span>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>

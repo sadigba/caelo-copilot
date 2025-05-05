@@ -1,6 +1,7 @@
 
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "./AppSidebar";
+import { TopBar } from "./TopBar";
 import { AIChatSidebar } from "../caelo/AIChatSidebar";
 import { AIChatPopup } from "../caelo/AIChatPopup";
 import { useCaeloChat } from "@/hooks/use-caelo-chat";
@@ -15,6 +16,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
   return (
     <SidebarProvider>
       <div className="min-h-screen flex flex-col w-full">
+        <TopBar />
         <div className="flex flex-1 w-full">
           <AppSidebar />
           <main className="flex-1">
