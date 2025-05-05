@@ -6,8 +6,6 @@ interface CaeloChatContextType {
   openCaeloChat: () => void;
   closeCaeloChat: () => void;
   toggleCaeloChat: () => void;
-  layoutMode: "sidebar" | "popup"; // Add this property
-  toggleLayoutMode: () => void;    // Add this method
 }
 
 const CaeloChatContext = createContext<CaeloChatContextType>({
@@ -15,18 +13,14 @@ const CaeloChatContext = createContext<CaeloChatContextType>({
   openCaeloChat: () => {},
   closeCaeloChat: () => {},
   toggleCaeloChat: () => {},
-  layoutMode: "sidebar",           // Default layout mode
-  toggleLayoutMode: () => {},      // Default implementation
 });
 
 export function CaeloChatProvider({ children }: { children: React.ReactNode }) {
   const [isChatOpen, setIsChatOpen] = useState(false);
-  const [layoutMode, setLayoutMode] = useState<"sidebar" | "popup">("sidebar");
 
   const openCaeloChat = () => setIsChatOpen(true);
   const closeCaeloChat = () => setIsChatOpen(false);
   const toggleCaeloChat = () => setIsChatOpen(prev => !prev);
-  const toggleLayoutMode = () => setLayoutMode(prev => prev === "sidebar" ? "popup" : "sidebar");
 
   return (
     <CaeloChatContext.Provider 
@@ -34,9 +28,7 @@ export function CaeloChatProvider({ children }: { children: React.ReactNode }) {
         isChatOpen,
         openCaeloChat, 
         closeCaeloChat, 
-        toggleCaeloChat,
-        layoutMode,
-        toggleLayoutMode
+        toggleCaeloChat
       }}
     >
       {children}

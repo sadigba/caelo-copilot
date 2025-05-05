@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,7 +10,6 @@ import {
   PaperclipIcon, 
   MessageSquare
 } from "lucide-react";
-import { useCaeloChat } from "@/hooks/use-caelo-chat";
 import {
   Sidebar,
   SidebarContent,
@@ -73,7 +73,7 @@ export function AIChatSidebar({ isOpen, onClose }: AIChatSidebarProps) {
   if (!isOpen) return null;
 
   return (
-    <Sidebar side="right" variant="sidebar" className="border-l z-20">
+    <Sidebar side="right" variant="floating" className="border-l z-20 w-[350px]">
       <SidebarHeader className="p-4 border-b">
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-2">
