@@ -103,7 +103,7 @@ export function DocumentUpload({ loanId, open, setOpen }: DocumentUploadProps) {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="sm:max-w-[500px] max-h-[80vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-[500px] max-h-[80vh] overflow-y-auto bg-background/95 backdrop-blur-sm border border-border/50">
         <DialogHeader>
           <DialogTitle>Upload Documents</DialogTitle>
           <DialogDescription>
