@@ -120,7 +120,7 @@ export default function LoanDetail() {
 
   // Regular Loan Detail View
   return (
-    <>
+    <div className="relative flex flex-col h-full">
       {/* Header with sidebar trigger, title and navigation */}
       <div>
         <div className="flex items-center justify-between px-6 py-3">
@@ -147,8 +147,8 @@ export default function LoanDetail() {
         </div>
       </div>
 
-      <div className="flex flex-1">
-        <div className={`p-6 flex-1 ${commentsSidebarOpen ? 'pr-0' : ''}`}>
+      <div className="flex flex-1 relative">
+        <div className={`p-6 flex-1 ${commentsSidebarOpen ? 'pr-[320px]' : ''}`}>
           <Tabs defaultValue={defaultTab} className="space-y-6">
             <TabsList className="grid grid-cols-2 md:grid-cols-4 w-full">
               <TabsTrigger value="summary">Application Summary</TabsTrigger>
@@ -350,6 +350,6 @@ export default function LoanDetail() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </>
+    </div>
   );
 }

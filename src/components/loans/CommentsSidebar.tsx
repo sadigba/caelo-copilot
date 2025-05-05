@@ -48,7 +48,7 @@ export function CommentsSidebar({ isOpen, onClose, insight, loanId }: CommentsSi
   };
 
   return (
-    <div className="border-l h-full bg-background w-[320px] min-w-[320px] flex flex-col">
+    <div className="border-l h-full bg-background w-[320px] min-w-[320px] flex flex-col absolute top-0 right-0 bottom-0 z-10">
       {/* Header */}
       <div className="h-14 border-b flex items-center justify-between px-4">
         <div className="flex items-center gap-2">
