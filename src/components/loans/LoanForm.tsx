@@ -18,7 +18,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Building, Bank } from "lucide-react";
+import { Building, BankIcon } from "lucide-react";
 import { useLoanContext } from "@/context/LoanContext";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";

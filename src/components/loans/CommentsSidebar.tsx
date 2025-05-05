@@ -32,8 +32,7 @@ export function CommentsSidebar({ isOpen, onClose, insight, loanId }: CommentsSi
     
     addComment(loanId, insight.id, {
       text: newComment,
-      author: "You",
-      timestamp: new Date().toISOString()
+      user: "You"
     });
     
     setNewComment('');
@@ -81,11 +80,9 @@ export function CommentsSidebar({ isOpen, onClose, insight, loanId }: CommentsSi
             {insight.comments.map((comment, index) => (
               <div key={index} className="bg-secondary/20 p-3 rounded-md">
                 <div className="text-sm">{comment.text}</div>
-                {comment.author && (
-                  <div className="text-xs text-muted-foreground mt-1">
-                    {comment.author} • {comment.timestamp && new Date(comment.timestamp).toLocaleDateString()}
-                  </div>
-                )}
+                <div className="text-xs text-muted-foreground mt-1">
+                  {comment.user} • {comment.timestamp && new Date(comment.timestamp).toLocaleDateString()}
+                </div>
               </div>
             ))}
           </div>

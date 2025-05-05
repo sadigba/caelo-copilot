@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useReducer, useCallback } from "react";
 import { v4 as uuidv4 } from "uuid";
 
@@ -22,7 +23,7 @@ export interface Insight {
   saved?: boolean;
   dateCreated: string;
   narrative?: string;
-  evidence?: string;
+  evidence?: string | string[];
   comments?: Comment[];
 }
 
@@ -32,6 +33,7 @@ export interface Comment {
   text: string;
   user: string;
   timestamp: string;
+  author?: string; // Add author field
 }
 
 // Define the Loan interface
