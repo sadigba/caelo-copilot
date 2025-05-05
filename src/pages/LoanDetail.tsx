@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import {
@@ -170,7 +169,7 @@ export default function LoanDetail() {
                   <div className="font-medium">{loan.loanType}</div>
                   
                   <div className="text-gray-600">Requested</div>
-                  <div className="font-medium">${Number(loan.requestedAmount).toLocaleString()}</div>
+                  <div className="font-medium">${Number(loan.loanAmount).toLocaleString()}</div>
                   
                   <div className="text-gray-600">Status</div>
                   <div>
@@ -532,4 +531,3 @@ export default function LoanDetail() {
     </>
   );
 }
-
