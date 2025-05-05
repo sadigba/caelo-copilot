@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -14,15 +13,10 @@ export default function Settings() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="p-6">
       <div className="flex items-center gap-4 mb-6">
         <SidebarTrigger />
-        <div>
-          <h1 className="text-3xl font-bold">Settings</h1>
-          <p className="text-muted-foreground mt-1">
-            Manage your account and application preferences.
-          </p>
-        </div>
+        <h1 className="text-2xl font-bold">Settings</h1>
       </div>
 
       <div className="grid gap-6 md:grid-cols-2">
