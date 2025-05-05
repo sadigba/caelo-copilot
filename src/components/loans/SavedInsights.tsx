@@ -92,13 +92,13 @@ export function SavedInsights({ loanId, savedInsights }: SavedInsightsProps) {
   return (
     <>
       <div className="flex justify-between items-center mb-4">
-        <div></div> {/* Empty div to maintain flex spacing */}
         <Button 
           onClick={() => setIsCreateDialogOpen(true)}
           className="flex items-center gap-1"
         >
           <Plus className="h-4 w-4" /> Create Insight
         </Button>
+        <div></div> {/* Empty div to maintain flex spacing */}
       </div>
 
       {savedInsights.length === 0 ? (
