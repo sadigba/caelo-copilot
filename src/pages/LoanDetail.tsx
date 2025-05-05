@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import {
@@ -7,7 +8,7 @@ import {
   TabsTrigger,
 } from "@/components/ui/tabs";
 import { useLoanContext } from "@/context/LoanContext";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { ArrowLeft, FileText, Upload, AlertTriangle, BarChart2 } from "lucide-react";
 import { DocumentTable } from "@/components/loans/DocumentTable";
@@ -36,10 +37,12 @@ export default function LoanDetail() {
   const { loanId } = useParams<{ loanId: string }>();
   const { getLoanById, updateDocument } = useLoanContext();
   const navigate = useNavigate();
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const showDealSummary = searchParams.get('view') === 'deal-summary';
 
   const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
   const [isRequestDialogOpen, setIsRequestDialogOpen] = useState(false);
-  const [showDealSummary, setShowDealSummary] = useState(false);
   
   // States for the request documentation dialog
   const [documentTags, setDocumentTags] = useState<string[]>([]);
@@ -88,10 +91,6 @@ export default function LoanDetail() {
     setCurrentTag("");
   };
   
-  const toggleDealSummary = () => {
-    setShowDealSummary(!showDealSummary);
-  };
-  
   // Deal Summary View
   if (showDealSummary) {
     return (
@@ -103,7 +102,7 @@ export default function LoanDetail() {
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={() => setShowDealSummary(false)}
+                onClick={() => navigate(`/loans/${loanId}`)}
                 className="h-8"
               >
                 <ArrowLeft className="h-4 w-4 mr-1" />
@@ -237,6 +236,7 @@ export default function LoanDetail() {
     );
   }
 
+  // Regular Loan Detail View
   return (
     <>
       {/* Header with sidebar trigger, title and navigation */}
