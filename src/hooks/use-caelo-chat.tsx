@@ -1,5 +1,5 @@
 
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useState } from "react";
 
 type ChatLayoutMode = "popup" | "sidebar";
 
@@ -22,21 +22,8 @@ const CaeloChatContext = createContext<CaeloChatContextType>({
 });
 
 export function CaeloChatProvider({ children }: { children: React.ReactNode }) {
-  // Use localStorage to persist chat open state across page navigation
-  const storedIsOpen = localStorage.getItem('caelo-chat-open') === 'true';
-  const storedLayoutMode = localStorage.getItem('caelo-chat-layout') as ChatLayoutMode || "popup";
-  
-  const [isChatOpen, setIsChatOpen] = useState(storedIsOpen);
-  const [layoutMode, setLayoutMode] = useState<ChatLayoutMode>(storedLayoutMode);
-
-  // Update localStorage when state changes
-  useEffect(() => {
-    localStorage.setItem('caelo-chat-open', isChatOpen.toString());
-  }, [isChatOpen]);
-
-  useEffect(() => {
-    localStorage.setItem('caelo-chat-layout', layoutMode);
-  }, [layoutMode]);
+  const [isChatOpen, setIsChatOpen] = useState(false);
+  const [layoutMode, setLayoutMode] = useState<ChatLayoutMode>("popup");
 
   const openCaeloChat = () => setIsChatOpen(true);
   const closeCaeloChat = () => setIsChatOpen(false);
