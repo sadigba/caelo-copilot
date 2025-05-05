@@ -75,10 +75,7 @@ export function LoanListItem({ loan }: LoanListItemProps) {
       </TableCell>
       
       <TableCell>
-        <div className="flex flex-col">
-          <span>{loan.loanType}</span>
-          <span className="text-sm font-medium">{formatCurrency(loan.loanAmount)}</span>
-        </div>
+        <span>{loan.loanType}</span>
       </TableCell>
       
       <TableCell>
