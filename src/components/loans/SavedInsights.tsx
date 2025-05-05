@@ -1,4 +1,3 @@
-
 import { Card, CardContent } from "@/components/ui/card";
 import { Insight, useLoanContext } from "@/context/LoanContext";
 import { toast } from "sonner";
@@ -92,7 +91,7 @@ export function SavedInsights({ loanId, savedInsights }: SavedInsightsProps) {
   return (
     <>
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-semibold">Saved Insights</h2>
+        <div></div> {/* Empty div to maintain flex spacing */}
         <Button 
           onClick={() => setIsCreateDialogOpen(true)}
           className="flex items-center gap-1"
@@ -156,8 +155,7 @@ export function SavedInsights({ loanId, savedInsights }: SavedInsightsProps) {
                                 <TooltipContent>
                                   <p>{evidence}</p>
                                 </TooltipContent>
-                              </Tooltip>
-                            </TooltipProvider>
+                              </TooltipProvider>
                           ))}
                         </div>
                       </TableCell>
