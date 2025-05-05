@@ -35,6 +35,7 @@ export default function LoanDetail() {
   const { loanId } = useParams<{ loanId: string }>();
   const { getLoanById, updateDocument } = useLoanContext();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
   const [isRequestDialogOpen, setIsRequestDialogOpen] = useState(false);
@@ -43,6 +44,10 @@ export default function LoanDetail() {
   const [documentTags, setDocumentTags] = useState<string[]>([]);
   const [currentTag, setCurrentTag] = useState("");
   const [requestNote, setRequestNote] = useState("");
+  
+  // Get the default tab from URL query parameters
+  const queryParams = new URLSearchParams(location.search);
+  const defaultTab = queryParams.get('tab') === 'summary' ? 'summary' : 'data-room';
 
   const loan = getLoanById(loanId || "");
 
@@ -116,7 +121,7 @@ export default function LoanDetail() {
       </div>
 
       <div className="p-6">
-        <Tabs defaultValue="data-room" className="space-y-6">
+        <Tabs defaultValue={defaultTab} className="space-y-6">
           <TabsList className="grid grid-cols-2 md:grid-cols-4 w-full">
             <TabsTrigger value="summary">Application Summary</TabsTrigger>
             <TabsTrigger value="data-room">Data Room</TabsTrigger>

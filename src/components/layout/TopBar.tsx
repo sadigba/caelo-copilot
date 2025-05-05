@@ -1,7 +1,7 @@
 
 import { Button } from "@/components/ui/button";
 import { useCaeloChat } from "@/hooks/use-caelo-chat";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,6 +13,7 @@ import { useState } from "react";
 export function TopBar() {
   const { toggleCaeloChat } = useCaeloChat();
   const location = useLocation();
+  const navigate = useNavigate();
   const [refreshing, setRefreshing] = useState(false);
   
   // Check if we're on a loan detail page
@@ -28,6 +29,14 @@ export function TopBar() {
 
   const handleDownload = (type: string) => {
     console.log(`Downloading ${type}`);
+  };
+
+  const navigateToDealSummary = () => {
+    // Extract the loanId from the current path if we're on a loan detail page
+    if (isLoanDetailPage) {
+      const loanId = location.pathname.split('/').pop();
+      navigate(`/loans/${loanId}?tab=summary`);
+    }
   };
 
   return (
@@ -78,6 +87,7 @@ export function TopBar() {
               size="sm" 
               variant="outline" 
               className="h-8"
+              onClick={navigateToDealSummary}
             >
               Deal Summary
             </Button>
