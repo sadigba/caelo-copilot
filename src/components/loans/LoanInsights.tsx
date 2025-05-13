@@ -16,10 +16,10 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { MessageSquare, PlusCircle } from "lucide-react";
+import { MessageSquare, PlusCircle, LoaderCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect, useRef } from "react";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Progress } from "@/components/ui/progress";
 
 interface LoanInsightsProps {
   loanId: string;
@@ -37,6 +37,7 @@ export function LoanInsights({ loanId, insights, onViewComments }: LoanInsightsP
   const [loading, setLoading] = useState(!loadedLoans.get(loanId));
   const [visibleInsights, setVisibleInsights] = useState<Insight[]>([]);
   const initialLoadComplete = useRef(loadedLoans.get(loanId) || false);
+  const [loadingProgress, setLoadingProgress] = useState(0);
 
   // Function to check if an insight is already saved
   const isInsightSaved = (insightId: string) => {
@@ -66,8 +67,20 @@ export function LoanInsights({ loanId, insights, onViewComments }: LoanInsightsP
     // Initial loading state
     setLoading(true);
     setVisibleInsights([]);
+    setLoadingProgress(0);
     
-    // Show loading state for 5 seconds
+    // Progress animation
+    const progressInterval = setInterval(() => {
+      setLoadingProgress(prev => {
+        if (prev >= 100) {
+          clearInterval(progressInterval);
+          return 100;
+        }
+        return prev + 1;
+      });
+    }, 100); // Increment every 100ms to reach ~100% in 10 seconds
+    
+    // Show loading state for 10 seconds (increased from 5 seconds)
     const loadingTimeout = setTimeout(() => {
       // Show all insights at once after loading
       setVisibleInsights([...insights]);
@@ -76,9 +89,15 @@ export function LoanInsights({ loanId, insights, onViewComments }: LoanInsightsP
       
       // Mark this loan as loaded in the static map
       loadedLoans.set(loanId, true);
-    }, 5000);
+      
+      // Clear the progress interval if it's still running
+      clearInterval(progressInterval);
+    }, 10000); // 10 seconds
 
-    return () => clearTimeout(loadingTimeout);
+    return () => {
+      clearTimeout(loadingTimeout);
+      clearInterval(progressInterval);
+    };
   }, [insights, loanId]);
 
   if (insights.length === 0) {
@@ -100,16 +119,13 @@ export function LoanInsights({ loanId, insights, onViewComments }: LoanInsightsP
     return (
       <Card>
         <CardContent className="p-6">
-          <div className="text-center py-8">
-            <p className="text-muted-foreground mb-2">Generating insights from documents...</p>
-            <div className="flex flex-col items-center gap-4 mt-4 w-full max-w-lg mx-auto">
-              <Skeleton className="w-full h-10 bg-caelo-100" />
-              <Skeleton className="w-full h-28 bg-caelo-100" />
-              <div className="flex gap-2 w-full">
-                <Skeleton className="w-1/3 h-6 bg-caelo-100" />
-                <Skeleton className="w-1/3 h-6 bg-caelo-100" />
-                <Skeleton className="w-1/3 h-6 bg-caelo-100" />
-              </div>
+          <div className="text-center py-12">
+            <div className="flex justify-center mb-6">
+              <LoaderCircle className="h-12 w-12 text-primary animate-spin" />
+            </div>
+            <p className="text-muted-foreground mb-6">Generating insights from documents...</p>
+            <div className="w-full max-w-md mx-auto">
+              <Progress value={loadingProgress} className="h-2" />
             </div>
           </div>
         </CardContent>
