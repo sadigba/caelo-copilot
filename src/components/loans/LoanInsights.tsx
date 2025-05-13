@@ -27,12 +27,16 @@ interface LoanInsightsProps {
   onViewComments: (insight: Insight) => void;
 }
 
+// Create a static map to track which loans have completed their initial load
+// This ensures persistence across tab changes
+const loadedLoans = new Map<string, boolean>();
+
 export function LoanInsights({ loanId, insights, onViewComments }: LoanInsightsProps) {
   const { saveInsight, getLoanById } = useLoanContext();
   const loan = getLoanById(loanId);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(!loadedLoans.get(loanId));
   const [visibleInsights, setVisibleInsights] = useState<Insight[]>([]);
-  const initialLoadComplete = useRef(false);
+  const initialLoadComplete = useRef(loadedLoans.get(loanId) || false);
 
   // Function to check if an insight is already saved
   const isInsightSaved = (insightId: string) => {
@@ -44,14 +48,18 @@ export function LoanInsights({ loanId, insights, onViewComments }: LoanInsightsP
     toast.success("Insight saved");
   };
 
-  // Loading effect for insights - only run once after initial render
+  // Set visible insights on first render and when insights change
   useEffect(() => {
-    // Skip loading if we've already loaded once or no insights
-    if (initialLoadComplete.current || insights.length === 0) {
+    // If we've already loaded this loan before, show insights immediately
+    if (loadedLoans.get(loanId) || initialLoadComplete.current) {
       setLoading(false);
-      if (insights.length > 0 && visibleInsights.length === 0) {
-        setVisibleInsights([...insights]);
-      }
+      setVisibleInsights([...insights]);
+      return;
+    }
+    
+    // No insights, no need to load
+    if (insights.length === 0) {
+      setLoading(false);
       return;
     }
     
@@ -64,11 +72,14 @@ export function LoanInsights({ loanId, insights, onViewComments }: LoanInsightsP
       // Show all insights at once after loading
       setVisibleInsights([...insights]);
       setLoading(false);
-      initialLoadComplete.current = true; // Mark loading as complete
+      initialLoadComplete.current = true;
+      
+      // Mark this loan as loaded in the static map
+      loadedLoans.set(loanId, true);
     }, 5000);
 
     return () => clearTimeout(loadingTimeout);
-  }, [insights]);
+  }, [insights, loanId]);
 
   if (insights.length === 0) {
     return (
