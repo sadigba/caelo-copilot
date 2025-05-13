@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/tooltip";
 import { MessageSquare, PlusCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 
 interface LoanInsightsProps {
@@ -32,6 +32,7 @@ export function LoanInsights({ loanId, insights, onViewComments }: LoanInsightsP
   const loan = getLoanById(loanId);
   const [loading, setLoading] = useState(true);
   const [visibleInsights, setVisibleInsights] = useState<Insight[]>([]);
+  const initialLoadComplete = useRef(false);
 
   // Function to check if an insight is already saved
   const isInsightSaved = (insightId: string) => {
@@ -43,10 +44,14 @@ export function LoanInsights({ loanId, insights, onViewComments }: LoanInsightsP
     toast.success("Insight saved");
   };
 
-  // Loading effect for insights
+  // Loading effect for insights - only run once after initial render
   useEffect(() => {
-    if (insights.length === 0) {
+    // Skip loading if we've already loaded once or no insights
+    if (initialLoadComplete.current || insights.length === 0) {
       setLoading(false);
+      if (insights.length > 0 && visibleInsights.length === 0) {
+        setVisibleInsights([...insights]);
+      }
       return;
     }
     
@@ -59,6 +64,7 @@ export function LoanInsights({ loanId, insights, onViewComments }: LoanInsightsP
       // Show all insights at once after loading
       setVisibleInsights([...insights]);
       setLoading(false);
+      initialLoadComplete.current = true; // Mark loading as complete
     }, 5000);
 
     return () => clearTimeout(loadingTimeout);
