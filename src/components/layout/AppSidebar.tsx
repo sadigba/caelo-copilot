@@ -1,5 +1,4 @@
-
-import { FileText, Settings, FilePlus, User, LogOut, ChevronDown } from "lucide-react";
+import { FileText, Settings, FilePlus, User, LogOut, ChevronDown, Workflow } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -33,6 +32,11 @@ const mainItems = [
 ];
 
 const managementItems = [
+  {
+    title: "Workflow Builder",
+    url: "/workflow-builder",
+    icon: Workflow,
+  },
   {
     title: "Settings",
     url: "/settings",

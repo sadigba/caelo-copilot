@@ -15,6 +15,7 @@ import LoanDetail from "./pages/LoanDetail";
 import DealSummary from "./pages/DealSummary";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
+import WorkflowBuilder from "./pages/WorkflowBuilder";
 
 const queryClient = new QueryClient();
 
@@ -33,6 +34,7 @@ const App = () => (
               <Route path="/loan/:loanId" element={<AppLayout><LoanDetail /></AppLayout>} />
               <Route path="/loans/:loanId/deal-summary" element={<AppLayout><DealSummary /></AppLayout>} />
               <Route path="/settings" element={<AppLayout><Settings /></AppLayout>} />
+              <Route path="/workflow-builder" element={<AppLayout><WorkflowBuilder /></AppLayout>} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
