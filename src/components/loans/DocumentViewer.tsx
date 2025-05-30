@@ -41,275 +41,748 @@ export function DocumentViewer({ document, open, onClose }: DocumentViewerProps)
   };
 
   const getDocumentContent = () => {
-    // Check if document name contains a specific keyword to show appropriate mock content
-    if (document.type?.toLowerCase().includes('rent roll')) {
+    const docName = document.name.toLowerCase();
+    
+    // Business Tax Returns
+    if (docName.includes('tax returns') || docName.includes('tax return')) {
       return (
         <>
-          <h2>Property Rent Roll - Sample Content</h2>
-          <p>This document contains information about the rental properties, including unit details, tenant information, lease terms, and rental rates.</p>
-          <table className="w-full border-collapse my-4">
-            <thead>
-              <tr className="bg-gray-50">
-                <th className="border p-2 text-left">Unit</th>
-                <th className="border p-2 text-left">Tenant</th>
-                <th className="border p-2 text-right">Rent</th>
-                <th className="border p-2">Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td className="border p-2">101</td>
-                <td className="border p-2">John Smith</td>
-                <td className="border p-2 text-right">$1,500</td>
-                <td className="border p-2 text-center">Occupied</td>
-              </tr>
-              <tr>
-                <td className="border p-2">102</td>
-                <td className="border p-2">Jane Doe</td>
-                <td className="border p-2 text-right">$1,700</td>
-                <td className="border p-2 text-center">Occupied</td>
-              </tr>
-              <tr>
-                <td className="border p-2">202</td>
-                <td className="border p-2">Vacant</td>
-                <td className="border p-2 text-right">$2,100</td>
-                <td className="border p-2 text-center">Vacant</td>
-              </tr>
-            </tbody>
-          </table>
-          <p>The above information represents the current occupancy and rental rates for the property as of the date of this report.</p>
-        </>
-      );
-    } else if (document.type?.toLowerCase().includes('tax return') || document.name.toLowerCase().includes('tax return')) {
-      return (
-        <>
-          <h2>Tax Returns - Sample Content</h2>
-          <p>This document contains tax return information for the property owner, including income, expenses, and tax liability for the most recent fiscal year.</p>
-          <div className="my-4 p-4 border rounded bg-gray-50">
-            <h3 className="font-medium">Income Summary</h3>
-            <table className="w-full my-2">
-              <tbody>
-                <tr>
-                  <td className="py-1">Gross Rental Income</td>
-                  <td className="py-1 text-right">$345,000</td>
-                </tr>
-                <tr>
-                  <td className="py-1">Other Income</td>
-                  <td className="py-1 text-right">$18,500</td>
-                </tr>
-                <tr className="border-t">
-                  <td className="py-1 font-medium">Total Income</td>
-                  <td className="py-1 text-right font-medium">$363,500</td>
-                </tr>
-              </tbody>
-            </table>
-            
-            <h3 className="font-medium mt-4">Expenses Summary</h3>
-            <table className="w-full my-2">
-              <tbody>
-                <tr>
-                  <td className="py-1">Property Management</td>
-                  <td className="py-1 text-right">$32,700</td>
-                </tr>
-                <tr>
-                  <td className="py-1">Repairs and Maintenance</td>
-                  <td className="py-1 text-right">$41,200</td>
-                </tr>
-                <tr>
-                  <td className="py-1">Insurance</td>
-                  <td className="py-1 text-right">$18,900</td>
-                </tr>
-                <tr>
-                  <td className="py-1">Property Taxes</td>
-                  <td className="py-1 text-right">$29,000</td>
-                </tr>
-                <tr className="border-t">
-                  <td className="py-1 font-medium">Total Expenses</td>
-                  <td className="py-1 text-right font-medium">$121,800</td>
-                </tr>
-              </tbody>
-            </table>
-            
-            <h3 className="font-medium mt-4">Net Income</h3>
-            <table className="w-full my-2">
-              <tbody>
-                <tr className="border-t border-b">
-                  <td className="py-1 font-medium">Net Taxable Income</td>
-                  <td className="py-1 text-right font-medium">$241,700</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </>
-      );
-    } else if (document.type?.toLowerCase().includes('construction')) {
-      return (
-        <>
-          <h2>Construction Documentation - Sample Content</h2>
-          <p>This document contains plans, specifications, and budgets related to the construction project.</p>
-          
-          <h3 className="font-medium mt-4">Construction Schedule</h3>
-          <table className="w-full border-collapse my-4">
-            <thead>
-              <tr className="bg-gray-50">
-                <th className="border p-2 text-left">Phase</th>
-                <th className="border p-2 text-left">Start Date</th>
-                <th className="border p-2 text-left">End Date</th>
-                <th className="border p-2 text-right">Budget</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td className="border p-2">Site Preparation</td>
-                <td className="border p-2">June 1, 2025</td>
-                <td className="border p-2">July 15, 2025</td>
-                <td className="border p-2 text-right">$450,000</td>
-              </tr>
-              <tr>
-                <td className="border p-2">Foundation</td>
-                <td className="border p-2">July 20, 2025</td>
-                <td className="border p-2">August 30, 2025</td>
-                <td className="border p-2 text-right">$850,000</td>
-              </tr>
-              <tr>
-                <td className="border p-2">Framing</td>
-                <td className="border p-2">September 5, 2025</td>
-                <td className="border p-2">November 15, 2025</td>
-                <td className="border p-2 text-right">$1,200,000</td>
-              </tr>
-            </tbody>
-          </table>
-          
-          <div className="mt-4 border rounded p-4">
-            <h3 className="font-medium">Construction Notes</h3>
-            <p className="mt-2">The project is scheduled for completion in Q4 2026, with an estimated total budget of $5,000,000. All necessary permits have been obtained and contractors have been selected through a competitive bidding process.</p>
-          </div>
-        </>
-      );
-    } else if (document.type?.toLowerCase().includes('appraisal')) {
-      return (
-        <>
-          <h2>Property Appraisal - Sample Content</h2>
-          <p>This document contains a professional appraisal of the property value based on location, condition, and comparable properties.</p>
+          <h2>Business Tax Returns - Form 1120S</h2>
+          <p className="text-sm text-muted-foreground mb-4">S Corporation Income Tax Return for Tax Year 2023</p>
           
           <div className="my-4 p-4 border rounded bg-gray-50">
-            <h3 className="font-medium">Appraisal Summary</h3>
-            <table className="w-full my-4">
+            <h3 className="font-medium mb-3">Income Statement Summary</h3>
+            <table className="w-full border-collapse">
               <tbody>
-                <tr>
-                  <td className="py-1 font-medium">Property Address:</td>
-                  <td className="py-1">123 Main St, Anytown, USA</td>
+                <tr className="border-b">
+                  <td className="py-2 font-medium">Gross Receipts or Sales</td>
+                  <td className="py-2 text-right">$387,450</td>
+                </tr>
+                <tr className="border-b">
+                  <td className="py-2">Returns and Allowances</td>
+                  <td className="py-2 text-right">($12,340)</td>
+                </tr>
+                <tr className="border-b">
+                  <td className="py-2">Cost of Goods Sold</td>
+                  <td className="py-2 text-right">($156,800)</td>
+                </tr>
+                <tr className="border-b">
+                  <td className="py-2 font-medium">Gross Profit</td>
+                  <td className="py-2 text-right font-medium">$218,310</td>
+                </tr>
+                <tr className="border-b">
+                  <td className="py-2">Total Deductions</td>
+                  <td className="py-2 text-right">($165,220)</td>
                 </tr>
                 <tr>
-                  <td className="py-1 font-medium">Property Type:</td>
-                  <td className="py-1">Multifamily Residential</td>
-                </tr>
-                <tr>
-                  <td className="py-1 font-medium">Total Units:</td>
-                  <td className="py-1">24</td>
-                </tr>
-                <tr>
-                  <td className="py-1 font-medium">Building Size:</td>
-                  <td className="py-1">28,500 sq ft</td>
-                </tr>
-                <tr>
-                  <td className="py-1 font-medium">Lot Size:</td>
-                  <td className="py-1">1.2 acres</td>
-                </tr>
-                <tr>
-                  <td className="py-1 font-medium">Year Built:</td>
-                  <td className="py-1">2010</td>
-                </tr>
-                <tr>
-                  <td className="py-1 font-medium">Condition:</td>
-                  <td className="py-1">Good</td>
-                </tr>
-                <tr className="border-t">
-                  <td className="py-2 font-medium">Appraised Value:</td>
-                  <td className="py-2 font-bold">$3,750,000</td>
+                  <td className="py-2 font-bold">Ordinary Business Income</td>
+                  <td className="py-2 text-right font-bold">$53,090</td>
                 </tr>
               </tbody>
             </table>
-            
-            <p className="text-sm text-muted-foreground mt-4">
-              This appraisal was conducted by Smith & Associates on April 15, 2025. The value estimate is based on recent comparable sales, income approach, and replacement cost analysis.
-            </p>
           </div>
-        </>
-      );
-    } else if (document.name.toLowerCase().includes('financial') || document.type?.toLowerCase().includes('financial')) {
-      return (
-        <>
-          <h2>Financial Document - Sample Content</h2>
-          <p>This document contains financial information related to the property, including income statements, balance sheets, and cash flow projections.</p>
-          <p>Page {currentPage} contains the following information:</p>
-          <ul>
-            <li>Annual revenue projections</li>
-            <li>Operating expenses breakdown</li>
-            <li>Net operating income calculation</li>
-            <li>Debt service coverage ratio analysis</li>
-          </ul>
-          <p>The financial analysis indicates a stable cash flow with a positive trend in rental income over the past three years.</p>
           
-          <div className="my-4 border-t pt-4">
-            <h3 className="font-medium">Key Financial Metrics</h3>
-            <table className="w-full border-collapse my-4">
-              <thead>
-                <tr className="bg-gray-50">
-                  <th className="border p-2 text-left">Metric</th>
-                  <th className="border p-2 text-right">2023</th>
-                  <th className="border p-2 text-right">2024</th>
-                  <th className="border p-2 text-right">2025 (Projected)</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td className="border p-2">Gross Revenue</td>
-                  <td className="border p-2 text-right">$450,000</td>
-                  <td className="border p-2 text-right">$487,000</td>
-                  <td className="border p-2 text-right">$525,000</td>
-                </tr>
-                <tr>
-                  <td className="border p-2">Operating Expenses</td>
-                  <td className="border p-2 text-right">$180,000</td>
-                  <td className="border p-2 text-right">$195,000</td>
-                  <td className="border p-2 text-right">$210,000</td>
-                </tr>
-                <tr>
-                  <td className="border p-2">NOI</td>
-                  <td className="border p-2 text-right">$270,000</td>
-                  <td className="border p-2 text-right">$292,000</td>
-                  <td className="border p-2 text-right">$315,000</td>
-                </tr>
-                <tr>
-                  <td className="border p-2">DSCR</td>
-                  <td className="border p-2 text-right">1.35</td>
-                  <td className="border p-2 text-right">1.46</td>
-                  <td className="border p-2 text-right">1.58</td>
-                </tr>
-              </tbody>
-            </table>
+          <div className="mt-4">
+            <h3 className="font-medium mb-2">Key Deductions</h3>
+            <ul className="text-sm space-y-1">
+              <li>• Officer compensation: $45,000</li>
+              <li>• Rent expenses: $36,000</li>
+              <li>• Repairs and maintenance: $8,750</li>
+              <li>• Insurance: $12,600</li>
+              <li>• Utilities: $15,400</li>
+            </ul>
           </div>
-        </>
-      );
-    } else {
-      // Generic document content for other document types
-      return (
-        <>
-          <h2>{document.name.replace('.pdf', '').replace('.xlsx', '')} - Sample Content</h2>
-          <p>This document contains information related to the commercial real estate loan application.</p>
-          <p>Page {currentPage} contains relevant details for the underwriting process.</p>
-          <div className="my-4 p-4 border rounded bg-gray-50">
-            <p className="text-sm">
-              This is a sample display of a document that would typically be reviewed as part of 
-              the commercial real estate loan application process. The actual content would include 
-              detailed information specific to the property, business operations, and financial status.
-            </p>
-          </div>
-          <p>The complete document consists of {totalPages} pages with comprehensive information needed for loan evaluation.</p>
         </>
       );
     }
+    
+    // Restaurant Lease Agreement
+    if (docName.includes('lease agreement') || docName.includes('lease')) {
+      return (
+        <>
+          <h2>Commercial Lease Agreement</h2>
+          <p className="text-sm text-muted-foreground mb-4">Restaurant Space - 456 Main Street, Springfield, IL</p>
+          
+          <div className="space-y-4">
+            <div className="p-4 border rounded">
+              <h3 className="font-medium mb-2">Lease Terms</h3>
+              <table className="w-full">
+                <tbody>
+                  <tr>
+                    <td className="py-1 font-medium">Tenant:</td>
+                    <td className="py-1">Maria's Family Restaurant, LLC</td>
+                  </tr>
+                  <tr>
+                    <td className="py-1 font-medium">Landlord:</td>
+                    <td className="py-1">Springfield Commercial Properties</td>
+                  </tr>
+                  <tr>
+                    <td className="py-1 font-medium">Lease Term:</td>
+                    <td className="py-1">5 years (January 1, 2023 - December 31, 2027)</td>
+                  </tr>
+                  <tr>
+                    <td className="py-1 font-medium">Square Footage:</td>
+                    <td className="py-1">2,400 sq ft</td>
+                  </tr>
+                  <tr>
+                    <td className="py-1 font-medium">Monthly Rent:</td>
+                    <td className="py-1">$3,600 (Triple Net)</td>
+                  </tr>
+                  <tr>
+                    <td className="py-1 font-medium">Security Deposit:</td>
+                    <td className="py-1">$7,200 (2 months rent)</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            
+            <div className="p-4 border rounded">
+              <h3 className="font-medium mb-2">Additional Terms</h3>
+              <ul className="text-sm space-y-1">
+                <li>• Permitted use: Restaurant and food service operations</li>
+                <li>• Option to renew for additional 5-year term</li>
+                <li>• Tenant responsible for utilities, taxes, and insurance</li>
+                <li>• Kitchen equipment included in lease</li>
+                <li>• 20 parking spaces allocated</li>
+              </ul>
+            </div>
+          </div>
+        </>
+      );
+    }
+    
+    // Profit & Loss Statement
+    if (docName.includes('profit') && docName.includes('loss')) {
+      return (
+        <>
+          <h2>Profit & Loss Statement</h2>
+          <p className="text-sm text-muted-foreground mb-4">Year-to-Date through October 31, 2024</p>
+          
+          <div className="my-4 border rounded overflow-hidden">
+            <table className="w-full">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="text-left p-3 font-medium">Account</th>
+                  <th className="text-right p-3 font-medium">YTD 2024</th>
+                  <th className="text-right p-3 font-medium">YTD 2023</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr className="border-b">
+                  <td className="p-3 font-medium">Revenue</td>
+                  <td className="p-3 text-right"></td>
+                  <td className="p-3 text-right"></td>
+                </tr>
+                <tr className="border-b">
+                  <td className="p-3 pl-6">Food Sales</td>
+                  <td className="p-3 text-right">$312,400</td>
+                  <td className="p-3 text-right">$298,650</td>
+                </tr>
+                <tr className="border-b">
+                  <td className="p-3 pl-6">Beverage Sales</td>
+                  <td className="p-3 text-right">$89,200</td>
+                  <td className="p-3 text-right">$84,100</td>
+                </tr>
+                <tr className="border-b bg-gray-50">
+                  <td className="p-3 font-medium">Total Revenue</td>
+                  <td className="p-3 text-right font-medium">$401,600</td>
+                  <td className="p-3 text-right font-medium">$382,750</td>
+                </tr>
+                <tr className="border-b">
+                  <td className="p-3 font-medium">Cost of Goods Sold</td>
+                  <td className="p-3 text-right">$140,560</td>
+                  <td className="p-3 text-right">$134,962</td>
+                </tr>
+                <tr className="border-b bg-gray-50">
+                  <td className="p-3 font-medium">Gross Profit</td>
+                  <td className="p-3 text-right font-medium">$261,040</td>
+                  <td className="p-3 text-right font-medium">$247,788</td>
+                </tr>
+                <tr className="border-b">
+                  <td className="p-3 font-medium">Operating Expenses</td>
+                  <td className="p-3 text-right">$198,450</td>
+                  <td className="p-3 text-right">$189,200</td>
+                </tr>
+                <tr className="bg-blue-50">
+                  <td className="p-3 font-bold">Net Income</td>
+                  <td className="p-3 text-right font-bold">$62,590</td>
+                  <td className="p-3 text-right font-bold">$58,588</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </>
+      );
+    }
+    
+    // Financial Statements (Auto Shop)
+    if (docName.includes('financial statements')) {
+      return (
+        <>
+          <h2>Financial Statements</h2>
+          <p className="text-sm text-muted-foreground mb-4">Mike's Auto Repair - Quarterly Report Q3 2024</p>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="p-4 border rounded">
+              <h3 className="font-medium mb-3">Balance Sheet Summary</h3>
+              <table className="w-full text-sm">
+                <tbody>
+                  <tr className="border-b">
+                    <td className="py-1 font-medium">Assets</td>
+                    <td className="py-1 text-right"></td>
+                  </tr>
+                  <tr>
+                    <td className="py-1 pl-4">Cash</td>
+                    <td className="py-1 text-right">$48,500</td>
+                  </tr>
+                  <tr>
+                    <td className="py-1 pl-4">Accounts Receivable</td>
+                    <td className="py-1 text-right">$23,800</td>
+                  </tr>
+                  <tr>
+                    <td className="py-1 pl-4">Inventory</td>
+                    <td className="py-1 text-right">$67,200</td>
+                  </tr>
+                  <tr>
+                    <td className="py-1 pl-4">Equipment (net)</td>
+                    <td className="py-1 text-right">$125,000</td>
+                  </tr>
+                  <tr className="border-t">
+                    <td className="py-1 font-medium">Total Assets</td>
+                    <td className="py-1 text-right font-medium">$264,500</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            
+            <div className="p-4 border rounded">
+              <h3 className="font-medium mb-3">Income Statement</h3>
+              <table className="w-full text-sm">
+                <tbody>
+                  <tr className="border-b">
+                    <td className="py-1">Labor Revenue</td>
+                    <td className="py-1 text-right">$145,600</td>
+                  </tr>
+                  <tr className="border-b">
+                    <td className="py-1">Parts Sales</td>
+                    <td className="py-1 text-right">$89,400</td>
+                  </tr>
+                  <tr className="border-b">
+                    <td className="py-1 font-medium">Total Revenue</td>
+                    <td className="py-1 text-right font-medium">$235,000</td>
+                  </tr>
+                  <tr className="border-b">
+                    <td className="py-1">Cost of Parts</td>
+                    <td className="py-1 text-right">$53,640</td>
+                  </tr>
+                  <tr className="border-b">
+                    <td className="py-1">Operating Expenses</td>
+                    <td className="py-1 text-right">$98,500</td>
+                  </tr>
+                  <tr>
+                    <td className="py-1 font-medium">Net Income</td>
+                    <td className="py-1 text-right font-medium">$82,860</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </>
+      );
+    }
+    
+    // Equipment Purchase Quotes
+    if (docName.includes('equipment') && (docName.includes('quotes') || docName.includes('purchase'))) {
+      return (
+        <>
+          <h2>Equipment Purchase Quotes</h2>
+          <p className="text-sm text-muted-foreground mb-4">Hydraulic Lifts and Diagnostic Equipment - Mike's Auto Repair</p>
+          
+          <div className="space-y-4">
+            <div className="p-4 border rounded">
+              <h3 className="font-medium mb-2">Quote #1 - AutoLift Pro Systems</h3>
+              <table className="w-full">
+                <tbody>
+                  <tr>
+                    <td className="py-1">2-Post Hydraulic Lift (10,000 lb capacity)</td>
+                    <td className="py-1 text-right">$4,850</td>
+                  </tr>
+                  <tr>
+                    <td className="py-1">4-Post Alignment Lift (12,000 lb capacity)</td>
+                    <td className="py-1 text-right">$7,200</td>
+                  </tr>
+                  <tr>
+                    <td className="py-1">Installation & Setup</td>
+                    <td className="py-1 text-right">$1,500</td>
+                  </tr>
+                  <tr className="border-t">
+                    <td className="py-1 font-medium">Subtotal</td>
+                    <td className="py-1 text-right font-medium">$13,550</td>
+                  </tr>
+                  <tr>
+                    <td className="py-1">Tax</td>
+                    <td className="py-1 text-right">$949</td>
+                  </tr>
+                  <tr className="border-t">
+                    <td className="py-1 font-bold">Total</td>
+                    <td className="py-1 text-right font-bold">$14,499</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            
+            <div className="p-4 border rounded">
+              <h3 className="font-medium mb-2">Quote #2 - Diagnostic Equipment Systems</h3>
+              <table className="w-full">
+                <tbody>
+                  <tr>
+                    <td className="py-1">Professional OBD Scanner</td>
+                    <td className="py-1 text-right">$3,200</td>
+                  </tr>
+                  <tr>
+                    <td className="py-1">Brake Lathe System</td>
+                    <td className="py-1 text-right">$8,500</td>
+                  </tr>
+                  <tr>
+                    <td className="py-1">Tire Balancer</td>
+                    <td className="py-1 text-right">$2,800</td>
+                  </tr>
+                  <tr>
+                    <td className="py-1">Training & Warranty (2 years)</td>
+                    <td className="py-1 text-right">$850</td>
+                  </tr>
+                  <tr className="border-t">
+                    <td className="py-1 font-bold">Total</td>
+                    <td className="py-1 text-right font-bold">$15,350</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </>
+      );
+    }
+    
+    // Business License
+    if (docName.includes('business license') || docName.includes('license')) {
+      return (
+        <>
+          <h2>Business License</h2>
+          <p className="text-sm text-muted-foreground mb-4">City of Springfield Business Operations License</p>
+          
+          <div className="p-4 border rounded bg-gray-50">
+            <h3 className="font-medium mb-3">License Information</h3>
+            <table className="w-full">
+              <tbody>
+                <tr>
+                  <td className="py-1 font-medium">Business Name:</td>
+                  <td className="py-1">Bella's Beauty Salon</td>
+                </tr>
+                <tr>
+                  <td className="py-1 font-medium">License Number:</td>
+                  <td className="py-1">BL-2024-0847</td>
+                </tr>
+                <tr>
+                  <td className="py-1 font-medium">Business Type:</td>
+                  <td className="py-1">Personal Care Services - Beauty Salon</td>
+                </tr>
+                <tr>
+                  <td className="py-1 font-medium">Owner:</td>
+                  <td className="py-1">Isabella Chen</td>
+                </tr>
+                <tr>
+                  <td className="py-1 font-medium">Address:</td>
+                  <td className="py-1">123 Oak Avenue, Springfield, IL 62702</td>
+                </tr>
+                <tr>
+                  <td className="py-1 font-medium">Issue Date:</td>
+                  <td className="py-1">January 15, 2024</td>
+                </tr>
+                <tr>
+                  <td className="py-1 font-medium">Expiration Date:</td>
+                  <td className="py-1">January 15, 2025</td>
+                </tr>
+                <tr>
+                  <td className="py-1 font-medium">Status:</td>
+                  <td className="py-1 text-green-600 font-medium">Active - Good Standing</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+          <div className="mt-4 p-4 border rounded">
+            <h3 className="font-medium mb-2">Permitted Activities</h3>
+            <ul className="text-sm space-y-1">
+              <li>• Hair cutting, styling, and coloring services</li>
+              <li>• Manicure and pedicure services</li>
+              <li>• Facial treatments and skin care</li>
+              <li>• Retail sale of beauty products</li>
+              <li>• Up to 6 styling stations</li>
+            </ul>
+          </div>
+        </>
+      );
+    }
+    
+    // Renovation Estimates
+    if (docName.includes('renovation') && docName.includes('estimates')) {
+      return (
+        <>
+          <h2>Renovation Estimates</h2>
+          <p className="text-sm text-muted-foreground mb-4">Bella's Beauty Salon - Interior Renovation Project</p>
+          
+          <div className="space-y-4">
+            <div className="p-4 border rounded">
+              <h3 className="font-medium mb-2">Springfield Contractors LLC</h3>
+              <table className="w-full">
+                <tbody>
+                  <tr>
+                    <td className="py-1">Flooring (luxury vinyl plank)</td>
+                    <td className="py-1 text-right">$4,200</td>
+                  </tr>
+                  <tr>
+                    <td className="py-1">Interior painting (2 coats)</td>
+                    <td className="py-1 text-right">$2,800</td>
+                  </tr>
+                  <tr>
+                    <td className="py-1">Salon station installation (6 units)</td>
+                    <td className="py-1 text-right">$8,400</td>
+                  </tr>
+                  <tr>
+                    <td className="py-1">Lighting upgrade (LED fixtures)</td>
+                    <td className="py-1 text-right">$3,200</td>
+                  </tr>
+                  <tr>
+                    <td className="py-1">Plumbing (2 shampoo bowls)</td>
+                    <td className="py-1 text-right">$2,400</td>
+                  </tr>
+                  <tr>
+                    <td className="py-1">Electrical work</td>
+                    <td className="py-1 text-right">$1,800</td>
+                  </tr>
+                  <tr className="border-t">
+                    <td className="py-1 font-medium">Labor & Materials</td>
+                    <td className="py-1 text-right font-medium">$22,800</td>
+                  </tr>
+                  <tr>
+                    <td className="py-1">Permits & Fees</td>
+                    <td className="py-1 text-right">$450</td>
+                  </tr>
+                  <tr className="border-t">
+                    <td className="py-1 font-bold">Total Estimate</td>
+                    <td className="py-1 text-right font-bold">$23,250</td>
+                  </tr>
+                </tbody>
+              </table>
+              <p className="text-sm text-muted-foreground mt-2">Timeline: 3-4 weeks | Warranty: 2 years</p>
+            </div>
+          </div>
+        </>
+      );
+    }
+    
+    // Bank Statements
+    if (docName.includes('bank statements') || docName.includes('bank statement')) {
+      return (
+        <>
+          <h2>Business Bank Statements</h2>
+          <p className="text-sm text-muted-foreground mb-4">Springfield Community Bank - Business Checking Account</p>
+          
+          <div className="my-4 p-4 border rounded">
+            <h3 className="font-medium mb-3">Account Summary - October 2024</h3>
+            <table className="w-full">
+              <tbody>
+                <tr>
+                  <td className="py-1 font-medium">Account Number:</td>
+                  <td className="py-1">****-****-****-4738</td>
+                </tr>
+                <tr>
+                  <td className="py-1 font-medium">Beginning Balance:</td>
+                  <td className="py-1 text-right">$12,450.33</td>
+                </tr>
+                <tr>
+                  <td className="py-1 font-medium">Total Deposits:</td>
+                  <td className="py-1 text-right">$38,725.00</td>
+                </tr>
+                <tr>
+                  <td className="py-1 font-medium">Total Withdrawals:</td>
+                  <td className="py-1 text-right">($35,890.67)</td>
+                </tr>
+                <tr className="border-t">
+                  <td className="py-1 font-bold">Ending Balance:</td>
+                  <td className="py-1 text-right font-bold">$15,284.66</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+          <div className="space-y-2">
+            <h3 className="font-medium">Recent Transactions</h3>
+            <div className="border rounded overflow-hidden">
+              <table className="w-full text-sm">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="text-left p-2">Date</th>
+                    <th className="text-left p-2">Description</th>
+                    <th className="text-right p-2">Amount</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr className="border-b">
+                    <td className="p-2">10/28</td>
+                    <td className="p-2">Daily Sales Deposit</td>
+                    <td className="p-2 text-right text-green-600">+$1,247.50</td>
+                  </tr>
+                  <tr className="border-b">
+                    <td className="p-2">10/27</td>
+                    <td className="p-2">Supply Invoice #2847</td>
+                    <td className="p-2 text-right text-red-600">-$845.33</td>
+                  </tr>
+                  <tr className="border-b">
+                    <td className="p-2">10/26</td>
+                    <td className="p-2">Rent Payment</td>
+                    <td className="p-2 text-right text-red-600">-$3,600.00</td>
+                  </tr>
+                  <tr>
+                    <td className="p-2">10/25</td>
+                    <td className="p-2">Weekend Sales Deposit</td>
+                    <td className="p-2 text-right text-green-600">+$2,134.75</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </>
+      );
+    }
+    
+    // Insurance Documents
+    if (docName.includes('insurance')) {
+      return (
+        <>
+          <h2>Business Insurance Policy</h2>
+          <p className="text-sm text-muted-foreground mb-4">General Liability & Property Insurance - Sweet Dreams Bakery</p>
+          
+          <div className="space-y-4">
+            <div className="p-4 border rounded bg-gray-50">
+              <h3 className="font-medium mb-3">Policy Information</h3>
+              <table className="w-full">
+                <tbody>
+                  <tr>
+                    <td className="py-1 font-medium">Policy Number:</td>
+                    <td className="py-1">GL-2024-887432</td>
+                  </tr>
+                  <tr>
+                    <td className="py-1 font-medium">Insured:</td>
+                    <td className="py-1">Sweet Dreams Bakery LLC</td>
+                  </tr>
+                  <tr>
+                    <td className="py-1 font-medium">Policy Period:</td>
+                    <td className="py-1">01/01/2024 - 01/01/2025</td>
+                  </tr>
+                  <tr>
+                    <td className="py-1 font-medium">Premium:</td>
+                    <td className="py-1">$2,845 annually</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            
+            <div className="p-4 border rounded">
+              <h3 className="font-medium mb-3">Coverage Details</h3>
+              <table className="w-full">
+                <tbody>
+                  <tr>
+                    <td className="py-1">General Liability</td>
+                    <td className="py-1 text-right">$1,000,000 per occurrence</td>
+                  </tr>
+                  <tr>
+                    <td className="py-1">Product Liability</td>
+                    <td className="py-1 text-right">$1,000,000 per occurrence</td>
+                  </tr>
+                  <tr>
+                    <td className="py-1">Property Coverage</td>
+                    <td className="py-1 text-right">$250,000</td>
+                  </tr>
+                  <tr>
+                    <td className="py-1">Equipment Breakdown</td>
+                    <td className="py-1 text-right">$100,000</td>
+                  </tr>
+                  <tr>
+                    <td className="py-1">Business Interruption</td>
+                    <td className="py-1 text-right">$150,000</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </>
+      );
+    }
+    
+    // Equipment Appraisal
+    if (docName.includes('equipment appraisal') || docName.includes('appraisal')) {
+      return (
+        <>
+          <h2>Equipment Appraisal Report</h2>
+          <p className="text-sm text-muted-foreground mb-4">Professional Bakery Equipment Valuation</p>
+          
+          <div className="space-y-4">
+            <div className="p-4 border rounded">
+              <h3 className="font-medium mb-3">Appraisal Summary</h3>
+              <table className="w-full">
+                <tbody>
+                  <tr>
+                    <td className="py-1 font-medium">Appraisal Date:</td>
+                    <td className="py-1">October 15, 2024</td>
+                  </tr>
+                  <tr>
+                    <td className="py-1 font-medium">Appraiser:</td>
+                    <td className="py-1">Midwest Equipment Appraisers, LLC</td>
+                  </tr>
+                  <tr>
+                    <td className="py-1 font-medium">Purpose:</td>
+                    <td className="py-1">Loan Collateral Valuation</td>
+                  </tr>
+                  <tr className="border-t">
+                    <td className="py-1 font-bold">Total Appraised Value:</td>
+                    <td className="py-1 text-right font-bold">$47,500</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            
+            <div className="border rounded overflow-hidden">
+              <table className="w-full">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="text-left p-3">Equipment</th>
+                    <th className="text-center p-3">Year</th>
+                    <th className="text-center p-3">Condition</th>
+                    <th className="text-right p-3">Value</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr className="border-b">
+                    <td className="p-3">Hobart 60qt Spiral Mixer</td>
+                    <td className="p-3 text-center">2019</td>
+                    <td className="p-3 text-center">Excellent</td>
+                    <td className="p-3 text-right">$12,500</td>
+                  </tr>
+                  <tr className="border-b">
+                    <td className="p-3">Blodgett Double Deck Oven</td>
+                    <td className="p-3 text-center">2020</td>
+                    <td className="p-3 text-center">Very Good</td>
+                    <td className="p-3 text-right">$18,000</td>
+                  </tr>
+                  <tr className="border-b">
+                    <td className="p-3">Refrigerated Display Case</td>
+                    <td className="p-3 text-center">2021</td>
+                    <td className="p-3 text-center">Good</td>
+                    <td className="p-3 text-right">$8,500</td>
+                  </tr>
+                  <tr className="border-b">
+                    <td className="p-3">Proof Cabinet (2 units)</td>
+                    <td className="p-3 text-center">2022</td>
+                    <td className="p-3 text-center">Excellent</td>
+                    <td className="p-3 text-right">$6,000</td>
+                  </tr>
+                  <tr>
+                    <td className="p-3">Misc. Small Equipment</td>
+                    <td className="p-3 text-center">Various</td>
+                    <td className="p-3 text-center">Good</td>
+                    <td className="p-3 text-right">$2,500</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </>
+      );
+    }
+    
+    // Business Plan
+    if (docName.includes('business plan')) {
+      return (
+        <>
+          <h2>Business Plan</h2>
+          <p className="text-sm text-muted-foreground mb-4">Sweet Dreams Bakery - Expansion Plan 2024-2026</p>
+          
+          <div className="space-y-4">
+            <div className="p-4 border rounded">
+              <h3 className="font-medium mb-2">Executive Summary</h3>
+              <p className="text-sm">
+                Sweet Dreams Bakery has been serving the Springfield community for 5 years, 
+                specializing in custom cakes, artisan breads, and pastries. This business plan 
+                outlines our strategy for equipment upgrades and market expansion to increase 
+                production capacity by 40% and revenue by 35% over the next two years.
+              </p>
+            </div>
+            
+            <div className="p-4 border rounded">
+              <h3 className="font-medium mb-3">Financial Projections</h3>
+              <table className="w-full border-collapse">
+                <thead>
+                  <tr className="bg-gray-50">
+                    <th className="border p-2 text-left">Year</th>
+                    <th className="border p-2 text-right">Revenue</th>
+                    <th className="border p-2 text-right">Expenses</th>
+                    <th className="border p-2 text-right">Net Income</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td className="border p-2">2024 (Current)</td>
+                    <td className="border p-2 text-right">$285,000</td>
+                    <td className="border p-2 text-right">$210,000</td>
+                    <td className="border p-2 text-right">$75,000</td>
+                  </tr>
+                  <tr>
+                    <td className="border p-2">2025 (Projected)</td>
+                    <td className="border p-2 text-right">$340,000</td>
+                    <td className="border p-2 text-right">$245,000</td>
+                    <td className="border p-2 text-right">$95,000</td>
+                  </tr>
+                  <tr>
+                    <td className="border p-2">2026 (Projected)</td>
+                    <td className="border p-2 text-right">$385,000</td>
+                    <td className="border p-2 text-right">$270,000</td>
+                    <td className="border p-2 text-right">$115,000</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            
+            <div className="p-4 border rounded">
+              <h3 className="font-medium mb-2">Use of Loan Proceeds</h3>
+              <ul className="text-sm space-y-1">
+                <li>• Commercial oven upgrade: $20,000</li>
+                <li>• Additional display cases: $8,000</li>
+                <li>• Storefront improvements: $5,000</li>
+                <li>• Working capital: $2,000</li>
+              </ul>
+            </div>
+          </div>
+        </>
+      );
+    }
+    
+    // Default fallback for any other documents
+    return (
+      <>
+        <h2>{document.name.replace('.pdf', '').replace('.xlsx', '')} - Sample Content</h2>
+        <p>This document contains information related to the small business loan application.</p>
+        <p>Page {currentPage} contains relevant details for the underwriting process.</p>
+        <div className="my-4 p-4 border rounded bg-gray-50">
+          <p className="text-sm">
+            This is a sample display of a document that would typically be reviewed as part of 
+            the small business loan application process. The actual content would include 
+            detailed information specific to the business operations and financial status.
+          </p>
+        </div>
+        <p>The complete document consists of {totalPages} pages with comprehensive information needed for loan evaluation.</p>
+      </>
+    );
   };
 
   return (
