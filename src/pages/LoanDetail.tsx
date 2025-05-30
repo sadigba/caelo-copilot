@@ -123,153 +123,219 @@ export default function LoanDetail() {
     const insights: Insight[] = [];
     const currentDate = new Date().toISOString();
 
-    // Generate insights based on document types
+    // Generate business-specific insights based on the company profile
+    switch (loan.businessName) {
+      case "Maria's Family Restaurant":
+        if (documentTypes.has("Financial")) {
+          insights.push({
+            id: uuidv4(),
+            title: "Strong Food Cost Management",
+            description: "Restaurant maintains excellent food cost ratios",
+            category: "Financial",
+            score: 88,
+            dateCreated: currentDate,
+            narrative: "Tax returns show food costs at 28% of revenue, well below the industry average of 32%. This indicates strong kitchen management and supplier relationships.",
+            evidence: ["Food costs: 28% of revenue", "Industry average: 32%", "Consistent margins over 3 years"],
+            comments: []
+          });
+
+          insights.push({
+            id: uuidv4(),
+            title: "Seasonal Revenue Patterns",
+            description: "Restaurant shows predictable seasonal fluctuations",
+            category: "Financial",
+            score: 82,
+            dateCreated: currentDate,
+            narrative: "Financial statements reveal 20% higher revenue during holiday seasons (Nov-Dec) and summer months, with stable baseline performance.",
+            evidence: ["Q4 revenue increase: 20%", "Summer peak: 15% above average", "Predictable cash flow patterns"],
+            comments: []
+          });
+        }
+
+        if (documentTypes.has("Legal")) {
+          insights.push({
+            id: uuidv4(),
+            title: "Favorable Lease Terms",
+            description: "Restaurant lease provides operational flexibility",
+            category: "Legal",
+            score: 90,
+            dateCreated: currentDate,
+            narrative: "The lease agreement includes a 5-year renewal option at current market rates and allows for extended operating hours during peak seasons.",
+            evidence: ["5-year renewal option", "Extended hours permitted", "Base rent locked for 2 more years"],
+            comments: []
+          });
+        }
+        break;
+
+      case "Mike's Auto Repair":
+        if (documentTypes.has("Financial")) {
+          insights.push({
+            id: uuidv4(),
+            title: "Diversified Revenue Streams",
+            description: "Auto shop has multiple income sources",
+            category: "Financial",
+            score: 91,
+            dateCreated: currentDate,
+            narrative: "Revenue breakdown shows 45% from repairs, 30% from maintenance, 15% from parts sales, and 10% from inspections, reducing dependency risk.",
+            evidence: ["Repairs: 45%", "Maintenance contracts: 30%", "Parts sales: 15%", "Inspections: 10%"],
+            comments: []
+          });
+
+          insights.push({
+            id: uuidv4(),
+            title: "Strong Customer Retention",
+            description: "High percentage of repeat customers",
+            category: "Business",
+            score: 89,
+            dateCreated: currentDate,
+            narrative: "Customer analysis shows 75% repeat business rate, indicating strong service quality and customer loyalty in the automotive repair sector.",
+            evidence: ["Repeat customers: 75%", "Average customer lifetime: 8 years", "Referral rate: 35%"],
+            comments: []
+          });
+        }
+
+        if (documentTypes.has("Equipment")) {
+          insights.push({
+            id: uuidv4(),
+            title: "Modern Equipment Investment",
+            description: "Recent equipment upgrades enhance service capabilities",
+            category: "Equipment",
+            score: 85,
+            dateCreated: currentDate,
+            narrative: "Investment in diagnostic equipment and hydraulic lifts positions the shop to handle modern vehicles and increase efficiency.",
+            evidence: ["New diagnostic systems", "2 additional service bays", "Capability for hybrid/electric vehicles"],
+            comments: []
+          });
+        }
+        break;
+
+      case "Bella's Beauty Salon":
+        if (documentTypes.has("Financial")) {
+          insights.push({
+            id: uuidv4(),
+            title: "Growing Service Menu",
+            description: "Salon expanding into high-margin services",
+            category: "Financial",
+            score: 87,
+            dateCreated: currentDate,
+            narrative: "Recent addition of spa services and specialized treatments has increased average ticket size by 25% over the past year.",
+            evidence: ["Average ticket increase: 25%", "Spa services: 40% margin", "New treatment bookings: +35%"],
+            comments: []
+          });
+
+          insights.push({
+            id: uuidv4(),
+            title: "Strong Appointment Booking",
+            description: "Consistent booking rates indicate demand",
+            category: "Business",
+            score: 84,
+            dateCreated: currentDate,
+            narrative: "Booking system shows 85% capacity utilization with strong weekend and evening demand, indicating healthy market position.",
+            evidence: ["Capacity utilization: 85%", "Weekend bookings: 95%", "Advance bookings: 3 weeks average"],
+            comments: []
+          });
+        }
+
+        if (documentTypes.has("Legal")) {
+          insights.push({
+            id: uuidv4(),
+            title: "Compliance and Licensing",
+            description: "All required licenses and permits current",
+            category: "Legal",
+            score: 95,
+            dateCreated: currentDate,
+            narrative: "Business maintains all required cosmetology licenses, health permits, and local business licenses in good standing.",
+            evidence: ["State cosmetology license current", "Health permit renewed", "Business license compliant"],
+            comments: []
+          });
+        }
+        break;
+
+      case "Sweet Dreams Bakery":
+        if (documentTypes.has("Financial")) {
+          insights.push({
+            id: uuidv4(),
+            title: "Custom Order Growth",
+            description: "Bakery seeing strong demand for custom orders",
+            category: "Financial",
+            score: 89,
+            dateCreated: currentDate,
+            narrative: "Custom cake and catering orders now represent 40% of revenue with higher margins than retail sales, showing business evolution.",
+            evidence: ["Custom orders: 40% of revenue", "Margin improvement: 15%", "Catering contracts increasing"],
+            comments: []
+          });
+
+          insights.push({
+            id: uuidv4(),
+            title: "Early Morning Revenue",
+            description: "Strong breakfast and coffee sales",
+            category: "Financial",
+            score: 86,
+            dateCreated: currentDate,
+            narrative: "Morning sales (6-10 AM) account for 55% of daily revenue, with coffee and pastry combinations driving consistent traffic.",
+            evidence: ["Morning sales: 55% of daily revenue", "Coffee attachment rate: 70%", "Regular morning customers: 150+"],
+            comments: []
+          });
+        }
+
+        if (documentTypes.has("Business Plan")) {
+          insights.push({
+            id: uuidv4(),
+            title: "Expansion Strategy",
+            description: "Well-planned growth into wholesale market",
+            category: "Business",
+            score: 83,
+            dateCreated: currentDate,
+            narrative: "Business plan outlines strategic expansion into supplying local cafes and restaurants with baked goods, leveraging existing production capacity.",
+            evidence: ["3 wholesale partnerships identified", "Production capacity: 40% unused", "Projected revenue increase: 25%"],
+            comments: []
+          });
+        }
+
+        if (documentTypes.has("Insurance")) {
+          insights.push({
+            id: uuidv4(),
+            title: "Comprehensive Coverage",
+            description: "Bakery maintains appropriate insurance coverage",
+            category: "Risk Management",
+            score: 92,
+            dateCreated: currentDate,
+            narrative: "Insurance portfolio includes general liability, product liability, and business interruption coverage appropriate for food service business.",
+            evidence: ["Product liability: $2M coverage", "Business interruption included", "Workers compensation current"],
+            comments: []
+          });
+        }
+        break;
+
+      default:
+        // Generic insights for other businesses
+        if (documentTypes.has("Financial")) {
+          insights.push({
+            id: uuidv4(),
+            title: "Financial Stability",
+            description: "Business shows consistent financial performance",
+            category: "Financial",
+            score: 85,
+            dateCreated: currentDate,
+            narrative: "Financial statements demonstrate stable revenue growth and controlled expenses over the review period.",
+            evidence: ["Consistent revenue growth", "Controlled operating expenses", "Positive cash flow"],
+            comments: []
+          });
+        }
+        break;
+    }
+
+    // Add some common insights that apply regardless of business type
     if (documentTypes.has("Rent Roll")) {
       insights.push({
         id: uuidv4(),
-        title: "Positive Cash Flow",
-        description: "The property shows strong positive cash flow based on rent roll",
-        category: "Financial",
-        score: 92,
-        dateCreated: currentDate,
-        narrative: "The rent roll shows a stable tenant base with low vacancy rates, resulting in consistent monthly income that exceeds operating expenses by approximately 25%.",
-        evidence: ["Average monthly rental income: $45,000", "Monthly operating expenses: $35,000", "Positive cash flow: $10,000/month"],
-        comments: []
-      });
-      
-      insights.push({
-        id: uuidv4(),
-        title: "Below Market Rents",
-        description: "Current rents are 15% below market rate",
-        category: "Financial",
-        score: 85,
-        dateCreated: currentDate,
-        narrative: "Analysis of the rent roll compared to market rates indicates potential for rental income growth through strategic increases.",
-        evidence: ["Current average rent: $1,250/unit", "Market average rent: $1,450/unit", "Potential increase: 15%"],
-        comments: []
-      });
-      
-      insights.push({
-        id: uuidv4(),
-        title: "High Occupancy Rate",
-        description: "Property maintains 95% occupancy rate",
+        title: "Property Income Analysis",
+        description: "Rent roll shows stable tenant relationships",
         category: "Property",
-        score: 90,
-        dateCreated: currentDate,
-        narrative: "The property has maintained consistently high occupancy rates over the past 24 months, indicating strong demand and effective property management.",
-        evidence: ["Current occupancy: 95%", "Market average: 89%", "Tenant retention rate: 78%"],
-        comments: []
-      });
-    }
-    
-    if (documentTypes.has("Financial")) {
-      insights.push({
-        id: uuidv4(),
-        title: "Strong Financial Performance",
-        description: "The business shows consistent financial growth",
-        category: "Financial",
         score: 88,
         dateCreated: currentDate,
-        narrative: "The financial statements demonstrate year-over-year revenue growth of 8%, with improving profit margins and controlled operating expenses.",
-        evidence: ["Annual revenue growth: 8%", "Profit margin increase: 3.5%", "Expense ratio reduction: 2.1%"],
-        comments: []
-      });
-      
-      if (loan.loanType === "Bridge") {
-        insights.push({
-          id: uuidv4(),
-          title: "Favorable Loan Terms",
-          description: "Bridge loan terms are competitive for market segment",
-          category: "Financial",
-          score: 78,
-          dateCreated: currentDate,
-          narrative: "The proposed bridge loan terms align well with current market conditions for properties undergoing renovation.",
-          evidence: ["Interest rate 50bps below average for similar loans", "Flexible draw schedule accommodates renovation timeline", "No prepayment penalty after 12 months"],
-          comments: []
-        });
-      }
-    }
-    
-    if (documentTypes.has("Property")) {
-      insights.push({
-        id: uuidv4(),
-        title: "Prime Location Assessment",
-        description: `Property situated in high-traffic ${loan.propertyType.toLowerCase()} corridor`,
-        category: "Property",
-        score: 95,
-        dateCreated: currentDate,
-        narrative: `Analysis of the property data confirms the ${loan.propertyType.toLowerCase()} is situated in a prime corridor with strong traffic and excellent visibility.`,
-        evidence: ["Daily foot/vehicle traffic: 20,000+", "Walking distance to public transit", "Corner lot with street frontage on two major roads"],
-        comments: []
-      });
-    }
-    
-    if (documentTypes.has("Appraisal")) {
-      insights.push({
-        id: uuidv4(),
-        title: "Strong Appraisal Value",
-        description: "Property appraised 8% above purchase price",
-        category: "Property",
-        score: 92,
-        dateCreated: currentDate,
-        narrative: "The appraisal report indicates a value higher than the acquisition cost, providing a favorable loan-to-value ratio.",
-        evidence: ["Appraisal: $2,700,000", "Purchase price: $2,500,000", "8% built-in equity"],
-        comments: []
-      });
-    }
-    
-    if (documentTypes.has("Legal")) {
-      insights.push({
-        id: uuidv4(),
-        title: "Clean Title Report",
-        description: "No title issues or encumbrances identified",
-        category: "Legal",
-        score: 95,
-        dateCreated: currentDate,
-        narrative: "Title examination reveals clean ownership history with no liens, encumbrances, or legal disputes that would affect property transfer.",
-        evidence: ["Clear title dating back 40+ years", "No outstanding liens", "Proper easements documented"],
-        comments: []
-      });
-    }
-    
-    if (documentTypes.has("Construction")) {
-      insights.push({
-        id: uuidv4(),
-        title: "Construction Budget Analysis",
-        description: "Construction budget appears comprehensive and realistic",
-        category: "Construction",
-        score: 85,
-        dateCreated: currentDate,
-        narrative: "The construction budget includes appropriate contingencies and is in line with industry standards for similar projects.",
-        evidence: ["15% contingency allocation", "Material costs within 5% of current market rates", "Timeline accounts for potential supply chain delays"],
-        comments: []
-      });
-    }
-    
-    if (documentTypes.has("Environmental")) {
-      insights.push({
-        id: uuidv4(),
-        title: "Environmental Risk Assessment",
-        description: "No significant environmental concerns identified",
-        category: "Environmental",
-        score: 90,
-        dateCreated: currentDate,
-        narrative: "The environmental report indicates no significant contamination issues or environmental liabilities associated with the property.",
-        evidence: ["Phase I assessment complete", "No recognized environmental conditions", "Site meets current environmental standards"],
-        comments: []
-      });
-    }
-
-    if (documentTypes.has("Inspection")) {
-      insights.push({
-        id: uuidv4(),
-        title: "Property Condition Assessment",
-        description: "Inspection reveals good overall condition with minor repairs needed",
-        category: "Property",
-        score: 82,
-        dateCreated: currentDate,
-        narrative: "The property inspection report indicates the building is in good condition overall, with some minor maintenance items that should be addressed.",
-        evidence: ["HVAC system 8 years old (15-year lifespan)", "Roof in good condition (5 years old)", "Electrical systems up to code"],
+        narrative: "Analysis of rent roll indicates strong tenant retention and market-rate pricing for the property type and location.",
+        evidence: ["Average tenancy: 3+ years", "Market-rate pricing", "Low vacancy risk"],
         comments: []
       });
     }
@@ -277,7 +343,7 @@ export default function LoanDetail() {
     // If we have insights to add, update the loan
     if (insights.length > 0) {
       updateLoan(loanId, { insights });
-      toast.success("Insights generated based on document analysis");
+      toast.success("Business-specific insights generated");
     }
   };
 
