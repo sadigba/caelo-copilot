@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import {
@@ -255,25 +254,49 @@ export default function LoanDetail() {
         if (documentTypes.has("Financial")) {
           insights.push({
             id: uuidv4(),
-            title: "Custom Order Growth",
-            description: "Bakery seeing strong demand for custom orders",
+            title: "Strong DSCR Performance",
+            description: "Bakery demonstrates healthy debt service coverage",
             category: "Financial",
-            score: 89,
+            score: 92,
             dateCreated: currentDate,
-            narrative: "Custom cake and catering orders now represent 40% of revenue with higher margins than retail sales, showing business evolution.",
-            evidence: ["Custom orders: 40% of revenue", "Margin improvement: 15%", "Catering contracts increasing"],
+            narrative: "DSCR of 1.45x indicates strong cash flow to cover debt obligations, well above the 1.25x minimum requirement for commercial lending.",
+            evidence: ["DSCR: 1.45x", "Industry benchmark: 1.25x", "Consistent monthly cash flow: $18,500"],
             comments: []
           });
 
           insights.push({
             id: uuidv4(),
-            title: "Early Morning Revenue",
-            description: "Strong breakfast and coffee sales",
+            title: "Optimal Food Cost Management",
+            description: "Bakery maintains excellent ingredient cost ratios",
             category: "Financial",
-            score: 86,
+            score: 89,
             dateCreated: currentDate,
-            narrative: "Morning sales (6-10 AM) account for 55% of daily revenue, with coffee and pastry combinations driving consistent traffic.",
-            evidence: ["Morning sales: 55% of daily revenue", "Coffee attachment rate: 70%", "Regular morning customers: 150+"],
+            narrative: "Food costs at 22% of revenue demonstrate efficient ingredient sourcing and waste management, significantly below industry average of 28% for bakeries.",
+            evidence: ["Food costs: 22% of revenue", "Industry average: 28%", "Waste reduction: 15% YoY"],
+            comments: []
+          });
+
+          insights.push({
+            id: uuidv4(),
+            title: "Custom Order Revenue Growth",
+            description: "High-margin custom orders driving profitability",
+            category: "Financial",
+            score: 87,
+            dateCreated: currentDate,
+            narrative: "Custom cake and catering orders represent 40% of revenue with 65% gross margins, compared to 45% margins on retail items.",
+            evidence: ["Custom orders: 40% of revenue", "Custom order margin: 65%", "Retail margin: 45%", "Order backlog: 3 weeks"],
+            comments: []
+          });
+
+          insights.push({
+            id: uuidv4(),
+            title: "Peak Hour Revenue Optimization",
+            description: "Strong morning rush performance maximizes daily sales",
+            category: "Business",
+            score: 84,
+            dateCreated: currentDate,
+            narrative: "Morning sales (6-10 AM) generate 55% of daily revenue with coffee attachment rate of 70%, indicating effective product bundling strategy.",
+            evidence: ["Morning revenue: 55% of daily total", "Coffee attachment: 70%", "Average transaction: $8.50", "Peak hour capacity: 95%"],
             comments: []
           });
         }
@@ -281,13 +304,27 @@ export default function LoanDetail() {
         if (documentTypes.has("Business Plan")) {
           insights.push({
             id: uuidv4(),
-            title: "Expansion Strategy",
-            description: "Well-planned growth into wholesale market",
+            title: "Wholesale Expansion Strategy",
+            description: "Planned wholesale channel shows growth potential",
             category: "Business",
-            score: 83,
+            score: 86,
             dateCreated: currentDate,
-            narrative: "Business plan outlines strategic expansion into supplying local cafes and restaurants with baked goods, leveraging existing production capacity.",
-            evidence: ["3 wholesale partnerships identified", "Production capacity: 40% unused", "Projected revenue increase: 25%"],
+            narrative: "Business plan details wholesale expansion to 5 local cafes, leveraging 40% unused production capacity to increase revenue by 25% with minimal additional overhead.",
+            evidence: ["Target wholesale accounts: 5", "Unused capacity: 40%", "Projected revenue increase: 25%", "Additional overhead: <5%"],
+            comments: []
+          });
+        }
+
+        if (documentTypes.has("Equipment")) {
+          insights.push({
+            id: uuidv4(),
+            title: "Modern Production Equipment",
+            description: "Recent equipment investments enhance efficiency",
+            category: "Equipment",
+            score: 88,
+            dateCreated: currentDate,
+            narrative: "Investment in commercial ovens and mixing equipment has increased daily production capacity by 30% while reducing labor costs per unit by 18%.",
+            evidence: ["Production capacity increase: 30%", "Labor cost reduction: 18%", "Equipment age: <2 years", "Maintenance costs: Low"],
             comments: []
           });
         }
@@ -295,13 +332,27 @@ export default function LoanDetail() {
         if (documentTypes.has("Insurance")) {
           insights.push({
             id: uuidv4(),
-            title: "Comprehensive Coverage",
-            description: "Bakery maintains appropriate insurance coverage",
+            title: "Comprehensive Food Service Coverage",
+            description: "Appropriate insurance for food service operations",
             category: "Risk Management",
-            score: 92,
+            score: 93,
             dateCreated: currentDate,
-            narrative: "Insurance portfolio includes general liability, product liability, and business interruption coverage appropriate for food service business.",
-            evidence: ["Product liability: $2M coverage", "Business interruption included", "Workers compensation current"],
+            narrative: "Insurance coverage includes product liability ($2M), general liability, and business interruption, with food contamination coverage specific to bakery operations.",
+            evidence: ["Product liability: $2M", "Food contamination coverage included", "Business interruption: 12 months", "Workers compensation current"],
+            comments: []
+          });
+        }
+
+        if (documentTypes.has("Legal")) {
+          insights.push({
+            id: uuidv4(),
+            title: "Food Service Compliance",
+            description: "All health and safety permits current",
+            category: "Legal",
+            score: 95,
+            dateCreated: currentDate,
+            narrative: "Maintains current health department permits, food handler certifications, and local business licenses with excellent inspection history.",
+            evidence: ["Health permit: Current (A+ rating)", "Food handler certs: All current", "Last inspection: 98/100", "Business license: Active"],
             comments: []
           });
         }
